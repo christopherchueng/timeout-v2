@@ -64,7 +64,7 @@ export const alarmlistRouter = createTRPCRouter({
         },
         data: {
           name: input.name,
-          is_on: input.is_on,
+          isOn: input.is_on,
         },
       });
     }),
