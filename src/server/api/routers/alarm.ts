@@ -65,7 +65,6 @@ export const alarmRouter = createTRPCRouter({
         sound: z.string().optional(),
         repeat: z.string().optional(),
         snooze: z.boolean(),
-        isOn: z.boolean(),
         alarmlistId: z.string(),
       }),
     )
@@ -79,7 +78,7 @@ export const alarmRouter = createTRPCRouter({
           sound: input.sound,
           repeat: input.repeat,
           snooze: input.snooze,
-          isOn: input.isOn,
+          isOn: true,
           alarmlistId: input.alarmlistId,
         },
       });
@@ -95,7 +94,6 @@ export const alarmRouter = createTRPCRouter({
         sound: z.string().optional(),
         repeat: z.string().optional(),
         snooze: z.boolean(),
-        isOn: z.boolean(),
         alarmlistId: z.string(),
       }),
     )
@@ -120,7 +118,7 @@ export const alarmRouter = createTRPCRouter({
           sound: input.sound,
           repeat: input.repeat,
           snooze: input.snooze,
-          isOn: input.isOn,
+          isOn: true,
           alarmlistId: input.alarmlistId,
         },
       });

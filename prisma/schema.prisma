@@ -80,7 +80,7 @@ model Alarm {
     hour            Int
     minutes         Int
     meridiem        String
-    sound           String?
+    sound           String?  @default("https://www.dropbox.com/scl/fi/v0iuqyj5gep7tfqawycg9/Skxva-Tones.mp3?rlkey=wr68bjowr0hwevtwqqyv4oq1h&dl=0")
     repeat          String?  @db.VarChar(64)
     snooze          Boolean  @default(false)
     isOn            Boolean  @default(true)
