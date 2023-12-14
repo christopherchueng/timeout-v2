@@ -77,4 +77,35 @@ export const alarmlistRouter = createTRPCRouter({
         },
       });
     }),
+  toggleAlarmlist: protectedProcedure
+    .input(z.object({ id: z.string(), isOn: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      const alarms = ctx.db.alarm.findMany({
+        where: { alarmlistId: input.id },
+      });
+      const alarmlist = ctx.db.alarmlist.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          isOn: true,
+        },
+      });
+
+      (await alarms).map((alarm) => {
+        ctx.db.alarm.update({
+          where: {
+            id: alarm.id,
+          },
+          data: {
+            isOn: input.isOn,
+          },
+        });
+      });
+
+      return {
+        alarmlist,
+        alarms,
+      };
+    }),
 });

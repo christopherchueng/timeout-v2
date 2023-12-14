@@ -134,4 +134,18 @@ export const alarmRouter = createTRPCRouter({
         },
       });
     }),
+  toggleAlarm: protectedProcedure
+    .input(z.object({ id: z.string(), isOn: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      const alarm = ctx.db.alarm.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          isOn: input.isOn,
+        },
+      });
+
+      return alarm;
+    }),
 });
