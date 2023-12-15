@@ -1,23 +1,9 @@
-import { getServerAuthSession } from "@/server/auth";
-import { api } from "@/trpc/server";
-import Alarmlist from "../_components/Alarmlist";
+import Sidebar from "../_components/Sidebar";
 
-const Dashboard = async () => {
-  const session = await getServerAuthSession();
-
-  if (!session) return null;
-
-  const alarmlists = await api.alarmlist.getAlarmlistsByUserId.query({
-    userId: session?.user.id,
-  });
-
+const Dashboard = () => {
   return (
     <main className="flex h-full w-full flex-row items-center justify-center">
-      <aside className="h-full w-full bg-blue-200 pt-16 sm:w-72">
-        {alarmlists.map((alarmlist) => (
-          <Alarmlist {...alarmlist} key={alarmlist.id} />
-        ))}
-      </aside>
+      <Sidebar />
       <div className="hidden w-full text-center text-9xl sm:block">12:30</div>
     </main>
   );

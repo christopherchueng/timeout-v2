@@ -1,5 +1,8 @@
+"use client";
+
 import { RouterOutputs } from "@/trpc/shared";
 import clsx from "clsx";
+import Switch from "../UI/Switch";
 
 type AlarmProps = RouterOutputs["alarm"]["getAlarmsByAlarmlistId"][number];
 
@@ -11,15 +14,18 @@ const Alarm = (alarm: AlarmProps) => {
           "text-gray-400": !alarm.isOn,
         })}
       >
-        <div className="flex items-end gap-0.5 py-0.5 font-bold">
-          <span className="text-sm leading-tight transition">
+        <div className="flex items-end gap-0.5 font-bold">
+          <span className="leading-tight transition">
             {alarm.hour}:{alarm.minutes}
           </span>
           <span className="text-2xs">{alarm.meridiem}</span>
         </div>
         <div className="text-xs">{alarm.name}</div>
       </div>
-      <button>.</button>
+      <Switch
+        checked={alarm.isOn}
+        onChange={() => console.log("Toggle alarm")}
+      />
     </div>
   );
 };
