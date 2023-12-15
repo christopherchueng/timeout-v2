@@ -13,12 +13,12 @@ const Dashboard = async () => {
 
   return (
     <main className="flex h-full w-full flex-row items-center justify-center">
-      <aside className="h-full w-full bg-red-200 pt-16 sm:w-72">
+      <aside className="h-full w-full bg-blue-200 pt-16 sm:w-72">
         {alarmlists.map((alarmlist) => (
           <Alarmlist {...alarmlist} key={alarmlist.id} />
         ))}
       </aside>
-      <div className="hidden w-full text-9xl sm:block">12:30</div>
+      <div className="hidden w-full text-center text-9xl sm:block">12:30</div>
     </main>
   );
 };
