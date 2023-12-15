@@ -6,9 +6,12 @@ const NavigationBar = async () => {
   const session = await getServerAuthSession();
 
   return (
-    <nav className="mx-8 my-4 flex justify-between text-xs">
-      <Link href={session ? "/dashboard" : "/"}>Home</Link>
-      <div className="flex gap-2">
+    <nav className="absolute z-10 flex w-full items-center justify-center bg-white px-8 py-4 text-xs">
+      <div className="w-full">
+        <Link href={session ? "/dashboard" : "/"}>Home</Link>
+      </div>
+      <div className="text-lg font-bold sm:hidden">12:30</div>
+      <div className="flex w-full justify-end gap-2">
         {session && (
           <>
             <Link href="/create">Create</Link>

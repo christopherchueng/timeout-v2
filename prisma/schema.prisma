@@ -64,6 +64,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     alarmlists    Alarmlist[]
+    alarms        Alarm[]
 }
 
 model VerificationToken {
@@ -89,6 +90,9 @@ model Alarm {
 
     alarmlist       Alarmlist @relation(fields: [alarmlistId], references: [id], onDelete: Cascade)
     alarmlistId     String
+
+    user            User     @relation(fields: [userId], references: [id])
+    userId          String
 
     @@index([id, alarmlistId])
 }

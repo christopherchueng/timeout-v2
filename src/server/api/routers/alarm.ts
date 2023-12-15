@@ -53,7 +53,7 @@ export const alarmRouter = createTRPCRouter({
           message: `There are no alarms under ${alarmlist.name}. Create a new alarm!`,
         });
 
-      return addUserDataToAlarm(alarms);
+      return alarms;
     }),
   create: protectedProcedure
     .input(
@@ -66,6 +66,7 @@ export const alarmRouter = createTRPCRouter({
         repeat: z.string().optional(),
         snooze: z.boolean(),
         alarmlistId: z.string(),
+        userId: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -80,6 +81,7 @@ export const alarmRouter = createTRPCRouter({
           snooze: input.snooze,
           isOn: true,
           alarmlistId: input.alarmlistId,
+          userId: input.userId,
         },
       });
     }),

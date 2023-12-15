@@ -5,7 +5,7 @@ import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { getServerAuthSession } from "@/server/auth";
 import { TRPCError } from "@trpc/server";
 
-const addUserDataToAlarmlists = async (alarmlists: Alarmlist[]) => {
+const addUserDataToAlarmlist = async (alarmlist: Alarmlist) => {
   const session = await getServerAuthSession();
   if (!session) {
     throw new TRPCError({
@@ -13,14 +13,12 @@ const addUserDataToAlarmlists = async (alarmlists: Alarmlist[]) => {
       message: "User for alarmlist not found",
     });
   }
-  return alarmlists.map((alarmlist) => {
-    return {
-      alarmlist,
-      user: {
-        ...session.user,
-      },
-    };
-  });
+  return {
+    alarmlist,
+    user: {
+      ...session.user,
+    },
+  };
 };
 
 export const alarmlistRouter = createTRPCRouter({
@@ -30,15 +28,36 @@ export const alarmlistRouter = createTRPCRouter({
         userId: z.string(),
       }),
     )
-    .query(({ ctx, input }) =>
-      ctx.db.alarmlist.findMany({
+    .query(async ({ ctx, input }) => {
+      const alarmlistsWithAlarms = await ctx.db.alarmlist.findMany({
         where: {
           userId: input.userId,
         },
         take: 10,
         orderBy: [{ createdAt: "desc" }],
-      }),
-    ),
+        include: {
+          alarms: true,
+        },
+      });
+
+      const alarmlists = alarmlistsWithAlarms.map((alarmlist) => {
+        const newAlarmlist = {
+          id: alarmlist.id,
+          name: alarmlist.name,
+          isOn: alarmlist.isOn,
+          createdAt: alarmlist.createdAt,
+          updatedAt: alarmlist.updatedAt,
+          userId: alarmlist.userId,
+          alarms: alarmlist.alarms.filter(
+            (alarm) => alarmlist.id === alarm.alarmlistId,
+          ),
+        };
+
+        return newAlarmlist;
+      });
+
+      return alarmlists;
+    }),
   create: protectedProcedure
     .input(z.object({ name: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
