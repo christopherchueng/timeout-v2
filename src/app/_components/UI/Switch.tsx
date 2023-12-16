@@ -1,21 +1,24 @@
 import clsx from "clsx";
-import React from "react";
+import React, { ChangeEvent } from "react";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 type SwitchProps = {
+  id: string;
   checked: boolean;
-  onChange: () => void;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
-const Switch = ({ checked, onChange }: SwitchProps) => {
+const Switch = ({ id, checked, onChange }: SwitchProps) => {
   return (
     <div className="relative box-border flex w-12 justify-center">
-      <label className="group absolute">
+      <label htmlFor={id} className="group absolute">
         <input
+          id={id}
           className="peer invisible relative block before:visible before:absolute before:left-1 before:top-1 before:h-5 before:w-8 before:cursor-pointer before:rounded-xl before:bg-gray-400 before:transition checked:before:bg-slate-900"
           type="checkbox"
+          name="isOn"
           checked={checked}
           onChange={onChange}
         />
@@ -29,9 +32,6 @@ const Switch = ({ checked, onChange }: SwitchProps) => {
           )}
         />
       </label>
-      {/* <div className={clsx({ "active:w-3.5": true, "-scale-x-1": checked })}>
-        a
-      </div> */}
     </div>
   );
 };

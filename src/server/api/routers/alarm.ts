@@ -26,7 +26,7 @@ const addUserDataToAlarm = async (alarms: Alarm[]) => {
 };
 
 export const alarmRouter = createTRPCRouter({
-  getAlarmsByAlarmlistId: protectedProcedure
+  getAllByAlarmlistId: protectedProcedure
     .input(
       z.object({
         alarmlistId: z.string(),
@@ -129,16 +129,16 @@ export const alarmRouter = createTRPCRouter({
     }),
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(async ({ ctx, input }) => {
+    .mutation(({ ctx, input }) => {
       return ctx.db.alarm.delete({
         where: {
           id: input.id,
         },
       });
     }),
-  toggleAlarm: protectedProcedure
+  toggle: protectedProcedure
     .input(z.object({ id: z.string(), isOn: z.boolean() }))
-    .mutation(async ({ ctx, input }) => {
+    .mutation(({ ctx, input }) => {
       const alarm = ctx.db.alarm.update({
         where: {
           id: input.id,

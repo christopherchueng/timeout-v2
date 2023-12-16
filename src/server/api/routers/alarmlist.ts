@@ -5,58 +5,66 @@ import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { getServerAuthSession } from "@/server/auth";
 import { TRPCError } from "@trpc/server";
 
-const addUserDataToAlarmlist = async (alarmlist: Alarmlist) => {
-  const session = await getServerAuthSession();
-  if (!session) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "User for alarmlist not found",
-    });
-  }
-  return {
-    alarmlist,
-    user: {
-      ...session.user,
-    },
-  };
-};
-
 export const alarmlistRouter = createTRPCRouter({
-  getAlarmlistsByUserId: protectedProcedure
-    .input(
-      z.object({
-        userId: z.string(),
-      }),
-    )
+  getAll: protectedProcedure.query(async ({ ctx }) => {
+    const session = await getServerAuthSession();
+
+    if (!session) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "User not found",
+      });
+    }
+
+    const alarmlistsWithAlarms = await ctx.db.alarmlist.findMany({
+      where: {
+        userId: session?.user.id,
+      },
+      take: 10,
+      orderBy: [{ createdAt: "desc" }],
+      include: {
+        alarms: true,
+      },
+    });
+
+    const alarmlists = alarmlistsWithAlarms.map((alarmlist) => {
+      const newAlarmlist = {
+        id: alarmlist.id,
+        name: alarmlist.name,
+        isOn: alarmlist.isOn,
+        createdAt: alarmlist.createdAt,
+        updatedAt: alarmlist.updatedAt,
+        userId: alarmlist.userId,
+        alarms: alarmlist.alarms.filter(
+          (alarm) => alarmlist.id === alarm.alarmlistId,
+        ),
+      };
+
+      return newAlarmlist;
+    });
+
+    return alarmlists;
+  }),
+  getOne: protectedProcedure
+    .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      const alarmlistsWithAlarms = await ctx.db.alarmlist.findMany({
+      const alarmlist = await ctx.db.alarmlist.findUnique({
         where: {
-          userId: input.userId,
+          id: input.id,
         },
-        take: 10,
-        orderBy: [{ createdAt: "desc" }],
         include: {
           alarms: true,
         },
       });
 
-      const alarmlists = alarmlistsWithAlarms.map((alarmlist) => {
-        const newAlarmlist = {
-          id: alarmlist.id,
-          name: alarmlist.name,
-          isOn: alarmlist.isOn,
-          createdAt: alarmlist.createdAt,
-          updatedAt: alarmlist.updatedAt,
-          userId: alarmlist.userId,
-          alarms: alarmlist.alarms.filter(
-            (alarm) => alarmlist.id === alarm.alarmlistId,
-          ),
-        };
+      if (!alarmlist) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Alarmlist not found",
+        });
+      }
 
-        return newAlarmlist;
-      });
-
-      return alarmlists;
+      return alarmlist;
     }),
   create: protectedProcedure
     .input(z.object({ name: z.string().min(1) }))
@@ -65,6 +73,7 @@ export const alarmlistRouter = createTRPCRouter({
         data: {
           name: input.name,
           user: { connect: { id: ctx.session.user.id } },
+          isOn: true,
         },
       });
     }),
@@ -72,18 +81,17 @@ export const alarmlistRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
-        is_on: z.boolean().optional(),
+        isOn: z.boolean().optional(),
         name: z.string().min(1, { message: "Please enter a name." }),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(({ ctx, input }) => {
       return ctx.db.alarmlist.update({
         where: {
           id: input.id,
         },
         data: {
           name: input.name,
-          isOn: input.is_on,
         },
       });
     }),
@@ -96,35 +104,30 @@ export const alarmlistRouter = createTRPCRouter({
         },
       });
     }),
-  toggleAlarmlist: protectedProcedure
+  toggle: protectedProcedure
     .input(z.object({ id: z.string(), isOn: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
-      const alarms = ctx.db.alarm.findMany({
-        where: { alarmlistId: input.id },
-      });
       const alarmlist = ctx.db.alarmlist.update({
         where: {
           id: input.id,
         },
         data: {
-          isOn: true,
+          isOn: input.isOn,
+        },
+        include: {
+          alarms: true,
         },
       });
 
-      (await alarms).map((alarm) => {
-        ctx.db.alarm.update({
-          where: {
-            id: alarm.id,
-          },
-          data: {
-            isOn: input.isOn,
-          },
-        });
+      await ctx.db.alarm.updateMany({
+        where: {
+          alarmlistId: input.id,
+        },
+        data: {
+          isOn: input.isOn,
+        },
       });
 
-      return {
-        alarmlist,
-        alarms,
-      };
+      return alarmlist;
     }),
 });

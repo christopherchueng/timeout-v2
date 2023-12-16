@@ -8,9 +8,7 @@ const Sidebar = async () => {
 
   if (!session) return null;
 
-  const alarmlists = await api.alarmlist.getAlarmlistsByUserId.query({
-    userId: session?.user.id,
-  });
+  const alarmlists = await api.alarmlist.getAll.query();
   return (
     <aside className="h-full w-full pt-16 sm:w-72">
       {alarmlists.map((alarmlist) => (
