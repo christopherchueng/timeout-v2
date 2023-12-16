@@ -138,16 +138,40 @@ export const alarmRouter = createTRPCRouter({
     }),
   toggle: protectedProcedure
     .input(z.object({ id: z.string(), isOn: z.boolean() }))
-    .mutation(({ ctx, input }) => {
-      const alarm = ctx.db.alarm.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          isOn: input.isOn,
-        },
+    .mutation(async ({ ctx, input }) => {
+      const { id, isOn } = input;
+
+      // Update the individual alarm
+      const updatedAlarm = await ctx.db.alarm.update({
+        where: { id },
+        data: { isOn },
       });
 
-      return alarm;
+      // Retrieve all alarms under the same alarmlist
+      const alarmsInAlarmlist = await ctx.db.alarm.findMany({
+        where: { alarmlistId: updatedAlarm.alarmlistId },
+      });
+
+      const activeAlarms = alarmsInAlarmlist.filter((alarm) => alarm.isOn);
+
+      // If alarmlist is off and one alarm is turned on,
+      // turn the alarmlist on even if not all alarms are on
+      if (activeAlarms.length === 1 && isOn) {
+        await ctx.db.alarmlist.update({
+          where: { id: updatedAlarm.alarmlistId },
+          data: { isOn: true },
+        });
+      }
+
+      // If alarmlist is on and every alarm except 1 is turned off,
+      // turn the alarmlist off
+      if (activeAlarms.length === 0 && !isOn) {
+        await ctx.db.alarmlist.update({
+          where: { id: updatedAlarm.alarmlistId },
+          data: { isOn: false },
+        });
+      }
+
+      return updatedAlarm;
     }),
 });

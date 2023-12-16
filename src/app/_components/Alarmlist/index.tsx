@@ -6,6 +6,7 @@ import Switch from "../UI/Switch";
 import { api } from "@/trpc/react";
 import { useCallback, useState } from "react";
 import type { Alarm as TAlarm } from "@prisma/client";
+import clsx from "clsx";
 
 type AlarmlistProps = RouterOutputs["alarmlist"]["getAll"][number];
 
@@ -78,7 +79,13 @@ const Alarmlist = (alarmlist: AlarmlistProps) => {
   return (
     <div className="px-4">
       <div className="flex justify-between rounded-xl border border-transparent px-2 py-0.5 text-lg transition duration-200 hover:bg-gray-200">
-        <span className="self-center font-bold">{alarmlist.name}</span>
+        <span
+          className={clsx("self-center font-bold", {
+            "text-gray-400": !alarmlist.isOn,
+          })}
+        >
+          {alarmlist.name}
+        </span>
         <Switch
           id={alarmlist.id}
           checked={toggleAlarmlist}

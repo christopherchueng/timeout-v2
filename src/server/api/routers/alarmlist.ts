@@ -122,6 +122,7 @@ export const alarmlistRouter = createTRPCRouter({
       await ctx.db.alarm.updateMany({
         where: {
           alarmlistId: input.id,
+          isOn: !input.isOn,
         },
         data: {
           isOn: input.isOn,

@@ -15,7 +15,7 @@ type AlarmToggleFunction = {
 type AlarmProps = ServerProps & AlarmToggleFunction;
 
 const Alarm = (alarm: AlarmProps) => {
-  const [toggleAlarm, setToggleAlarm] = useState(alarm.isOn);
+  const [isAlarmOn, setIsAlarmOn] = useState(alarm.isOn);
   const ctx = api.useUtils();
 
   const { mutate, isLoading: isToggling } = api.alarm.toggle.useMutation({
@@ -54,7 +54,10 @@ const Alarm = (alarm: AlarmProps) => {
     },
 
     onSuccess: (_, { isOn }) => {
-      setToggleAlarm(isOn);
+      setIsAlarmOn(isOn);
+      void ctx.alarm.getAllByAlarmlistId.invalidate({
+        alarmlistId: alarm.alarmlistId,
+      });
     },
 
     // If the mutation fails,
@@ -80,7 +83,7 @@ const Alarm = (alarm: AlarmProps) => {
     <div className="flex flex-row justify-between rounded-xl border border-transparent px-2 py-0.5 transition duration-200 hover:bg-gray-200">
       <div
         className={clsx("flex flex-col transition", {
-          "text-gray-400": !toggleAlarm || !alarm.isOn,
+          "text-gray-400": !isAlarmOn || !alarm.isOn,
         })}
       >
         <div className="flex items-end gap-0.5 font-bold">
@@ -93,7 +96,7 @@ const Alarm = (alarm: AlarmProps) => {
       </div>
       <Switch
         id={alarm.id}
-        checked={toggleAlarm || alarm.isOn}
+        checked={isAlarmOn || alarm.isOn}
         onChange={(e) =>
           mutate({ id: alarm.id, isOn: e.currentTarget.checked })
         }
