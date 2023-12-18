@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-import type { Alarmlist } from "@prisma/client";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { getServerAuthSession } from "@/server/auth";
 import { TRPCError } from "@trpc/server";
@@ -104,10 +103,19 @@ export const alarmlistRouter = createTRPCRouter({
         },
       });
     }),
-  toggle: protectedProcedure
+  toggleWithAlarms: protectedProcedure
     .input(z.object({ id: z.string(), isOn: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
-      const alarmlist = ctx.db.alarmlist.update({
+      await ctx.db.alarm.updateMany({
+        where: {
+          alarmlistId: input.id,
+        },
+        data: {
+          isOn: input.isOn,
+        },
+      });
+
+      const alarmlist = await ctx.db.alarmlist.update({
         where: {
           id: input.id,
         },
@@ -116,16 +124,6 @@ export const alarmlistRouter = createTRPCRouter({
         },
         include: {
           alarms: true,
-        },
-      });
-
-      await ctx.db.alarm.updateMany({
-        where: {
-          alarmlistId: input.id,
-          isOn: !input.isOn,
-        },
-        data: {
-          isOn: input.isOn,
         },
       });
 

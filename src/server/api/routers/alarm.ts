@@ -154,24 +154,13 @@ export const alarmRouter = createTRPCRouter({
 
       const activeAlarms = alarmsInAlarmlist.filter((alarm) => alarm.isOn);
 
-      // If alarmlist is off and one alarm is turned on,
-      // turn the alarmlist on even if not all alarms are on
-      if (activeAlarms.length === 1 && isOn) {
-        await ctx.db.alarmlist.update({
-          where: { id: updatedAlarm.alarmlistId },
-          data: { isOn: true },
-        });
-      }
+      // Alarmlist should be on as long as there is at least 1 alarm on.
+      // Otherwise, turn off alarmlist.
+      const alarmlist = await ctx.db.alarmlist.update({
+        where: { id: updatedAlarm.alarmlistId },
+        data: { isOn: activeAlarms.length > 0 },
+      });
 
-      // If alarmlist is on and every alarm except 1 is turned off,
-      // turn the alarmlist off
-      if (activeAlarms.length === 0 && !isOn) {
-        await ctx.db.alarmlist.update({
-          where: { id: updatedAlarm.alarmlistId },
-          data: { isOn: false },
-        });
-      }
-
-      return updatedAlarm;
+      return { alarm: updatedAlarm, alarms: alarmsInAlarmlist, alarmlist };
     }),
 });
