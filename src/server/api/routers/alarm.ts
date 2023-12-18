@@ -33,9 +33,10 @@ export const alarmRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
+      const { alarmlistId } = input;
       const alarmlist = await ctx.db.alarmlist.findFirst({
         where: {
-          id: input.alarmlistId,
+          id: alarmlistId,
         },
       });
 
@@ -43,7 +44,7 @@ export const alarmRouter = createTRPCRouter({
 
       const alarms = await ctx.db.alarm.findMany({
         where: {
-          alarmlistId: input.alarmlistId,
+          alarmlistId: alarmlistId,
         },
       });
 
@@ -70,18 +71,29 @@ export const alarmRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const {
+        name,
+        hour,
+        minutes,
+        meridiem,
+        sound,
+        repeat,
+        snooze,
+        alarmlistId,
+        userId,
+      } = input;
       return ctx.db.alarm.create({
         data: {
-          name: input.name,
-          hour: input.hour,
-          minutes: input.minutes,
-          meridiem: input.meridiem,
-          sound: input.sound,
-          repeat: input.repeat,
-          snooze: input.snooze,
+          name,
+          hour,
+          minutes,
+          meridiem,
+          sound,
+          repeat,
+          snooze,
           isOn: true,
-          alarmlistId: input.alarmlistId,
-          userId: input.userId,
+          alarmlistId,
+          userId,
         },
       });
     }),
@@ -100,28 +112,38 @@ export const alarmRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const {
+        id,
+        name,
+        hour,
+        minutes,
+        meridiem,
+        sound,
+        repeat,
+        snooze,
+        alarmlistId,
+      } = input;
+
       const alarmlist = await ctx.db.alarmlist.findFirst({
         where: {
-          id: input.alarmlistId,
+          id: alarmlistId,
         },
       });
 
       if (!alarmlist) throw new TRPCError({ code: "NOT_FOUND" });
 
       const alarm = ctx.db.alarm.update({
-        where: {
-          id: input.id,
-        },
+        where: { id },
         data: {
-          name: input.name,
-          hour: input.hour,
-          minutes: input.minutes,
-          meridiem: input.meridiem,
-          sound: input.sound,
-          repeat: input.repeat,
-          snooze: input.snooze,
+          name,
+          hour,
+          minutes,
+          meridiem,
+          sound,
+          repeat,
+          snooze,
           isOn: true,
-          alarmlistId: input.alarmlistId,
+          alarmlistId,
         },
       });
 
@@ -130,10 +152,9 @@ export const alarmRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(({ ctx, input }) => {
+      const { id } = input;
       return ctx.db.alarm.delete({
-        where: {
-          id: input.id,
-        },
+        where: { id },
       });
     }),
   toggle: protectedProcedure

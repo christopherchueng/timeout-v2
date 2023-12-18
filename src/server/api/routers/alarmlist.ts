@@ -19,7 +19,6 @@ export const alarmlistRouter = createTRPCRouter({
       where: {
         userId: session?.user.id,
       },
-      take: 10,
       orderBy: [{ createdAt: "desc" }],
       include: {
         alarms: true,
@@ -27,16 +26,16 @@ export const alarmlistRouter = createTRPCRouter({
     });
 
     const alarmlists = alarmlistsWithAlarms.map((alarmlist) => {
+      const { id, name, isOn, createdAt, updatedAt, userId, alarms } =
+        alarmlist;
       const newAlarmlist = {
-        id: alarmlist.id,
-        name: alarmlist.name,
-        isOn: alarmlist.isOn,
-        createdAt: alarmlist.createdAt,
-        updatedAt: alarmlist.updatedAt,
-        userId: alarmlist.userId,
-        alarms: alarmlist.alarms.filter(
-          (alarm) => alarmlist.id === alarm.alarmlistId,
-        ),
+        id,
+        name,
+        isOn,
+        createdAt,
+        updatedAt,
+        userId,
+        alarms: alarms.filter((alarm) => alarmlist.id === alarm.alarmlistId),
       };
 
       return newAlarmlist;
@@ -47,10 +46,10 @@ export const alarmlistRouter = createTRPCRouter({
   getOne: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
+      const { id } = input;
+
       const alarmlist = await ctx.db.alarmlist.findUnique({
-        where: {
-          id: input.id,
-        },
+        where: { id },
         include: {
           alarms: true,
         },
@@ -68,9 +67,10 @@ export const alarmlistRouter = createTRPCRouter({
   create: protectedProcedure
     .input(z.object({ name: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
+      const { name } = input;
       return ctx.db.alarmlist.create({
         data: {
-          name: input.name,
+          name,
           user: { connect: { id: ctx.session.user.id } },
           isOn: true,
         },
@@ -80,48 +80,40 @@ export const alarmlistRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
-        isOn: z.boolean().optional(),
         name: z.string().min(1, { message: "Please enter a name." }),
       }),
     )
     .mutation(({ ctx, input }) => {
+      const { id, name } = input;
       return ctx.db.alarmlist.update({
-        where: {
-          id: input.id,
-        },
+        where: { id },
         data: {
-          name: input.name,
+          name,
+          // Turn on alarmlist if updated
+          isOn: true,
         },
       });
     }),
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      const { id } = input;
       return ctx.db.alarmlist.delete({
-        where: {
-          id: input.id,
-        },
+        where: { id },
       });
     }),
-  toggleWithAlarms: protectedProcedure
+  toggle: protectedProcedure
     .input(z.object({ id: z.string(), isOn: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
+      const { id, isOn } = input;
       await ctx.db.alarm.updateMany({
-        where: {
-          alarmlistId: input.id,
-        },
-        data: {
-          isOn: input.isOn,
-        },
+        where: { alarmlistId: id },
+        data: { isOn },
       });
 
       const alarmlist = await ctx.db.alarmlist.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          isOn: input.isOn,
-        },
+        where: { id },
+        data: { isOn },
         include: {
           alarms: true,
         },

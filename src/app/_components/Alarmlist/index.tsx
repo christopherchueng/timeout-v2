@@ -18,15 +18,15 @@ type AlarmlistProps = {
 
 const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
   const initialState = {
-    isAlarmlistOn: alarmlist.isOn,
+    isOn: alarmlist.isOn,
     alarms: alarmlist.alarms,
   };
   const [state, dispatch] = useReducer(alarmlistReducer, initialState);
-  const { isAlarmlistOn, alarms } = state;
+  const { isOn, alarms } = state;
 
   const ctx = api.useUtils();
 
-  const { mutate } = api.alarmlist.toggleWithAlarms.useMutation({
+  const { mutate } = api.alarmlist.toggle.useMutation({
     onMutate: async ({ id, isOn }) => {
       // Cancel any outgoing refetches so they don't overwrite our optimistic update
       await ctx.alarmlist.getAll.cancel();
@@ -60,7 +60,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
       dispatch({
         type: TOGGLE_ALARMLIST_AND_ALARMS,
         alarms,
-        isAlarmlistOn: isOn,
+        isOn,
       });
     },
 
@@ -81,7 +81,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
       dispatch({
         type: TOGGLE_ALARMLIST,
         alarms: updatedAlarms,
-        isAlarmlistOn: isOn,
+        isOn,
       });
     },
     [],
@@ -94,14 +94,14 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
       <div className="flex justify-between rounded-xl border border-transparent px-2 py-0.5 text-lg transition duration-200 hover:bg-gray-200">
         <span
           className={clsx("self-center font-bold", {
-            "text-gray-400": !isAlarmlistOn,
+            "text-gray-400": !isOn,
           })}
         >
           {alarmlist.name}
         </span>
         <Switch
           id={alarmlist.id}
-          checked={isAlarmlistOn}
+          checked={isOn}
           onChange={(e) => {
             mutate({ id: alarmlist.id, isOn: e.currentTarget.checked });
           }}

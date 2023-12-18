@@ -2,18 +2,18 @@ import type { Alarm, Alarmlist } from "@prisma/client";
 import { TOGGLE_ALARMLIST_AND_ALARMS, TOGGLE_ALARMLIST } from "./constants";
 
 type InitialState = {
-  isAlarmlistOn: boolean;
+  isOn: boolean;
   alarms: Alarm[];
 };
 
 type Action = {
   type: string;
   alarms: Alarm[];
-  isAlarmlistOn: boolean;
+  isOn: boolean;
 };
 
 const initialState = {
-  isAlarmlistOn: false,
+  isOn: false,
   alarms: [],
 };
 
@@ -25,19 +25,19 @@ export const alarmlistReducer = (
     case TOGGLE_ALARMLIST_AND_ALARMS: {
       const activeAlarms = action.alarms.map((alarm: Alarm) => ({
         ...alarm,
-        isOn: action.isAlarmlistOn,
+        isOn: action.isOn,
       }));
 
       return {
         ...state,
-        isAlarmlistOn: action.isAlarmlistOn,
+        isOn: action.isOn,
         alarms: activeAlarms,
       };
     }
     case TOGGLE_ALARMLIST: {
       return {
         ...state,
-        isAlarmlistOn: action.isAlarmlistOn,
+        isOn: action.isOn,
         alarms: action.alarms,
       };
     }
