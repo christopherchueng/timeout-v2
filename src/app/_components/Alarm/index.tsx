@@ -77,7 +77,7 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
         })}
       >
         <div className="flex items-end gap-0.5 font-bold">
-          <span className="leading-tight transition">
+          <span className="leading-tight">
             {alarm.hour}:{alarm.minutes}
           </span>
           <span className="text-2xs">{alarm.meridiem}</span>

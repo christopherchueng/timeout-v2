@@ -93,7 +93,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
     <div className="px-4">
       <div className="flex justify-between rounded-xl border border-transparent px-2 py-0.5 text-lg transition duration-200 hover:bg-gray-200">
         <span
-          className={clsx("self-center font-bold", {
+          className={clsx("self-center font-bold transition", {
             "text-gray-400": !isOn,
           })}
         >
