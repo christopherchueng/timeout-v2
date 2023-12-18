@@ -12,7 +12,7 @@ type SwitchProps = {
 
 const Switch = ({ id, checked, onChange }: SwitchProps) => {
   return (
-    <div className="relative box-border flex w-12 justify-center">
+    <div className="relative mr-7 box-border flex w-2 justify-center">
       <label htmlFor={id} className="group absolute">
         <input
           id={id}
