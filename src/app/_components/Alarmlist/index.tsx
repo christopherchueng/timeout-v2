@@ -1,65 +1,22 @@
 "use client";
 
+import { useCallback, useReducer } from "react";
+import clsx from "clsx";
 import { RouterOutputs } from "@/trpc/shared";
+import { api } from "@/trpc/react";
+import { alarmlistReducer } from "@/store/AlarmlistReducer";
+import {
+  TOGGLE_ALARMLIST,
+  TOGGLE_ALARMLIST_AND_ALARMS,
+} from "@/store/constants";
 import Alarm from "../Alarm";
 import Switch from "../UI/Switch";
-import { api } from "@/trpc/react";
-import { useCallback, useReducer } from "react";
-import type { Alarmlist, Alarm as TAlarm } from "@prisma/client";
-import clsx from "clsx";
 
-const TOGGLE_ALARMLIST_AND_ALARMS = "toggleAlarmlistAndAlarms";
-const TOGGLE_ALARMLIST = "toggleAlarmlist";
-
-type InitialState = {
-  isAlarmlistOn: boolean;
-  alarms: TAlarm[];
+type AlarmlistProps = {
+  alarmlist: RouterOutputs["alarmlist"]["getAll"][number];
 };
 
-type Action = {
-  type: string;
-  alarmlist: Alarmlist;
-  alarms: TAlarm[];
-  isAlarmlistOn: boolean;
-};
-
-const initialState = {
-  isAlarmlistOn: false,
-  alarms: [],
-};
-
-export const alarmlistReducer = (
-  state: InitialState = initialState,
-  action: Action,
-) => {
-  switch (action.type) {
-    case TOGGLE_ALARMLIST_AND_ALARMS: {
-      const activeAlarms = action.alarms.map((alarm: TAlarm) => ({
-        ...alarm,
-        isOn: action.isAlarmlistOn,
-      }));
-
-      return {
-        ...state,
-        isAlarmlistOn: action.isAlarmlistOn,
-        alarms: activeAlarms,
-      };
-    }
-    case TOGGLE_ALARMLIST: {
-      return {
-        ...state,
-        isAlarmlistOn: action.isAlarmlistOn,
-        alarms: action.alarms,
-      };
-    }
-    default:
-      return state;
-  }
-};
-
-type AlarmlistProps = RouterOutputs["alarmlist"]["getAll"][number];
-
-const Alarmlist = (alarmlist: AlarmlistProps) => {
+const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
   const initialState = {
     isAlarmlistOn: alarmlist.isOn,
     alarms: alarmlist.alarms,
@@ -102,19 +59,14 @@ const Alarmlist = (alarmlist: AlarmlistProps) => {
     onSuccess: (_data, { isOn }) => {
       dispatch({
         type: TOGGLE_ALARMLIST_AND_ALARMS,
-        alarmlist,
         alarms,
         isAlarmlistOn: isOn,
       });
-      void ctx.alarmlist.getAll.invalidate();
     },
 
     // If the mutation fails,
     // use the context returned from onMutate to roll back
     onError: (_err, _isOn, context) => {
-      // toast.error(
-      //   `An error occured when marking todo as ${done ? "done" : "undone"}`,
-      // );
       if (!context) return;
       ctx.alarmlist.getAll.setData(undefined, () => context.previousAlarmlists);
     },
@@ -125,10 +77,9 @@ const Alarmlist = (alarmlist: AlarmlistProps) => {
   });
 
   const handleAlarmlistToggle = useCallback(
-    (updatedAlarmlist: Alarmlist, updatedAlarms: Alarm[], isOn: boolean) => {
+    (updatedAlarms: Alarm[], isOn: boolean) => {
       dispatch({
         type: TOGGLE_ALARMLIST,
-        alarmlist: updatedAlarmlist,
         alarms: updatedAlarms,
         isAlarmlistOn: isOn,
       });
@@ -153,20 +104,13 @@ const Alarmlist = (alarmlist: AlarmlistProps) => {
           checked={isAlarmlistOn}
           onChange={(e) => {
             mutate({ id: alarmlist.id, isOn: e.currentTarget.checked });
-            dispatch({
-              type: TOGGLE_ALARMLIST_AND_ALARMS,
-              alarmlist,
-              alarms,
-              isAlarmlistOn: e.currentTarget.checked,
-            });
           }}
         />
       </div>
       {alarms.map((alarm) => (
         <Alarm
-          {...alarm}
           key={alarm.id}
-          isAlarmlistOn={isAlarmlistOn}
+          alarm={alarm}
           handleAlarmlistToggle={handleAlarmlistToggle}
         />
       ))}

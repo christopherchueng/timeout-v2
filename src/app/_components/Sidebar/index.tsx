@@ -12,7 +12,7 @@ const Sidebar = async () => {
   return (
     <aside className="h-full w-full pt-16 sm:w-72">
       {alarmlists.map((alarmlist) => (
-        <Alarmlist {...alarmlist} key={alarmlist.id} />
+        <Alarmlist key={alarmlist.id} alarmlist={alarmlist} />
       ))}
     </aside>
   );

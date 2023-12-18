@@ -1,27 +1,16 @@
 "use client";
 
-import { RouterOutputs } from "@/trpc/shared";
 import clsx from "clsx";
 import Switch from "../UI/Switch";
 import { api } from "@/trpc/react";
-import { Alarm, Alarmlist } from "@prisma/client";
+import type { Alarm } from "@prisma/client";
 
-type TAlarm = RouterOutputs["alarm"]["getAllByAlarmlistId"][number];
-
-type AlarmToggleFunction = {
-  isAlarmlistOn: boolean;
-  handleAlarmlistToggle: (
-    updatedAlarmlist: Alarmlist,
-    updatedAlarms: Alarm[],
-    isOn: boolean,
-  ) => void;
+type AlarmProps = {
+  alarm: Alarm;
+  handleAlarmlistToggle: (updatedAlarms: Alarm[], isOn: boolean) => void;
 };
 
-type AlarmProps = TAlarm & AlarmToggleFunction;
-
-const Alarm = (alarm: AlarmProps) => {
-  const { handleAlarmlistToggle } = alarm;
-
+const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
   const ctx = api.useUtils();
 
   const { mutate } = api.alarm.toggle.useMutation({
@@ -60,18 +49,12 @@ const Alarm = (alarm: AlarmProps) => {
     },
 
     onSuccess: async (data) => {
-      handleAlarmlistToggle(data.alarmlist, data.alarms, data.alarmlist.isOn);
-      void ctx.alarm.getAllByAlarmlistId.invalidate({
-        alarmlistId: data.alarmlist.id,
-      });
+      handleAlarmlistToggle(data.alarms, data.alarmlist.isOn);
     },
 
     // If the mutation fails,
     // use the context returned from onMutate to roll back
     onError: (_err, _isOn, context) => {
-      // toast.error(
-      //   `An error occured when marking todo as ${done ? "done" : "undone"}`,
-      // );
       if (!context) return;
       ctx.alarm.getAllByAlarmlistId.setData(
         { alarmlistId: alarm.alarmlistId },
@@ -79,8 +62,8 @@ const Alarm = (alarm: AlarmProps) => {
       );
     },
     // Always refetch after error or success:
-    onSettled: async () => {
-      await ctx.alarm.getAllByAlarmlistId.invalidate({
+    onSettled: () => {
+      void ctx.alarm.getAllByAlarmlistId.invalidate({
         alarmlistId: alarm.alarmlistId,
       });
     },
