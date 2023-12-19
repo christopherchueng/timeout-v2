@@ -25,6 +25,15 @@ export default {
           },
         ],
       },
+      keyframes: {
+        blink: {
+          "0%, 100%": { opacity: "0.2" },
+          "50%": { opacity: "1" },
+        },
+      },
+      animation: {
+        blink: "blink 2s ease-in-out infinite",
+      },
     },
   },
   plugins: [],

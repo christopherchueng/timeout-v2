@@ -5,8 +5,8 @@ const Dashboard = () => {
   return (
     <main className="flex h-full w-full flex-row items-center justify-center">
       <Sidebar />
-      <div className="hidden w-full text-center text-9xl sm:block">
-        <Clock />
+      <div className="hidden w-full text-9xl sm:flex sm:justify-center">
+        <Clock size="lg" />
       </div>
     </main>
   );

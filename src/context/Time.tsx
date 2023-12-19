@@ -4,7 +4,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import dayjs from "dayjs";
 
 type TimeContextType = {
-  parts: Time;
+  parts: Part;
 };
 
 type TimeProps = {
@@ -17,7 +17,7 @@ export const TimeContext = createContext<TimeContextType>(
 
 export const useTimeContext = () => useContext(TimeContext);
 
-type Time = {
+type Part = {
   hour: string | number;
   colon: string;
   minute: string | number;
@@ -27,7 +27,7 @@ type Time = {
 
 const TimeProvider = ({ children }: TimeProps) => {
   const date = new Date();
-  const [parts, setParts] = useState<Time>({
+  const [parts, setParts] = useState<Part>({
     hour: "",
     colon: "",
     minute: "",
@@ -40,12 +40,16 @@ const TimeProvider = ({ children }: TimeProps) => {
       () =>
         setParts({
           hour: dayjs(date).get("hour"),
-          colon: +parts.second % 2 === 1 ? ":" : "",
-          minute: dayjs(date).get("minute"),
+          colon: ":",
+          // colon: +parts.second % 2 === 1 ? ":" : "",
+          minute:
+            dayjs(date).get("minute") < 10
+              ? "0" + dayjs(date).get("minute")
+              : dayjs(date).get("minute"),
           second: dayjs(date).get("second"),
           meridiem: +parts.hour >= 12 ? "PM" : "AM",
         }),
-      1000,
+      0,
     );
 
     return () => clearInterval(timeInterval);

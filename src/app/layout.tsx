@@ -7,7 +7,7 @@ import { TRPCReactProvider } from "@/trpc/react";
 
 import ProviderWrapper from "./_components/ProviderWrapper";
 import NavigationBar from "./_components/NavigationBar";
-import TimeProvider from "@/context/TimeContext";
+import TimeProvider from "@/context/Time";
 
 export const metadata = {
   title: "Timeout",

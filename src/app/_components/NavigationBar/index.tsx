@@ -1,6 +1,7 @@
 import { getServerAuthSession } from "@/server/auth";
 import Link from "next/link";
 import { Signin, Signout } from "../Auth";
+import Clock from "../Clock";
 
 const NavigationBar = async () => {
   const session = await getServerAuthSession();
@@ -10,7 +11,9 @@ const NavigationBar = async () => {
       <div className="w-full">
         <Link href={session ? "/dashboard" : "/"}>Home</Link>
       </div>
-      <div className="text-lg font-bold sm:hidden">12:30</div>
+      <div className="text-lg font-bold sm:hidden">
+        <Clock size="sm" />
+      </div>
       <div className="flex w-full justify-end gap-2">
         {session && (
           <>
