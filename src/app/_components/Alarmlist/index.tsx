@@ -2,7 +2,7 @@
 
 import { useCallback, useReducer } from "react";
 import clsx from "clsx";
-import { RouterOutputs } from "@/trpc/shared";
+import type { RouterOutputs } from "@/trpc/shared";
 import { api } from "@/trpc/react";
 import { alarmlistReducer } from "@/store/AlarmlistReducer";
 import {

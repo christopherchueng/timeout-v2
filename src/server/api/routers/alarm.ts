@@ -1,29 +1,27 @@
 import { z } from "zod";
 
-import type { Alarm } from "@prisma/client";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
-import { getServerAuthSession } from "@/server/auth";
 import { TRPCError } from "@trpc/server";
 
-const addUserDataToAlarm = async (alarms: Alarm[]) => {
-  const session = await getServerAuthSession();
+// const addUserDataToAlarm = async (alarms: Alarm[]) => {
+//   const session = await getServerAuthSession();
 
-  if (!session) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "User for alarmlist not found",
-    });
-  }
+//   if (!session) {
+//     throw new TRPCError({
+//       code: "INTERNAL_SERVER_ERROR",
+//       message: "User for alarmlist not found",
+//     });
+//   }
 
-  return alarms.map((alarm) => {
-    return {
-      alarm,
-      user: {
-        ...session.user,
-      },
-    };
-  });
-};
+//   return alarms.map((alarm) => {
+//     return {
+//       alarm,
+//       user: {
+//         ...session.user,
+//       },
+//     };
+//   });
+// };
 
 export const alarmRouter = createTRPCRouter({
   getAllByAlarmlistId: protectedProcedure

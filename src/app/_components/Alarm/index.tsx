@@ -3,7 +3,9 @@
 import clsx from "clsx";
 import Switch from "../UI/Switch";
 import { api } from "@/trpc/react";
-import type { Alarm } from "@prisma/client";
+import type { RouterOutputs } from "@/trpc/shared";
+
+type Alarm = RouterOutputs["alarm"]["getAllByAlarmlistId"][number];
 
 type AlarmProps = {
   alarm: Alarm;

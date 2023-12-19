@@ -1,8 +1,5 @@
 import clsx from "clsx";
-import React, { ChangeEvent } from "react";
-
-export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {}
+import React, { type ChangeEvent } from "react";
 
 type SwitchProps = {
   id: string;

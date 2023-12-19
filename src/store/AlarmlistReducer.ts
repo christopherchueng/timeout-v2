@@ -1,4 +1,4 @@
-import type { Alarm, Alarmlist } from "@prisma/client";
+import type { Alarm } from "@prisma/client";
 import { TOGGLE_ALARMLIST_AND_ALARMS, TOGGLE_ALARMLIST } from "./constants";
 
 type InitialState = {

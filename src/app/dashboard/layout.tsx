@@ -1,6 +1,4 @@
-import { getServerAuthSession } from "@/server/auth";
-import { api } from "@/trpc/react";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Dashboard",
