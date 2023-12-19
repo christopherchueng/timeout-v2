@@ -2,6 +2,7 @@ import { GeistSans } from "geist/font/sans";
 import { cookies } from "next/headers";
 import { TRPCReactProvider } from "@/trpc/react";
 import ProviderWrapper from "./_components/ProviderWrapper";
+import NavigationBar from "./_components/NavigationBar";
 
 export default function RootLayout({
   children,
