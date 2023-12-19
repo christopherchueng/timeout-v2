@@ -11,15 +11,20 @@ type TimeProps = {
   children: React.ReactNode;
 };
 
-export const TimeContext = createContext<TimeContextType>(
-  {} as TimeContextType,
-);
+export const TimeContext = createContext<TimeContextType | null>(null);
 
-export const useTimeContext = () => useContext(TimeContext);
+export const useTimeContext = () => {
+  const context = useContext(TimeContext);
+
+  if (!context) {
+    throw new Error("useTimeContext must be used within a TimeContextProvider");
+  }
+
+  return context;
+};
 
 type Part = {
   hour: string | number;
-  colon: string;
   minute: string | number;
   second: string | number;
   meridiem: string;
@@ -29,7 +34,6 @@ const TimeProvider = ({ children }: TimeProps) => {
   const date = new Date();
   const [parts, setParts] = useState<Part>({
     hour: "",
-    colon: "",
     minute: "",
     second: "",
     meridiem: "",
@@ -39,15 +43,10 @@ const TimeProvider = ({ children }: TimeProps) => {
     const timeInterval = setInterval(
       () =>
         setParts({
-          hour: dayjs(date).get("hour"),
-          colon: ":",
-          // colon: +parts.second % 2 === 1 ? ":" : "",
-          minute:
-            dayjs(date).get("minute") < 10
-              ? "0" + dayjs(date).get("minute")
-              : dayjs(date).get("minute"),
-          second: dayjs(date).get("second"),
-          meridiem: +parts.hour >= 12 ? "PM" : "AM",
+          hour: dayjs(date).format("h"),
+          minute: dayjs(date).format("mm"),
+          second: dayjs(date).format("s"),
+          meridiem: dayjs(date).format("A"),
         }),
       0,
     );

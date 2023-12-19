@@ -2,13 +2,16 @@
 
 import { useTimeContext } from "@/context/Time";
 import clsx from "clsx";
+import Loading from "./loading";
 
 type ClockProps = {
   size: "sm" | "lg";
 };
 const Clock = ({ size = "lg" }: ClockProps) => {
   const { parts } = useTimeContext();
-  const { hour, colon, minute, meridiem } = parts;
+  const { hour, minute, meridiem } = parts;
+
+  if (!parts) return <Loading size={size} />;
 
   return (
     <div className="flex w-fit flex-row">
@@ -19,7 +22,7 @@ const Clock = ({ size = "lg" }: ClockProps) => {
           "w-20": size === "lg",
         })}
       >
-        {colon}
+        :
       </span>
       <span>{minute}</span>&nbsp;
       <span
