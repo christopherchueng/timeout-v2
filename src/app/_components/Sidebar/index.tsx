@@ -10,7 +10,7 @@ const Sidebar = async () => {
 
   const alarmlists = await api.alarmlist.getAll.query();
   return (
-    <aside className="h-full w-full pt-16 sm:w-72">
+    <aside className="h-full w-full pt-16 sm:w-72 sm:flex-none">
       {alarmlists.map((alarmlist) => (
         <Alarmlist key={alarmlist.id} alarmlist={alarmlist} />
       ))}

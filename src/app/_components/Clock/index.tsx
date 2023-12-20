@@ -17,7 +17,7 @@ const Clock = ({ size = "lg" }: ClockProps) => {
     <div className="flex w-fit flex-row">
       <span>{hour}</span>
       <span
-        className={clsx("animate-blink text-center transition-all", {
+        className={clsx("animate-blink text-center transition", {
           "w-2": size === "sm",
           "w-20": size === "lg",
         })}
