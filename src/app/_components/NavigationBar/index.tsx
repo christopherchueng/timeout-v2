@@ -1,7 +1,6 @@
 import { getServerAuthSession } from "@/server/auth";
 import Link from "next/link";
 import { Signin, Signout } from "../Auth";
-import Clock from "../Clock";
 import { CreateButton } from "../UI";
 
 const Logo = async () => {
@@ -32,11 +31,8 @@ const Items = async () => {
 
 const NavigationBar = () => {
   return (
-    <nav className="absolute z-10 flex w-full items-center justify-center bg-white px-8 py-4 text-xs">
+    <nav className="absolute z-10 flex w-full items-center justify-center bg-white px-6 py-4 text-xs sm:px-8">
       <Logo />
-      <div className="text-lg font-bold sm:hidden">
-        <Clock size="sm" />
-      </div>
       <Items />
     </nav>
   );
