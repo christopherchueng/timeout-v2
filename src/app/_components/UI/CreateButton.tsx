@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Chevron, CreateAlarmlist, Plus } from ".";
+import Tooltip from "./Tooltip";
 
 const CreateAlarmIcon = () => (
   <svg
@@ -27,6 +28,7 @@ const CreateAlarmIcon = () => (
 
 const CreateButton = () => {
   const [isTabOpen, setIsTabOpen] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
   const tabRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -34,6 +36,7 @@ const CreateButton = () => {
 
     const closeTab = () => {
       setIsTabOpen(false);
+      setIsHovering(false);
     };
 
     document.addEventListener("click", closeTab);
@@ -44,31 +47,42 @@ const CreateButton = () => {
   }, [isTabOpen]);
 
   return (
-    <div className="rounded border border-slate-900 transition hover:border-slate-500 hover:bg-gray-100 active:bg-gray-200">
-      <button
-        onClick={() => setIsTabOpen((prev) => !prev)}
-        className="flex h-full items-center gap-0.5 px-1"
+    <div className="relative flex flex-col">
+      <div
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
+        className="h-full rounded border border-slate-900 transition hover:border-slate-500 hover:bg-gray-100 active:bg-gray-200"
       >
-        <Plus />
-        <Chevron />
-      </button>
-      {isTabOpen && (
-        <div ref={tabRef} className="relative">
-          <div className="absolute right-0 top-2 z-10 flex h-fit w-36 flex-col whitespace-nowrap rounded-lg border bg-white p-2 shadow-lg">
-            <div className="cursor-pointer rounded-md px-2 py-2 hover:bg-gray-200">
-              <div className="flex items-center gap-1.5">
-                <CreateAlarmlist />
-                <span>New alarmlist</span>
+        <button
+          onClick={() => setIsTabOpen((prev) => !prev)}
+          className="flex h-full items-center gap-0.5 px-1"
+        >
+          <Plus />
+          <Chevron />
+        </button>
+        {isTabOpen && (
+          <div ref={tabRef} className="animate-dilate relative transition-all">
+            <div className="absolute right-0 top-1.5 z-10 flex h-fit w-36 flex-col whitespace-nowrap rounded-md border bg-white p-2 shadow-lg">
+              <div className="cursor-pointer rounded-md px-2 py-2 hover:bg-gray-200">
+                <div className="flex items-center gap-1.5">
+                  <CreateAlarmlist />
+                  <span>New alarmlist</span>
+                </div>
               </div>
+              <Link
+                className="flex items-center gap-1.5 rounded-md px-2 py-2 hover:bg-gray-200"
+                href="/create"
+              >
+                <CreateAlarmIcon />
+                <span>New alarm</span>
+              </Link>
             </div>
-            <Link
-              className="flex items-center gap-1.5 rounded-md px-2 py-2 hover:bg-gray-200"
-              href="/create"
-            >
-              <CreateAlarmIcon />
-              <span>New alarm</span>
-            </Link>
           </div>
+        )}
+      </div>
+      {isHovering && !isTabOpen && (
+        <div className="absolute mx-auto inline-flex justify-center">
+          <Tooltip text="Create" />
         </div>
       )}
     </div>

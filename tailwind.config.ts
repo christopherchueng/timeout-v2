@@ -30,9 +30,14 @@ export default {
           "0%, 100%": { opacity: "0.2" },
           "50%": { opacity: "1" },
         },
+        dilate: {
+          "0%": { transform: "scale(0)" },
+          "100%": { transform: "scale(1)" },
+        },
       },
       animation: {
         blink: "blink 2s ease-in-out infinite",
+        dilate: "dilate .1s ease-in-out",
       },
     },
   },
