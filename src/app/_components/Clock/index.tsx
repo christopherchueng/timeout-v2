@@ -11,7 +11,7 @@ const Clock = ({ size = "lg" }: ClockProps) => {
   const { parts } = useTimeContext();
   const { hour, minute, meridiem } = parts;
 
-  if (!parts) return <Loading size={size} />;
+  if (!parts.hour) return <Loading size={size} />;
 
   return (
     <div className="flex w-fit flex-row">

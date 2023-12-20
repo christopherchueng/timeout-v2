@@ -10,7 +10,7 @@ import {
   TOGGLE_ALARMLIST_AND_ALARMS,
 } from "@/store/constants";
 import Alarm from "../Alarm";
-import Switch from "../UI/Switch";
+import { Switch } from "../UI";
 
 type AlarmlistProps = {
   alarmlist: RouterOutputs["alarmlist"]["getAll"][number];

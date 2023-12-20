@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import Switch from "../UI/Switch";
+import { Switch } from "../UI";
 import { api } from "@/trpc/react";
 import type { RouterOutputs } from "@/trpc/shared";
 

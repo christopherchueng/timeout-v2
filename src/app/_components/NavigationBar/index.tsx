@@ -2,6 +2,7 @@ import { getServerAuthSession } from "@/server/auth";
 import Link from "next/link";
 import { Signin, Signout } from "../Auth";
 import Clock from "../Clock";
+import { CreateButton } from "../UI";
 
 const Logo = async () => {
   const session = await getServerAuthSession();
@@ -17,11 +18,11 @@ const Items = async () => {
   const session = await getServerAuthSession();
 
   return (
-    <div className="flex w-full justify-end gap-2">
+    <div className="flex w-full justify-end gap-2.5 sm:gap-4">
       {session && (
         <>
-          <Link href="/create">Create</Link>
-          <span className="text-slate-500">&#124;</span>
+          <CreateButton />
+          <div className="h-5 self-center border-l border-slate-900 text-slate-500" />
         </>
       )}
       {session ? <Signout /> : <Signin />}
