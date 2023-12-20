@@ -11,6 +11,7 @@ import {
 } from "@/store/constants";
 import Alarm from "../Alarm";
 import { Switch } from "../UI";
+import AlarmlistIcon from "../UI/AlarmlistIcon";
 
 type AlarmlistProps = {
   alarmlist: RouterOutputs["alarmlist"]["getAll"][number];
@@ -91,14 +92,17 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
 
   return (
     <div className="px-4">
-      <div className="flex justify-between rounded-xl border border-transparent px-2 py-0.5 text-lg transition duration-200 hover:bg-gray-200">
-        <span
-          className={clsx("self-center font-bold transition", {
-            "text-gray-400": !isOn,
-          })}
-        >
-          {alarmlist.name}
-        </span>
+      <div className="flex items-center justify-between rounded-xl border border-transparent py-0.5 pr-2 text-sm transition duration-200 hover:bg-gray-200">
+        <div className="flex items-center gap-2">
+          <AlarmlistIcon isOn={isOn} />
+          <span
+            className={clsx("self-center transition", {
+              "text-gray-400": !isOn,
+            })}
+          >
+            {alarmlist.name}
+          </span>
+        </div>
         <Switch
           id={alarmlist.id}
           checked={isOn}
