@@ -7,10 +7,6 @@ type TimeContextType = {
   parts: Part;
 };
 
-type TimeProps = {
-  children: React.ReactNode;
-};
-
 export const TimeContext = createContext<TimeContextType | null>(null);
 
 export const useTimeContext = () => {
@@ -28,6 +24,10 @@ type Part = {
   minute: string | number;
   second: string | number;
   meridiem: string;
+};
+
+type TimeProps = {
+  children: React.ReactNode;
 };
 
 const TimeProvider = ({ children }: TimeProps) => {
