@@ -91,8 +91,8 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
   if (!alarms) return <div>No alarms</div>;
 
   return (
-    <div className="px-4">
-      <div className="flex items-center justify-between rounded-xl border border-transparent py-0.5 pr-2 text-sm transition duration-200 hover:bg-gray-200">
+    <ul className="px-4">
+      <li className="flex items-center justify-between rounded-lg border border-transparent px-2 py-2 text-sm transition duration-200 hover:bg-gray-200">
         <div className="flex items-center gap-2">
           <AlarmlistIcon isOn={isOn} />
           <span
@@ -110,7 +110,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
             mutate({ id: alarmlist.id, isOn: e.currentTarget.checked });
           }}
         />
-      </div>
+      </li>
       {alarms.map((alarm) => (
         <Alarm
           key={alarm.id}
@@ -118,7 +118,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
           handleAlarmlistToggle={handleAlarmlistToggle}
         />
       ))}
-    </div>
+    </ul>
   );
 };
 

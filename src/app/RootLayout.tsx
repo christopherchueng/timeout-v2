@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { TRPCReactProvider } from "@/trpc/react";
 import ProviderWrapper from "./_components/ProviderWrapper";
 import NavigationBar from "./_components/NavigationBar";
+import { NextUIProvider } from "@nextui-org/react";
 
 export default function RootLayout({
   children,
@@ -14,8 +15,10 @@ export default function RootLayout({
       <body className={`font-sans ${GeistSans.variable}`}>
         <ProviderWrapper>
           <TRPCReactProvider cookies={cookies().toString()}>
-            <NavigationBar />
-            {children}
+            <NextUIProvider>
+              <NavigationBar />
+              {children}
+            </NextUIProvider>
           </TRPCReactProvider>
         </ProviderWrapper>
       </body>

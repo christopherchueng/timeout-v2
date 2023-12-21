@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { Switch } from "../UI";
 import { api } from "@/trpc/react";
 import type { RouterOutputs } from "@/trpc/shared";
+import AlarmIcon from "../UI/AlarmIcon";
 
 type Alarm = RouterOutputs["alarm"]["getAllByAlarmlistId"][number];
 
@@ -73,19 +74,22 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
 
   return (
     <ul>
-      <li className="flex flex-row items-center justify-between rounded-xl border border-transparent px-2 py-0.5 transition duration-200 hover:bg-gray-200">
-        <div
-          className={clsx("flex flex-col transition", {
-            "text-gray-400": !alarm.isOn,
-          })}
-        >
-          <div className="flex items-end gap-0.5 font-bold">
-            <span className="leading-tight">
-              {alarm.hour}:{alarm.minutes}
-            </span>
-            <span className="text-2xs">{alarm.meridiem}</span>
+      <li className="flex flex-row items-center justify-between rounded-xl border border-transparent py-1 pl-4 pr-2 transition duration-200 hover:bg-gray-200">
+        <div className="flex items-center gap-2">
+          <AlarmIcon isOn={alarm.isOn} />
+          <div
+            className={clsx("flex flex-col transition", {
+              "text-gray-400": !alarm.isOn,
+            })}
+          >
+            <div className="flex items-end gap-0.5 text-sm font-semibold">
+              <span className="leading-tight">
+                {alarm.hour}:{alarm.minutes}
+              </span>
+              <span className="text-2xs">{alarm.meridiem}</span>
+            </div>
+            <div className="text-xs">{alarm.name}</div>
           </div>
-          <div className="text-xs">{alarm.name}</div>
         </div>
         <Switch
           id={alarm.id}

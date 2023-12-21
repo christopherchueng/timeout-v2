@@ -7,7 +7,7 @@ type AlarmlistIconProps = {
 const AlarmlistIcon = ({ isOn }: AlarmlistIconProps) => (
   <svg
     fill="currentColor"
-    className={clsx("h-3.5 w-3.5", {
+    className={clsx("h-3.5 w-3.5 transition", {
       "fill-slate-900": isOn,
       "fill-gray-400": !isOn,
     })}
