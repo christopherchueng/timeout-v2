@@ -65,18 +65,6 @@ export const MySwitch = extendVariants(SwitchComponent, {
     color: "default",
     disableAnimation: "false",
   },
-  compoundVariants: [
-    {
-      disableAnimation: false,
-      size: "xs",
-      class: {
-        thumb: [
-          "group-data-[pressed=true]:w-4",
-          "group-data-[selected]:group-data-[pressed]:ml-2",
-        ],
-      },
-    },
-  ],
 });
 
 const Switch = ({ checked, onChange }: SwitchProps) => {
@@ -88,6 +76,10 @@ const Switch = ({ checked, onChange }: SwitchProps) => {
         color="default"
         isSelected={checked}
         disableAnimation={false}
+        classNames={{
+          thumb:
+            "group-data-[pressed=true]:w-4 group-data-[selected]:group-data-[pressed]:ml-2",
+        }}
       />
     </div>
   );

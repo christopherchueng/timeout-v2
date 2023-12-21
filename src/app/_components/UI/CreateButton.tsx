@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Chevron, CreateAlarmlist, Plus } from ".";
+import { Chevron, CreateAlarmlistIcon, Plus } from ".";
 import Tooltip from "./Tooltip";
 
 const CreateAlarmIcon = () => (
@@ -58,7 +58,7 @@ const CreateButton = () => {
             <div className="absolute right-0 top-1.5 z-10 flex h-fit w-36 flex-col whitespace-nowrap rounded-md border bg-white p-2 shadow-lg">
               <div className="cursor-pointer rounded-md px-2 py-2 hover:bg-gray-200">
                 <div className="flex items-center gap-1.5">
-                  <CreateAlarmlist />
+                  <CreateAlarmlistIcon />
                   <span>New alarmlist</span>
                 </div>
               </div>

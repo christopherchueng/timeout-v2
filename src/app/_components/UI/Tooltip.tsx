@@ -11,7 +11,7 @@ const Tooltip = ({ text, children }: TooltipProps) => {
     `
       ${
         text && "animate-dilate"
-      } absolute -bottom-16 z-50 whitespace-nowrap rounded border px-2 py-1.5 text-xs transition-all delay-75 duration-300 bg-gray-100`,
+      } absolute -bottom-16 z-50 whitespace-nowrap rounded border px-2 py-1.5 text-xs transition-all delay-75 duration-300`,
   );
   return (
     <div className="group relative inline-block">
