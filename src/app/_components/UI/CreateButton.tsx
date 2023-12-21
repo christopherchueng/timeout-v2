@@ -22,6 +22,7 @@ const CreateAlarmIcon = () => (
 const CreateButton = () => {
   const [isTabOpen, setIsTabOpen] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const tabRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -58,7 +59,10 @@ const CreateButton = () => {
           <div ref={tabRef} className="relative animate-dilate transition-all">
             <div className="absolute right-0 top-1.5 z-10 flex h-fit w-36 flex-col whitespace-nowrap rounded-md border bg-white p-2 shadow-lg">
               <div className="cursor-pointer rounded-md px-2 py-2 hover:bg-gray-200">
-                <div className="flex items-center gap-1.5">
+                <div
+                  className="flex items-center gap-1.5"
+                  onClick={() => setIsModalOpen((prev) => !prev)}
+                >
                   <CreateAlarmlistIcon />
                   <span>New alarmlist</span>
                 </div>
@@ -78,6 +82,17 @@ const CreateButton = () => {
         <div className="absolute mx-auto inline-flex justify-center">
           <Tooltip text="Create" />
         </div>
+      )}
+      {isModalOpen && (
+        <Modal
+          isOpen={isModalOpen}
+          handleClose={() => setIsModalOpen((prev) => !prev)}
+        >
+          <div className="flex flex-col gap-4">
+            <Input placeholder="Enter Alarmlist name" />
+            <Button onClick={() => {}}>Create</Button>
+          </div>
+        </Modal>
       )}
     </div>
   );
