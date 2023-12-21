@@ -2,7 +2,7 @@ import { useLayoutEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 type PortalProps = {
-  children: React.ReactElement;
+  children: React.ReactNode;
   wrapperId: string;
 };
 
@@ -16,7 +16,7 @@ const createWrapperAndAppendToBody = (wrapperId: string) => {
   return wrapperElement;
 };
 
-const Portal = ({ children, wrapperId }: PortalProps) => {
+const Portal = ({ children, wrapperId = "portal-modal-ctn" }: PortalProps) => {
   const [wrapperElement, setWrapperElement] = useState<HTMLElement | null>(
     null,
   );
@@ -24,7 +24,7 @@ const Portal = ({ children, wrapperId }: PortalProps) => {
   useLayoutEffect(() => {
     let element = document.getElementById(wrapperId);
     let systemCreated = false;
-    // if element is not found with wrapperId or wrapperId is not provided,
+    // If element is not found with wrapperId or wrapperId is not provided,
     // create and append to body
     if (!element) {
       systemCreated = true;
@@ -33,14 +33,14 @@ const Portal = ({ children, wrapperId }: PortalProps) => {
     setWrapperElement(element);
 
     return () => {
-      // delete the programatically created element
+      // Delete the programatically created element
       if (systemCreated && element?.parentNode) {
         element.parentNode.removeChild(element);
       }
     };
   }, [wrapperId]);
 
-  // wrapperElement state will be null on the very first render.
+  // WrapperElement state will be null on the very first render.
   if (wrapperElement === null) return null;
 
   return createPortal(children, wrapperElement);
