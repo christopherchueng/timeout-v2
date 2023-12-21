@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { Switch as SwitchComponent, extendVariants } from "@nextui-org/react";
+import { Switch as SwitchComponent } from "@nextui-org/switch";
+import { extendVariants } from "@nextui-org/system";
 
 type SwitchProps = {
   id: string;
