@@ -3,17 +3,24 @@
 import { api } from "@/trpc/react";
 
 import Alarmlist from "../Alarmlist";
+import Loading from "./loading";
 
 const Sidebar = () => {
-  const { data: alarmlists } = api.alarmlist.getAll.useQuery();
+  const { data: alarmlists, isLoading } = api.alarmlist.getAll.useQuery();
 
-  if (!alarmlists) return <p>No alarmlists!</p>;
+  if (isLoading) return <Loading />;
 
   return (
     <aside className="h-full w-full pt-16 sm:w-72 sm:flex-none">
-      {alarmlists.map((alarmlist) => (
-        <Alarmlist key={alarmlist.id} alarmlist={alarmlist} />
-      ))}
+      {!alarmlists && (
+        <p className="flex h-full justify-center pt-10 text-xs italic text-gray-400">
+          No Alarmlists!
+        </p>
+      )}
+      {!!alarmlists &&
+        alarmlists.map((alarmlist) => (
+          <Alarmlist key={alarmlist.id} alarmlist={alarmlist} />
+        ))}
     </aside>
   );
 };
