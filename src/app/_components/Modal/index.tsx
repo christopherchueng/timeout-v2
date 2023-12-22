@@ -33,7 +33,10 @@ const Modal = ({ children, isOpen, handleClose }: ModalProps) => {
     <Portal wrapperId="portal-modal-ctn">
       <div className="fixed inset-0 z-50 flex h-full w-full flex-col items-center justify-center overflow-hidden bg-transparent p-10 backdrop-blur-sm transition-all">
         <div className="relative flex h-56 w-72 items-center justify-center rounded border bg-white shadow-lg">
-          <button onClick={handleClose} className="absolute right-5 top-0 py-3">
+          <button
+            onClick={handleClose}
+            className="absolute right-5 top-0 my-3 outline-none"
+          >
             &#x2715;
           </button>
           {children}

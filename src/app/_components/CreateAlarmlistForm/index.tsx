@@ -1,10 +1,10 @@
 import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { Button, Input } from "../UI";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { alarmlistSchema } from "@/utils";
 import { api } from "@/trpc/react";
-import { z } from "zod";
+import type { z } from "zod";
 
 export type AlarmlistFormValues = z.infer<typeof alarmlistSchema>;
 
@@ -19,7 +19,7 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
     setError,
     watch,
     reset,
-    formState: { errors, isSubmitted },
+    formState: { errors },
   } = useForm<AlarmlistFormValues>({ resolver: zodResolver(alarmlistSchema) });
 
   const watchName = watch("name");
@@ -34,16 +34,18 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
       void ctx.alarmlist.getAll.invalidate();
     },
     onError: (error) => {
-      setError("name", { type: "custom", message: error.message });
+      setError("name", { type: "server", message: error.message });
     },
   });
 
-  const handleCreateAlarmlist: SubmitHandler<AlarmlistFormValues> = (data) => {
+  const handleCreateAlarmlist: SubmitHandler<AlarmlistFormValues> = async (
+    data,
+  ) => {
     createAlarmlist(data);
 
-    if (isSubmitted && !isError && !errors.name) {
-      setIsModalOpen(false);
+    if (!isError && !errors.name) {
       reset();
+      setIsModalOpen(false);
     }
   };
 
@@ -54,8 +56,7 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
     >
       <div className="w-min">
         <Input
-          register={register}
-          name="name"
+          {...register("name")}
           label="name"
           type="text"
           value={watchName}
