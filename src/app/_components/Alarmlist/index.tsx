@@ -12,6 +12,7 @@ import {
 import Alarm from "../Alarm";
 import { Switch } from "../UI";
 import AlarmlistIcon from "../UI/AlarmlistIcon";
+import Ellipsis from "../UI/Ellipsis";
 
 type AlarmlistProps = {
   alarmlist: RouterOutputs["alarmlist"]["getAll"][number];
@@ -103,13 +104,16 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
             {alarmlist.name}
           </span>
         </div>
-        <Switch
-          id={alarmlist.id}
-          checked={isOn}
-          onChange={(e) => {
-            mutate({ id: alarmlist.id, isOn: e.currentTarget.checked });
-          }}
-        />
+        <div className="flex gap-4">
+          <Ellipsis />
+          <Switch
+            id={alarmlist.id}
+            checked={isOn}
+            onChange={(e) => {
+              mutate({ id: alarmlist.id, isOn: e.currentTarget.checked });
+            }}
+          />
+        </div>
       </li>
       {alarms.map((alarm) => (
         <Alarm
