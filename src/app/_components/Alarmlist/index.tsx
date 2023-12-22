@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useReducer } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import clsx from "clsx";
 import type { RouterOutputs } from "@/trpc/shared";
 import { api } from "@/trpc/react";
@@ -13,18 +13,34 @@ import Alarm from "../Alarm";
 import { Switch } from "../UI";
 import AlarmlistIcon from "../UI/AlarmlistIcon";
 import Ellipsis from "../UI/Ellipsis";
+import Settings from "./Settings";
 
 type AlarmlistProps = {
   alarmlist: RouterOutputs["alarmlist"]["getAll"][number];
 };
 
 const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
+  const [isEllipsisOpen, setIsEllipsisOpen] = useState(false);
   const initialState = {
     isOn: alarmlist.isOn,
     alarms: alarmlist.alarms,
   };
   const [state, dispatch] = useReducer(alarmlistReducer, initialState);
   const { isOn, alarms } = state;
+
+  useEffect(() => {
+    if (!isEllipsisOpen) return;
+
+    const closeTab = () => {
+      setIsEllipsisOpen(false);
+    };
+
+    document.addEventListener("click", closeTab);
+
+    return () => {
+      document.removeEventListener("click", closeTab);
+    };
+  }, [isEllipsisOpen]);
 
   const ctx = api.useUtils();
 
@@ -105,7 +121,13 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
           </span>
         </div>
         <div className="flex gap-4">
-          <Ellipsis />
+          <div
+            className="relative"
+            onClick={() => setIsEllipsisOpen((prev) => !prev)}
+          >
+            <Ellipsis />
+            {isEllipsisOpen && <Settings />}
+          </div>
           <Switch
             id={alarmlist.id}
             checked={isOn}

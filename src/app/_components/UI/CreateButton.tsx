@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Chevron, CreateAlarmlistIcon, Plus } from ".";
 import Tooltip from "./Tooltip";
@@ -24,7 +24,6 @@ const CreateButton = () => {
   const [isTabOpen, setIsTabOpen] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const tabRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isTabOpen) return;
@@ -57,11 +56,11 @@ const CreateButton = () => {
           <Chevron />
         </div>
         {isTabOpen && (
-          <div ref={tabRef} className="relative animate-dilate transition-all">
-            <div className="absolute right-0 top-1.5 z-10 flex h-fit w-36 flex-col whitespace-nowrap rounded-md border bg-white p-2 shadow-lg">
+          <div className="relative animate-dilate transition-all">
+            <div className="absolute left-0 top-1.5 z-50 flex h-fit w-36 flex-col whitespace-nowrap rounded-md border bg-white p-2 shadow-lg">
               <div
                 onClick={() => setIsModalOpen((prev) => !prev)}
-                className="cursor-pointer rounded-md px-2 py-2 hover:bg-gray-200"
+                className="cursor-pointer rounded-md px-2 py-2 hover:z-50 hover:bg-gray-200"
               >
                 <div className="flex items-center gap-1.5">
                   <CreateAlarmlistIcon />

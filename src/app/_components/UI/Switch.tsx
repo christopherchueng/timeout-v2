@@ -79,7 +79,7 @@ const Switch = ({ checked, onChange }: SwitchProps) => {
         disableAnimation={false}
         classNames={{
           thumb:
-            "group-data-[pressed=true]:w-4 group-data-[selected]:group-data-[pressed]:ml-2",
+            "z-0 group-data-[pressed=true]:w-4 group-data-[selected]:group-data-[pressed]:ml-2",
         }}
       />
     </div>

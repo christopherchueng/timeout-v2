@@ -5,7 +5,7 @@ const Ellipsis = () => (
     viewBox="0 0 24 24"
     stroke-width="1.5"
     stroke="currentColor"
-    className="h-6 w-6 cursor-pointer rounded border border-transparent p-1 transition hover:bg-gray-300"
+    className="h-6 w-6 cursor-pointer rounded border border-transparent p-1 transition hover:bg-gray-300 active:bg-gray-400"
   >
     <path
       stroke-linecap="round"
