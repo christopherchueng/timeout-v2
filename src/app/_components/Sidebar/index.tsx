@@ -1,14 +1,14 @@
-import { getServerAuthSession } from "@/server/auth";
-import { api } from "@/trpc/server";
+"use client";
+
+import { api } from "@/trpc/react";
 
 import Alarmlist from "../Alarmlist";
 
-const Sidebar = async () => {
-  const session = await getServerAuthSession();
+const Sidebar = () => {
+  const { data: alarmlists } = api.alarmlist.getAll.useQuery();
 
-  if (!session) return null;
+  if (!alarmlists) return <p>No alarmlists!</p>;
 
-  const alarmlists = await api.alarmlist.getAll.query();
   return (
     <aside className="h-full w-full pt-16 sm:w-72 sm:flex-none">
       {alarmlists.map((alarmlist) => (

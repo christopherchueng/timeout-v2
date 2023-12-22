@@ -17,10 +17,9 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
     register,
     handleSubmit,
     setError,
-    clearErrors,
     watch,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isSubmitSuccessful },
   } = useForm<AlarmlistFormValues>({ resolver: zodResolver(alarmlistSchema) });
 
   const watchName = watch("name");
@@ -28,6 +27,10 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
   const ctx = api.useUtils();
   const { mutate: createAlarmlist } = api.alarmlist.create.useMutation({
     onSuccess: () => {
+      if (isSubmitSuccessful && !errors.name) {
+        setIsModalOpen(false);
+        reset();
+      }
       void ctx.alarmlist.getAll.invalidate();
     },
     onError: (error) => {
@@ -39,12 +42,8 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
     data,
   ) => {
     createAlarmlist(data);
-
-    if (!errors.name) {
-      setIsModalOpen(false);
-      reset();
-    }
   };
+
   return (
     <form
       className="flex flex-col gap-4"
@@ -65,7 +64,9 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
           </p>
         )}
       </div>
-      <Button disabled={isSubmitting}>Create</Button>
+      <Button type="submit" disabled={isSubmitting}>
+        Create
+      </Button>
     </form>
   );
 };
