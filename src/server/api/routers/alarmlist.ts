@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { getServerAuthSession } from "@/server/auth";
 import { TRPCError } from "@trpc/server";
+import { alarmlistSchema } from "@/utils";
 
 export const alarmlistRouter = createTRPCRouter({
   getAll: protectedProcedure.query(async ({ ctx }) => {
@@ -65,16 +66,25 @@ export const alarmlistRouter = createTRPCRouter({
       return alarmlist;
     }),
   create: protectedProcedure
-    .input(z.object({ name: z.string().min(1) }))
+    .input(alarmlistSchema)
     .mutation(async ({ ctx, input }) => {
       const { name } = input;
-      return ctx.db.alarmlist.create({
-        data: {
-          name,
-          user: { connect: { id: ctx.session.user.id } },
-          isOn: true,
-        },
-      });
+
+      try {
+        const alarmlist = await ctx.db.alarmlist.create({
+          data: {
+            name,
+            user: { connect: { id: ctx.session.user.id } },
+            isOn: true,
+          },
+        });
+        return alarmlist;
+      } catch {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "That name already exists! Please choose another name.",
+        });
+      }
     }),
   update: protectedProcedure
     .input(

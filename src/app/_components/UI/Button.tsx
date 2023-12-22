@@ -1,11 +1,11 @@
 import clsx from "clsx";
-import React from "react";
+import React, { ButtonHTMLAttributes } from "react";
 
-type ButtonProps = {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   width?: string;
-  onClick: () => void;
+  onClick?: () => void;
   children: React.ReactNode;
-};
+}
 
 const Button = ({ width, children, onClick }: ButtonProps) => {
   const buttonClassNames = clsx();
