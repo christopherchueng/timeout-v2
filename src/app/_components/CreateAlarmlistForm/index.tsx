@@ -17,6 +17,7 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
     register,
     handleSubmit,
     setError,
+    clearErrors,
     watch,
     reset,
     formState: { errors, isSubmitting },
@@ -29,7 +30,7 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
     onSuccess: () => {
       void ctx.alarmlist.getAll.invalidate();
     },
-    onError: (error, name, context) => {
+    onError: (error) => {
       setError("name", { type: "custom", message: error.message });
     },
   });
@@ -38,23 +39,32 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
     data,
   ) => {
     createAlarmlist(data);
-    reset();
-    setIsModalOpen(false);
+
+    if (!errors.name) {
+      setIsModalOpen(false);
+      reset();
+    }
   };
   return (
     <form
       className="flex flex-col gap-4"
       onSubmit={handleSubmit(handleCreateAlarmlist)}
     >
-      <Input
-        register={register}
-        name="name"
-        label="name"
-        type="text"
-        value={watchName}
-        placeholder="Enter Alarmlist name"
-      />
-      {errors && <p>{errors.name?.message}</p>}
+      <div className="w-min">
+        <Input
+          register={register}
+          name="name"
+          label="name"
+          type="text"
+          value={watchName}
+          placeholder="Enter Alarmlist name"
+        />
+        {errors && (
+          <p className="whitespace-break-spaces pt-2 text-2xs text-red-600">
+            {errors.name?.message}
+          </p>
+        )}
+      </div>
       <Button disabled={isSubmitting}>Create</Button>
     </form>
   );

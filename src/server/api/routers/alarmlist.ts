@@ -69,22 +69,30 @@ export const alarmlistRouter = createTRPCRouter({
     .input(alarmlistSchema)
     .mutation(async ({ ctx, input }) => {
       const { name } = input;
+      const session = await getServerAuthSession();
 
-      try {
-        const alarmlist = await ctx.db.alarmlist.create({
-          data: {
-            name,
-            user: { connect: { id: ctx.session.user.id } },
-            isOn: true,
-          },
-        });
-        return alarmlist;
-      } catch {
+      const existingAlarmlist = await ctx.db.alarmlist.findFirst({
+        where: {
+          name,
+          userId: session?.user.id,
+        },
+      });
+
+      if (existingAlarmlist) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "That name already exists! Please choose another name.",
         });
       }
+
+      const alarmlist = await ctx.db.alarmlist.create({
+        data: {
+          name,
+          user: { connect: { id: ctx.session.user.id } },
+          isOn: true,
+        },
+      });
+      return alarmlist;
     }),
   update: protectedProcedure
     .input(
