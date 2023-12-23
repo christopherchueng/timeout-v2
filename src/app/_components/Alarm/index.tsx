@@ -5,6 +5,7 @@ import { Switch } from "../UI";
 import { api } from "@/trpc/react";
 import type { RouterOutputs } from "@/trpc/shared";
 import AlarmIcon from "../UI/AlarmIcon";
+import Ellipsis from "../UI/Ellipsis";
 
 type Alarm = RouterOutputs["alarm"]["getAllByAlarmlistId"][number];
 
@@ -74,8 +75,8 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
 
   return (
     <ul>
-      <li className="flex flex-row items-center justify-between rounded-xl border border-transparent py-1 pl-4 pr-2 transition duration-200 hover:bg-gray-200">
-        <div className="flex items-center gap-2">
+      <li className="group relative flex h-10 flex-row items-center justify-between rounded-lg border border-transparent py-1 pl-4 pr-2 transition duration-200 hover:bg-gray-200">
+        <div className="absolute flex w-3/4 items-center gap-2 group-hover:w-[73%]">
           <AlarmIcon isOn={alarm.isOn} />
           <div
             className={clsx("flex flex-col transition", {
@@ -91,13 +92,18 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
             <div className="text-xs">{alarm.name}</div>
           </div>
         </div>
-        <Switch
-          id={alarm.id}
-          checked={alarm.isOn}
-          onChange={(e) => {
-            mutate({ id: alarm.id, isOn: e.currentTarget.checked });
-          }}
-        />
+        <div className="absolute right-1 inline-flex w-auto gap-1.5">
+          <div className="relative">
+            <Ellipsis />
+          </div>
+          <Switch
+            id={alarm.id}
+            checked={alarm.isOn}
+            onChange={(e) => {
+              mutate({ id: alarm.id, isOn: e.currentTarget.checked });
+            }}
+          />
+        </div>
       </li>
     </ul>
   );
