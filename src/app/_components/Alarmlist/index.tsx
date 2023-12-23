@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useReducer, useState } from "react";
 import clsx from "clsx";
-import type { RouterOutputs } from "@/trpc/shared";
 import { api } from "@/trpc/react";
 import { alarmlistReducer } from "@/store/AlarmlistReducer";
 import {
@@ -14,13 +13,10 @@ import { Switch } from "../UI";
 import AlarmlistIcon from "../UI/AlarmlistIcon";
 import Ellipsis from "../UI/Ellipsis";
 import Settings from "./Settings";
+import type { Alarmlist } from "@/types";
 
-type AlarmlistProps = {
-  alarmlist: RouterOutputs["alarmlist"]["getAll"][number];
-};
-
-const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
-  const [isEllipsisOpen, setIsEllipsisOpen] = useState(false);
+const Alarmlist = ({ alarmlist }: Alarmlist) => {
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const initialState = {
     isOn: alarmlist.isOn,
     alarms: alarmlist.alarms,
@@ -28,19 +24,19 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
   const [state, dispatch] = useReducer(alarmlistReducer, initialState);
   const { isOn, alarms } = state;
 
-  useEffect(() => {
-    if (!isEllipsisOpen) return;
+  // useEffect(() => {
+  //   if (!isSettingsOpen) return;
 
-    const closeTab = () => {
-      setIsEllipsisOpen(false);
-    };
+  //   const closeTab = () => {
+  //     setIsSettingsOpen(false);
+  //   };
 
-    document.addEventListener("click", closeTab);
+  //   document.addEventListener("click", closeTab);
 
-    return () => {
-      document.removeEventListener("click", closeTab);
-    };
-  }, [isEllipsisOpen]);
+  //   return () => {
+  //     document.removeEventListener("click", closeTab);
+  //   };
+  // }, [isSettingsOpen]);
 
   const ctx = api.useUtils();
 
@@ -130,12 +126,14 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
           </span>
         </div>
         <div className="absolute right-1 inline-flex w-auto gap-1.5">
-          <div
-            className="relative"
-            onClick={() => setIsEllipsisOpen((prev) => !prev)}
-          >
+          <div className="relative" onClick={() => setIsSettingsOpen(true)}>
             <Ellipsis />
-            {isEllipsisOpen && <Settings />}
+            {isSettingsOpen && (
+              <Settings
+                alarmlist={alarmlist}
+                setIsSettingsOpen={setIsSettingsOpen}
+              />
+            )}
           </div>
           <Switch
             id={alarmlist.id}
