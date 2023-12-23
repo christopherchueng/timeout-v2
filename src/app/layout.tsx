@@ -8,6 +8,7 @@ import { TRPCReactProvider } from "@/trpc/react";
 import ProviderWrapper from "./_components/ProviderWrapper";
 import NavigationBar from "./_components/NavigationBar";
 import TimeProvider from "@/context/Time";
+import { Toaster } from "react-hot-toast";
 
 export const metadata = {
   title: "Timeout",
@@ -28,6 +29,7 @@ export default function RootLayout({
             <TimeProvider>
               <NavigationBar />
               {children}
+              <Toaster position="bottom-left" />
             </TimeProvider>
           </TRPCReactProvider>
         </ProviderWrapper>

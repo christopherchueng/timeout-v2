@@ -4,7 +4,6 @@ import { TRPCReactProvider } from "@/trpc/react";
 import ProviderWrapper from "./_components/ProviderWrapper";
 import NavigationBar from "./_components/NavigationBar";
 import { NextUIProvider } from "@nextui-org/system";
-import { Toaster } from "react-hot-toast";
 
 export default function RootLayout({
   children,
@@ -19,7 +18,6 @@ export default function RootLayout({
             <NextUIProvider>
               <NavigationBar />
               {children}
-              <Toaster position="bottom-left" />
             </NextUIProvider>
           </TRPCReactProvider>
         </ProviderWrapper>

@@ -62,7 +62,8 @@ const Settings = ({
         return { previousAlarmlists };
       },
       onSuccess: () => {
-        void ctx.alarmlist.getAll.invalidate();
+        toast.success(`'${alarmlist.name}' has been deleted!`);
+        void ctx.alarmlist.getAllWithAlarms.invalidate();
       },
       // If the mutation fails,
       // use the context returned from onMutate to roll back
