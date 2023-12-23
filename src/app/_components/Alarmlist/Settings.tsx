@@ -1,6 +1,5 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
 import type { Alarmlist } from "@prisma/client";
 import { api } from "@/trpc/react";
 import DeleteAlarmlistIcon from "../UI/DeleteAlarmlistIcon";
@@ -10,14 +9,12 @@ import toast from "react-hot-toast";
 
 type SettingsProps = {
   alarmlist: Alarmlist;
-  isSettingsOpen: boolean;
   isDeleteAlarmlistModalOpen: boolean;
   handleDeleteAlarmlistModal: () => void;
 };
 
 const Settings = ({
   alarmlist,
-  isSettingsOpen,
   handleDeleteAlarmlistModal,
   isDeleteAlarmlistModalOpen,
 }: SettingsProps) => {
@@ -70,7 +67,7 @@ const Settings = ({
       </div>
       {isDeleteAlarmlistModalOpen && (
         <Modal
-          isOpen={isDeleteAlarmlistModalOpen && isSettingsOpen}
+          isOpen={isDeleteAlarmlistModalOpen}
           handleClose={handleDeleteAlarmlistModal}
         >
           <div className="flex flex-col items-center gap-2.5">

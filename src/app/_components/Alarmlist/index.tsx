@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useReducer, useState } from "react";
 import clsx from "clsx";
 import { api } from "@/trpc/react";
 import { alarmlistReducer } from "@/store/AlarmlistReducer";
@@ -128,7 +128,6 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
             {isSettingsOpen && (
               <Settings
                 alarmlist={alarmlist}
-                isSettingsOpen={isSettingsOpen}
                 isDeleteAlarmlistModalOpen={isDeleteAlarmlistModalOpen}
                 handleDeleteAlarmlistModal={handleDeleteAlarmlistModal}
               />
