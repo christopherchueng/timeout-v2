@@ -1,21 +1,39 @@
 "use client";
 
+import { useCallback, useEffect, useState } from "react";
 import { Alarmlist } from "@prisma/client";
-
+import { api } from "@/trpc/react";
 import DeleteAlarmlistIcon from "../UI/DeleteAlarmlistIcon";
-import { useCallback, useState } from "react";
 import Modal from "../Modal";
 import { Button } from "../UI";
-import { api } from "@/trpc/react";
 
 type SettingsProps = {
   alarmlist: Alarmlist;
+  isSettingsOpen: boolean;
   setIsSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Settings = ({ alarmlist, setIsSettingsOpen }: SettingsProps) => {
+const Settings = ({
+  alarmlist,
+  isSettingsOpen,
+  setIsSettingsOpen,
+}: SettingsProps) => {
   const [isDeleteAlarmlistModalOpen, setIsDeleteAlarmlistModalOpen] =
     useState(false);
+
+  useEffect(() => {
+    if (!isSettingsOpen) return;
+
+    const closeTab = () => {
+      setIsSettingsOpen(false);
+    };
+
+    document.addEventListener("click", closeTab);
+
+    return () => {
+      document.removeEventListener("click", closeTab);
+    };
+  }, [isSettingsOpen, isDeleteAlarmlistModalOpen]);
 
   const handleDeleteAlarmlistModal = useCallback(() => {
     setIsSettingsOpen(false);

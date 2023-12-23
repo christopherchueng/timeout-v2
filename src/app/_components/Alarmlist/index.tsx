@@ -24,20 +24,6 @@ const Alarmlist = ({ alarmlist }: Alarmlist) => {
   const [state, dispatch] = useReducer(alarmlistReducer, initialState);
   const { isOn, alarms } = state;
 
-  // useEffect(() => {
-  //   if (!isSettingsOpen) return;
-
-  //   const closeTab = () => {
-  //     setIsSettingsOpen(false);
-  //   };
-
-  //   document.addEventListener("click", closeTab);
-
-  //   return () => {
-  //     document.removeEventListener("click", closeTab);
-  //   };
-  // }, [isSettingsOpen]);
-
   const ctx = api.useUtils();
 
   const { mutate } = api.alarmlist.toggle.useMutation({
@@ -130,6 +116,7 @@ const Alarmlist = ({ alarmlist }: Alarmlist) => {
             <Ellipsis />
             {isSettingsOpen && (
               <Settings
+                isSettingsOpen={isSettingsOpen}
                 alarmlist={alarmlist}
                 setIsSettingsOpen={setIsSettingsOpen}
               />
