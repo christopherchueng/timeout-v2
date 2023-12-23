@@ -1,7 +1,8 @@
-const DeleteAlarmlistIcon = () => (
+const DeleteAlarmlistIcon = (props: { size?: number }) => (
   <svg
     fill="#000000"
-    className="h-3.5 w-3.5"
+    width={props.size ?? 16}
+    height={props.size ?? 16}
     viewBox="0 0 32 32"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"

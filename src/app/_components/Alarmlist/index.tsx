@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import clsx from "clsx";
 import { api } from "@/trpc/react";
 import { alarmlistReducer } from "@/store/AlarmlistReducer";
@@ -23,6 +23,9 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
   };
   const [state, dispatch] = useReducer(alarmlistReducer, initialState);
   const { isOn, alarms } = state;
+
+  const [isDeleteAlarmlistModalOpen, setIsDeleteAlarmlistModalOpen] =
+    useState(false);
 
   const ctx = api.useUtils();
 
@@ -90,6 +93,11 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
     [],
   );
 
+  const handleDeleteAlarmlistModal = useCallback(() => {
+    setIsSettingsOpen((prev) => !prev);
+    setIsDeleteAlarmlistModalOpen((prev) => !prev);
+  }, []);
+
   if (!alarms) return <div>No alarms</div>;
 
   return (
@@ -119,9 +127,10 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
             <Ellipsis />
             {isSettingsOpen && (
               <Settings
-                isSettingsOpen={isSettingsOpen}
                 alarmlist={alarmlist}
-                setIsSettingsOpen={setIsSettingsOpen}
+                isSettingsOpen={isSettingsOpen}
+                isDeleteAlarmlistModalOpen={isDeleteAlarmlistModalOpen}
+                handleDeleteAlarmlistModal={handleDeleteAlarmlistModal}
               />
             )}
           </div>

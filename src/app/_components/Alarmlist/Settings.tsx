@@ -11,36 +11,16 @@ import toast from "react-hot-toast";
 type SettingsProps = {
   alarmlist: Alarmlist;
   isSettingsOpen: boolean;
-  setIsSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isDeleteAlarmlistModalOpen: boolean;
+  handleDeleteAlarmlistModal: () => void;
 };
 
 const Settings = ({
   alarmlist,
   isSettingsOpen,
-  setIsSettingsOpen,
+  handleDeleteAlarmlistModal,
+  isDeleteAlarmlistModalOpen,
 }: SettingsProps) => {
-  const [isDeleteAlarmlistModalOpen, setIsDeleteAlarmlistModalOpen] =
-    useState(false);
-
-  useEffect(() => {
-    if (!isSettingsOpen) return;
-
-    const closeTab = () => {
-      setIsSettingsOpen(false);
-    };
-
-    document.addEventListener("click", closeTab);
-
-    return () => {
-      document.removeEventListener("click", closeTab);
-    };
-  }, [isSettingsOpen, isDeleteAlarmlistModalOpen]);
-
-  const handleDeleteAlarmlistModal = useCallback(() => {
-    setIsSettingsOpen(false);
-    setIsDeleteAlarmlistModalOpen((prev) => !prev);
-  }, []);
-
   const ctx = api.useUtils();
 
   const { mutate: deleteAlarmlist, isLoading } =
@@ -90,17 +70,21 @@ const Settings = ({
       </div>
       {isDeleteAlarmlistModalOpen && (
         <Modal
-          isOpen={isDeleteAlarmlistModalOpen}
+          isOpen={isDeleteAlarmlistModalOpen && isSettingsOpen}
           handleClose={handleDeleteAlarmlistModal}
         >
-          <div className="flex flex-col gap-4">
-            <div className="text-xs leading-6">
-              <p>{`Are you sure you want to delete '${alarmlist.name}'?`}</p>
+          <div className="flex flex-col items-center gap-2.5">
+            <DeleteAlarmlistIcon size={40} />
+            <div className="text-center text-xs leading-6">
+              <p className="font-bold">{`Delete '${alarmlist.name}'?`}</p>
               <p className="italic text-gray-400">{`All alarms under '${alarmlist.name}' will be deleted.`}</p>
             </div>
             <Button
               disabled={isLoading}
-              onClick={() => deleteAlarmlist({ id: alarmlist.id })}
+              onClick={() => {
+                handleDeleteAlarmlistModal();
+                deleteAlarmlist({ id: alarmlist.id });
+              }}
             >
               Delete
             </Button>
