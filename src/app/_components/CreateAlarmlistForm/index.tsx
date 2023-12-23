@@ -3,7 +3,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { api } from "@/trpc/react";
 import type { z } from "zod";
-import { RouterOutputs } from "@/trpc/shared";
+import type { RouterOutputs } from "@/trpc/shared";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { alarmlistSchema } from "@/utils";
 import { Button, Input } from "../UI";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Alarmlist } from "@prisma/client";
+import type { Alarmlist } from "@prisma/client";
 import { api } from "@/trpc/react";
 import DeleteAlarmlistIcon from "../UI/DeleteAlarmlistIcon";
 import Modal from "../Modal";
