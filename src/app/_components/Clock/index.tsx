@@ -14,7 +14,7 @@ const Clock = ({ size = "lg" }: ClockProps) => {
   if (!parts.hour) return <Loading size={size} />;
 
   return (
-    <div className="flex w-fit flex-row">
+    <div className="flex w-full flex-row justify-center">
       <span>{hour}</span>
       <span
         className={clsx("animate-blink text-center transition", {

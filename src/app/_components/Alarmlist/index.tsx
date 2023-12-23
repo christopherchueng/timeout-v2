@@ -109,18 +109,23 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
 
   return (
     <ul className="px-4">
-      <li className="flex items-center justify-between rounded-lg border border-transparent px-2 py-2 text-sm transition duration-200 hover:bg-gray-200">
-        <div className="flex items-center gap-2">
-          <AlarmlistIcon isOn={isOn} />
+      <li className="group relative flex h-10 items-center justify-between rounded-lg border border-transparent px-2 py-2 text-sm transition duration-200 hover:bg-gray-200">
+        <div className="absolute flex w-3/4 items-center gap-2 group-hover:w-[73%]">
+          <div>
+            <AlarmlistIcon isOn={isOn} />
+          </div>
           <span
-            className={clsx("self-center transition", {
-              "text-gray-400": !isOn,
-            })}
+            className={clsx(
+              "line-clamp-1 inline-block self-center truncate transition",
+              {
+                "text-gray-400": !isOn,
+              },
+            )}
           >
             {alarmlist.name}
           </span>
         </div>
-        <div className="flex gap-4">
+        <div className="absolute right-0 inline-flex w-auto gap-2">
           <div
             className="relative"
             onClick={() => setIsEllipsisOpen((prev) => !prev)}
