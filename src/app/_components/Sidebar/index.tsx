@@ -6,7 +6,8 @@ import Alarmlist from "../Alarmlist";
 import Loading from "./loading";
 
 const Sidebar = () => {
-  const { data: alarmlists, isLoading } = api.alarmlist.getAll.useQuery();
+  const { data: alarmlists, isLoading } =
+    api.alarmlist.getAllWithAlarms.useQuery();
 
   if (isLoading) return <Loading />;
 

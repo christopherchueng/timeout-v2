@@ -1,5 +1,5 @@
 import { RouterOutputs } from "@/trpc/shared";
 
-export type Alarmlist = {
-  alarmlist: RouterOutputs["alarmlist"]["getAll"][number];
+export type AlarmlistWithAlarms = {
+  alarmlist: RouterOutputs["alarmlist"]["getAllWithAlarms"][number];
 };

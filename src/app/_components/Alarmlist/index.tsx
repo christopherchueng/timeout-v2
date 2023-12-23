@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useReducer, useState } from "react";
 import clsx from "clsx";
 import { api } from "@/trpc/react";
 import { alarmlistReducer } from "@/store/AlarmlistReducer";
@@ -13,9 +13,9 @@ import { Switch } from "../UI";
 import AlarmlistIcon from "../UI/AlarmlistIcon";
 import Ellipsis from "../UI/Ellipsis";
 import Settings from "./Settings";
-import type { Alarmlist } from "@/types";
+import type { AlarmlistWithAlarms } from "@/types";
 
-const Alarmlist = ({ alarmlist }: Alarmlist) => {
+const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const initialState = {
     isOn: alarmlist.isOn,
@@ -29,13 +29,13 @@ const Alarmlist = ({ alarmlist }: Alarmlist) => {
   const { mutate } = api.alarmlist.toggle.useMutation({
     onMutate: async ({ id, isOn }) => {
       // Cancel any outgoing refetches so they don't overwrite our optimistic update
-      await ctx.alarmlist.getAll.cancel();
+      await ctx.alarmlist.getAllWithAlarms.cancel();
 
       // Snapshot the previous value
-      const previousAlarmlists = ctx.alarmlist.getAll.getData();
+      const previousAlarmlists = ctx.alarmlist.getAllWithAlarms.getData();
 
       // Optimistically update to the new value
-      ctx.alarmlist.getAll.setData(undefined, (prev) => {
+      ctx.alarmlist.getAllWithAlarms.setData(undefined, (prev) => {
         if (!prev) return previousAlarmlists;
 
         const newAlarmlists = prev.map((alarmlist) => {
@@ -68,11 +68,14 @@ const Alarmlist = ({ alarmlist }: Alarmlist) => {
     // use the context returned from onMutate to roll back
     onError: (_err, _isOn, context) => {
       if (!context) return;
-      ctx.alarmlist.getAll.setData(undefined, () => context.previousAlarmlists);
+      ctx.alarmlist.getAllWithAlarms.setData(
+        undefined,
+        () => context.previousAlarmlists,
+      );
     },
     // Always refetch after error or success:
     onSettled: () => {
-      void ctx.alarmlist.getAll.invalidate();
+      void ctx.alarmlist.getAllWithAlarms.invalidate();
     },
   });
 

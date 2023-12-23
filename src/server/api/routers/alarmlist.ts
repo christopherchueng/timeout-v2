@@ -6,7 +6,7 @@ import { TRPCError } from "@trpc/server";
 import { alarmlistSchema } from "@/utils";
 
 export const alarmlistRouter = createTRPCRouter({
-  getAll: protectedProcedure.query(async ({ ctx }) => {
+  getAllWithAlarms: protectedProcedure.query(async ({ ctx }) => {
     const session = await getServerAuthSession();
 
     if (!session) {
@@ -37,6 +37,39 @@ export const alarmlistRouter = createTRPCRouter({
         updatedAt,
         userId,
         alarms: alarms.filter((alarm) => alarmlist.id === alarm.alarmlistId),
+      };
+
+      return newAlarmlist;
+    });
+
+    return alarmlists;
+  }),
+  getAll: protectedProcedure.query(async ({ ctx }) => {
+    const session = await getServerAuthSession();
+
+    if (!session) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "User not found",
+      });
+    }
+
+    const alarmlistsWithAlarms = await ctx.db.alarmlist.findMany({
+      where: {
+        userId: session?.user.id,
+      },
+      orderBy: [{ createdAt: "desc" }],
+    });
+
+    const alarmlists = alarmlistsWithAlarms.map((alarmlist) => {
+      const { id, name, isOn, createdAt, updatedAt, userId } = alarmlist;
+      const newAlarmlist = {
+        id,
+        name,
+        isOn,
+        createdAt,
+        updatedAt,
+        userId,
       };
 
       return newAlarmlist;
