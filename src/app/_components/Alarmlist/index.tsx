@@ -110,6 +110,10 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
   return (
     <ul className="px-4">
       <li className="group relative flex h-10 items-center justify-between rounded-lg border border-transparent px-2 py-2 text-sm transition duration-200 hover:bg-gray-200">
+        {/*
+          Width is defined below to allow alarmlist name to truncate.
+          Name will truncate even more on hover to account for ellipsis.
+        */}
         <div className="absolute flex w-3/4 items-center gap-2 group-hover:w-[73%]">
           <div>
             <AlarmlistIcon isOn={isOn} />
@@ -125,7 +129,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
             {alarmlist.name}
           </span>
         </div>
-        <div className="absolute right-0 inline-flex w-auto gap-2">
+        <div className="absolute right-1 inline-flex w-auto gap-1.5">
           <div
             className="relative"
             onClick={() => setIsEllipsisOpen((prev) => !prev)}

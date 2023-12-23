@@ -50,7 +50,7 @@ export const MySwitch = extendVariants(SwitchComponent, {
     },
     size: {
       xs: {
-        wrapper: "w-8 h-5 mr-2",
+        wrapper: "w-8 h-5 mr-0.5",
         thumb: [
           "w-3 h-3 text-tiny",
           //selected
@@ -70,7 +70,7 @@ export const MySwitch = extendVariants(SwitchComponent, {
 
 const Switch = ({ checked, onChange }: SwitchProps) => {
   return (
-    <div className="flex w-8 justify-center">
+    <div className="flex w-8">
       <MySwitch
         onChange={onChange}
         size="xs"
