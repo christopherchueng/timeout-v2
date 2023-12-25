@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { useCallback, useReducer, useRef, useState } from "react";
 import clsx from "clsx";
 import { api } from "@/trpc/react";
 import { alarmlistReducer } from "@/store";
@@ -113,6 +113,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
     // use the context returned from onMutate to roll back
     onError: (_err, _isOn, context) => {
       if (!context) return;
+
       ctx.alarmlist.getAllWithAlarms.setData(
         undefined,
         () => context.previousAlarmlists,
@@ -167,20 +168,18 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
             }}
           >
             <div className="relative">
-              {<Ellipsis isSettingsTabOpen={settingsTab.isOpen} />}
+              {settingsTab.isHovering && (
+                <Ellipsis isSettingsTabOpen={settingsTab.isOpen} />
+              )}
               {settingsTab.isOpen && (
-                <div
+                <SettingsWrapper
                   ref={settingsRef}
-                  className="absolute left-0 z-50 inline-block h-fit rounded border bg-white p-2 text-sm shadow-lg"
+                  isOpen={settingsTab.isOpen}
+                  handleClose={handleDeleteClick}
+                  cursorPosition={cursorPosition}
                 >
-                  <button
-                    onClick={() => setSettingsTab({ isOpen: false, index: 1 })}
-                    className="flex cursor-pointer items-center gap-1.5 rounded-md px-2 py-2 hover:bg-gray-200"
-                  >
-                    <DeleteAlarmlistIcon />
-                    <span>Delete</span>
-                  </button>
-                </div>
+                  <Settings handleSettingsClick={handleSettingsClick} />
+                </SettingsWrapper>
               )}
             </div>
           </div>
@@ -200,11 +199,17 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
           handleAlarmlistToggle={handleAlarmlistToggle}
         />
       ))}
-      {settingsTab.index === 1 && (
+      {settingsTab.isDeleteConfirmationOpen && (
         <DeleteAlarmlistForm
           alarmlist={alarmlist}
-          isDeleteAlarmlistModalOpen={settingsTab.index === 1}
-          handleCloseModal={() => setSettingsTab({ isOpen: false, index: 0 })}
+          isDeleteAlarmlistModalOpen={settingsTab.isDeleteConfirmationOpen}
+          handleCloseModal={() =>
+            setSettingsTab((prev) => ({
+              ...prev,
+              isOpen: false,
+              isDeleteConfirmationOpen: false,
+            }))
+          }
         />
       )}
     </ul>
