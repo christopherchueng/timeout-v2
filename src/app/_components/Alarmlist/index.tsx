@@ -14,60 +14,31 @@ import AlarmlistIcon from "../UI/AlarmlistIcon";
 import Ellipsis from "../UI/Ellipsis";
 import type { AlarmlistWithAlarms } from "@/types";
 import DeleteAlarmlistForm from "./DeleteAlarmlistForm";
-import DeleteAlarmlistIcon from "../UI/DeleteAlarmlistIcon";
+import SettingsWrapper from "./SettingsWrapper";
+import Settings from "./Settings";
 
 type SettingStatus = {
   isOpen: boolean;
-  index: number;
+  isHovering: boolean;
+  isDeleteConfirmationOpen: boolean;
 };
 
 const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
-  const alarmlistInitialState = {
-    isOn: alarmlist.isOn,
-    alarms: alarmlist.alarms,
-  };
-  const [alarmlistState, alarmlistDispatch] = useReducer(
-    alarmlistReducer,
-    alarmlistInitialState,
-  );
-  const { isOn, alarms } = alarmlistState;
   const settingsRef = useRef<HTMLInputElement | null>(null);
 
   const [settingsTab, setSettingsTab] = useState<SettingStatus>({
+    isHovering: false,
     isOpen: false,
-    index: 0,
+    isDeleteConfirmationOpen: false,
   });
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
 
-  useEffect(() => {
-    const handleClickedOutside = ({ target }: MouseEvent) => {
-      if (
-        settingsRef?.current &&
-        settingsRef.current?.contains(target as Node)
-      ) {
-        setSettingsTab({ isOpen: false, index: 1 });
-      } else if (
-        settingsRef?.current &&
-        !settingsRef.current?.contains(target as Node)
-      ) {
-        setSettingsTab({ isOpen: false, index: 0 });
-      }
-    };
-
-    // if (settingsTab.isOpen) {
-    document.addEventListener("click", handleClickedOutside);
-    // }
-
-    return () => {
-      document.removeEventListener("click", handleClickedOutside);
-    };
-  }, [settingsTab.isOpen]);
-
-  const onMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
-      setCursorPosition({ x: e.clientX, y: e.clientY }),
-    [settingsTab.isOpen],
-  );
+  const initialState = {
+    isOn: alarmlist.isOn,
+    alarms: alarmlist.alarms,
+  };
+  const [state, dispatch] = useReducer(alarmlistReducer, initialState);
+  const { isOn, alarms } = state;
 
   const ctx = api.useUtils();
 
@@ -102,7 +73,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
     },
 
     onSuccess: (_data, { isOn }) => {
-      alarmlistDispatch({
+      dispatch({
         type: TOGGLE_ALARMLIST_AND_ALARMS,
         alarms,
         isOn,
@@ -127,7 +98,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
 
   const handleAlarmlistToggle = useCallback(
     (updatedAlarms: Alarm[], isOn: boolean) => {
-      alarmlistDispatch({
+      dispatch({
         type: TOGGLE_ALARMLIST,
         alarms: updatedAlarms,
         isOn,
