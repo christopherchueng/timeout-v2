@@ -100,6 +100,7 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
           type="text"
           value={watchName}
           placeholder="Enter Alarmlist name"
+          autoFocus
         />
         {errors && (
           <p className="whitespace-break-spaces pt-2 text-2xs text-red-600">

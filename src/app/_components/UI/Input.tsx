@@ -26,7 +26,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         />
         <span
           className={clsx(
-            "group:-translate-y-3.5 group:pt-1 empty:translate-y-0! pointer-events-none absolute left-0 top-3 select-none text-slate-900 transition-all placeholder:text-white peer-focus:-translate-y-3 peer-focus:pt-1 peer-focus:text-2xs",
+            "group:-translate-y-3.5 group:pt-1 empty:translate-y-0! pointer-events-none absolute left-0 top-3 select-none text-slate-900 transition-all duration-75 placeholder:text-white peer-focus:-translate-y-3 peer-focus:pt-1 peer-focus:text-2xs",
             // Show placeholder above value if input is filled out and user clicks out of input field
             value ? "-translate-y-3 pt-1 text-2xs" : "text-xs",
           )}

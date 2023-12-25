@@ -107,16 +107,59 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
     [],
   );
 
+  const handleDeleteClick = useCallback(({ target }: MouseEvent) => {
+    // Clicking on "Delete" closes settings tab and opens delete modal
+    if (settingsRef?.current && settingsRef.current?.contains(target as Node)) {
+      setSettingsTab({
+        isOpen: false,
+        isHovering: false,
+        isDeleteConfirmationOpen: true,
+      });
+    } else if (
+      // Close settings outside modal
+      settingsRef?.current &&
+      !settingsRef.current?.contains(target as Node)
+    ) {
+      setSettingsTab({
+        isHovering: false,
+        isOpen: false,
+        isDeleteConfirmationOpen: false,
+      });
+    }
+  }, []);
+
+  const onMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
+      setCursorPosition({ x: e.clientX, y: e.clientY }),
+    [settingsTab.isOpen],
+  );
+
+  const handleSettingsClick = useCallback(() => {
+    setSettingsTab({
+      isOpen: false,
+      isHovering: true,
+      isDeleteConfirmationOpen: true,
+    });
+  }, []);
+
   if (!alarms) return <div>No alarms</div>;
 
   return (
     <ul className="px-4">
-      <li className="group relative flex h-10 items-center justify-between rounded-lg border border-transparent px-2 py-2 text-sm transition duration-200 hover:bg-gray-200">
+      <li
+        onMouseEnter={() =>
+          setSettingsTab((prev) => ({ ...prev, isHovering: true }))
+        }
+        onMouseLeave={() =>
+          setSettingsTab((prev) => ({ ...prev, isHovering: false }))
+        }
+        className="group relative flex h-10 items-center justify-between rounded-lg border border-transparent px-2 py-2 text-sm transition duration-200 hover:bg-gray-200"
+      >
         {/*
           Width is defined below to allow alarmlist name to truncate.
           Name will truncate even more on hover to account for ellipsis.
         */}
-        <div className="absolute flex w-3/4 items-center gap-2 group-hover:w-[73%]">
+        <div className="absolute flex w-[73%] items-center gap-2">
           <div>
             <AlarmlistIcon isOn={isOn} />
           </div>
