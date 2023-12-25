@@ -153,7 +153,10 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
         onMouseLeave={() =>
           setSettingsTab((prev) => ({ ...prev, isHovering: false }))
         }
-        className="relative flex h-10 items-center justify-between rounded-lg border border-transparent px-2 py-2 text-sm transition duration-200 hover:bg-gray-200"
+        className={clsx(
+          settingsTab.isHovering && "bg-gray-200",
+          "relative flex h-10 items-center justify-between rounded-lg border border-transparent px-2 py-2 text-sm transition duration-200",
+        )}
       >
         {/*
           Width is defined below to allow alarmlist name to truncate.
@@ -231,7 +234,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
           }
         />
       )}
-    </ul>
+    </>
   );
 };
 
