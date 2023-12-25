@@ -1,9 +1,9 @@
 "use client";
 
-import { useCallback, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import clsx from "clsx";
 import { api } from "@/trpc/react";
-import { alarmlistReducer } from "@/store/AlarmlistReducer";
+import { alarmlistReducer } from "@/store";
 import {
   TOGGLE_ALARMLIST,
   TOGGLE_ALARMLIST_AND_ALARMS,
@@ -12,20 +12,62 @@ import Alarm from "../Alarm";
 import { Switch } from "../UI";
 import AlarmlistIcon from "../UI/AlarmlistIcon";
 import Ellipsis from "../UI/Ellipsis";
-import Settings from "./Settings";
 import type { AlarmlistWithAlarms } from "@/types";
+import DeleteAlarmlistForm from "./DeleteAlarmlistForm";
+import DeleteAlarmlistIcon from "../UI/DeleteAlarmlistIcon";
+
+type SettingStatus = {
+  isOpen: boolean;
+  index: number;
+};
 
 const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const initialState = {
+  const alarmlistInitialState = {
     isOn: alarmlist.isOn,
     alarms: alarmlist.alarms,
   };
-  const [state, dispatch] = useReducer(alarmlistReducer, initialState);
-  const { isOn, alarms } = state;
+  const [alarmlistState, alarmlistDispatch] = useReducer(
+    alarmlistReducer,
+    alarmlistInitialState,
+  );
+  const { isOn, alarms } = alarmlistState;
+  const settingsRef = useRef<HTMLInputElement | null>(null);
 
-  const [isDeleteAlarmlistModalOpen, setIsDeleteAlarmlistModalOpen] =
-    useState(false);
+  const [settingsTab, setSettingsTab] = useState<SettingStatus>({
+    isOpen: false,
+    index: 0,
+  });
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleClickedOutside = ({ target }: MouseEvent) => {
+      if (
+        settingsRef?.current &&
+        settingsRef.current?.contains(target as Node)
+      ) {
+        setSettingsTab({ isOpen: false, index: 1 });
+      } else if (
+        settingsRef?.current &&
+        !settingsRef.current?.contains(target as Node)
+      ) {
+        setSettingsTab({ isOpen: false, index: 0 });
+      }
+    };
+
+    // if (settingsTab.isOpen) {
+    document.addEventListener("click", handleClickedOutside);
+    // }
+
+    return () => {
+      document.removeEventListener("click", handleClickedOutside);
+    };
+  }, [settingsTab.isOpen]);
+
+  const onMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
+      setCursorPosition({ x: e.clientX, y: e.clientY }),
+    [settingsTab.isOpen],
+  );
 
   const ctx = api.useUtils();
 
@@ -60,7 +102,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
     },
 
     onSuccess: (_data, { isOn }) => {
-      dispatch({
+      alarmlistDispatch({
         type: TOGGLE_ALARMLIST_AND_ALARMS,
         alarms,
         isOn,
@@ -84,7 +126,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
 
   const handleAlarmlistToggle = useCallback(
     (updatedAlarms: Alarm[], isOn: boolean) => {
-      dispatch({
+      alarmlistDispatch({
         type: TOGGLE_ALARMLIST,
         alarms: updatedAlarms,
         isOn,
@@ -92,11 +134,6 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
     },
     [],
   );
-
-  const handleDeleteAlarmlistModal = useCallback(() => {
-    setIsSettingsOpen((prev) => !prev);
-    setIsDeleteAlarmlistModalOpen((prev) => !prev);
-  }, []);
 
   if (!alarms) return <div>No alarms</div>;
 
@@ -123,15 +160,29 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
           </span>
         </div>
         <div className="absolute right-1 inline-flex w-auto gap-1.5">
-          <div className="relative" onClick={() => setIsSettingsOpen(true)}>
-            <Ellipsis />
-            {isSettingsOpen && (
-              <Settings
-                alarmlist={alarmlist}
-                isDeleteAlarmlistModalOpen={isDeleteAlarmlistModalOpen}
-                handleDeleteAlarmlistModal={handleDeleteAlarmlistModal}
-              />
-            )}
+          <div
+            onClick={(e) => {
+              setSettingsTab((prev) => ({ ...prev, isOpen: true }));
+              onMouseMove(e);
+            }}
+          >
+            <div className="relative">
+              {<Ellipsis isSettingsTabOpen={settingsTab.isOpen} />}
+              {settingsTab.isOpen && (
+                <div
+                  ref={settingsRef}
+                  className="absolute left-0 z-50 inline-block h-fit rounded border bg-white p-2 text-sm shadow-lg"
+                >
+                  <button
+                    onClick={() => setSettingsTab({ isOpen: false, index: 1 })}
+                    className="flex cursor-pointer items-center gap-1.5 rounded-md px-2 py-2 hover:bg-gray-200"
+                  >
+                    <DeleteAlarmlistIcon />
+                    <span>Delete</span>
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
           <Switch
             id={alarmlist.id}
@@ -149,6 +200,13 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
           handleAlarmlistToggle={handleAlarmlistToggle}
         />
       ))}
+      {settingsTab.index === 1 && (
+        <DeleteAlarmlistForm
+          alarmlist={alarmlist}
+          isDeleteAlarmlistModalOpen={settingsTab.index === 1}
+          handleCloseModal={() => setSettingsTab({ isOpen: false, index: 0 })}
+        />
+      )}
     </ul>
   );
 };

@@ -16,7 +16,10 @@ const createWrapperAndAppendToBody = (wrapperId: string) => {
   return wrapperElement;
 };
 
-const Portal = ({ children, wrapperId = "portal-modal-ctn" }: PortalProps) => {
+const Portal = ({
+  children,
+  wrapperId = "portal_modal_overlay",
+}: PortalProps) => {
   const [wrapperElement, setWrapperElement] = useState<HTMLElement | null>(
     null,
   );

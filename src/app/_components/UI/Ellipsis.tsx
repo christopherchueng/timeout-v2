@@ -1,11 +1,16 @@
-const Ellipsis = () => (
+import clsx from "clsx";
+
+const Ellipsis = (props: { isSettingsTabOpen: boolean }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"
     strokeWidth="1.5"
     stroke="currentColor"
-    className="hidden h-6 w-6 cursor-pointer rounded border border-transparent p-1 transition hover:bg-gray-300 active:bg-gray-400 group-hover:z-10 group-hover:block"
+    className={clsx(
+      props.isSettingsTabOpen && "visible",
+      "hidden h-6 w-6 cursor-pointer rounded border border-transparent p-1 transition hover:bg-gray-300 active:bg-gray-400 group-hover:z-10 group-hover:block group-focus:visible",
+    )}
   >
     <path
       strokeLinecap="round"

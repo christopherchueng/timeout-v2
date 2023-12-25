@@ -15,8 +15,8 @@ const Modal = ({ children, isOpen, handleClose }: ModalProps) => {
     const closeOnEscapeKey = (e: KeyboardEvent) =>
       e.key === "Escape" ? handleClose() : null;
 
-    const handleClickedOutside = ({ target }: MouseEvent) => {
-      if (modalRef?.current && !modalRef.current?.contains(target as Node)) {
+    const handleClickedOutside = (e: MouseEvent) => {
+      if (modalRef?.current && !modalRef.current?.contains(e.target as Node)) {
         handleClose();
       }
     };
@@ -41,8 +41,11 @@ const Modal = ({ children, isOpen, handleClose }: ModalProps) => {
   if (!isOpen) return null;
 
   return (
-    <Portal wrapperId="portal-modal-ctn">
-      <div className="fixed inset-0 z-50 flex h-full w-full flex-col items-center justify-center overflow-hidden bg-transparent p-10 backdrop-blur-sm transition-all">
+    <Portal wrapperId="modal_overlay">
+      <div
+        id="modal"
+        className="fixed inset-0 z-50 flex h-full w-full flex-col items-center justify-center overflow-hidden bg-transparent p-10 backdrop-blur-sm transition-all"
+      >
         <div
           ref={modalRef}
           className="relative box-border flex h-56 w-72 items-center justify-center rounded border bg-white p-8 shadow-lg"
