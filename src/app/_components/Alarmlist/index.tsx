@@ -145,7 +145,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
   if (!alarms) return <div>No alarms</div>;
 
   return (
-    <ul className="px-4">
+    <>
       <li
         onMouseEnter={() =>
           setSettingsTab((prev) => ({ ...prev, isHovering: true }))

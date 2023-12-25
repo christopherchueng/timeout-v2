@@ -18,10 +18,12 @@ const Sidebar = () => {
           No Alarmlists!
         </p>
       )}
-      {!!alarmlists &&
-        alarmlists.map((alarmlist) => (
-          <Alarmlist key={alarmlist.id} alarmlist={alarmlist} />
-        ))}
+      <ul className="px-4">
+        {!!alarmlists &&
+          alarmlists.map((alarmlist) => (
+            <Alarmlist key={alarmlist.id} alarmlist={alarmlist} />
+          ))}
+      </ul>
     </aside>
   );
 };

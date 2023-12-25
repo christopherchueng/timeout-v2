@@ -37,14 +37,14 @@ const SettingsWrapper = forwardRef<HTMLInputElement, SettingsWrapperProps>(
 
     return (
       <Portal wrapperId="Settings_Overlay">
-        <div className="absolute inset-0 z-10 min-h-full w-full bg-transparent">
+        <div className="absolute inset-0 z-10 h-full w-full bg-transparent">
           <div
             ref={ref}
             style={{
               left: `${cursorPosition.x - 5}px`,
               top: `${cursorPosition.y + 10}px`,
             }}
-            className="absolute left-0 z-20 rounded border bg-white"
+            className="fixed left-0 z-20 rounded border bg-white"
           >
             {children}
           </div>
