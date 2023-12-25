@@ -153,13 +153,18 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
         onMouseLeave={() =>
           setSettingsTab((prev) => ({ ...prev, isHovering: false }))
         }
-        className="group relative flex h-10 items-center justify-between rounded-lg border border-transparent px-2 py-2 text-sm transition duration-200 hover:bg-gray-200"
+        className="relative flex h-10 items-center justify-between rounded-lg border border-transparent px-2 py-2 text-sm transition duration-200 hover:bg-gray-200"
       >
         {/*
           Width is defined below to allow alarmlist name to truncate.
           Name will truncate even more on hover to account for ellipsis.
         */}
-        <div className="absolute flex w-[73%] items-center gap-2">
+        <div
+          className={clsx(
+            settingsTab.isHovering && "w-[73%]",
+            "absolute flex w-3/4 items-center gap-2",
+          )}
+        >
           <div>
             <AlarmlistIcon isOn={isOn} />
           </div>
