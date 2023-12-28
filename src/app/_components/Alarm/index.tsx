@@ -93,9 +93,9 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
           </div>
         </div>
         <div className="absolute right-1 inline-flex w-auto gap-1.5">
-          <div className="relative">
+          {/* <div className="relative">
             <Ellipsis />
-          </div>
+          </div> */}
           <Switch
             id={alarm.id}
             checked={alarm.isOn}
