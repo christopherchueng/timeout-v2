@@ -5,18 +5,18 @@ import React, {
 } from "react";
 import Portal from "../Portal";
 
-interface SettingsWrapperProps extends ComponentPropsWithoutRef<"button"> {
+interface SettingsWrapperProps extends ComponentPropsWithoutRef<"div"> {
   children: React.ReactNode;
-  ref: HTMLInputElement | null;
+  ref: HTMLDivElement | null;
   isOpen: boolean;
   cursorPosition: {
     x: number;
     y: number;
   };
-  handleClose: ({ target }: MouseEvent) => void;
+  handleClose: (e: MouseEvent) => void;
 }
 
-const SettingsWrapper = forwardRef<HTMLInputElement, SettingsWrapperProps>(
+const SettingsWrapper = forwardRef<HTMLDivElement, SettingsWrapperProps>(
   (
     { children, isOpen, handleClose, cursorPosition }: SettingsWrapperProps,
     ref,

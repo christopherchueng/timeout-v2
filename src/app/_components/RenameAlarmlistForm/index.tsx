@@ -1,21 +1,18 @@
 import React from "react";
+import type { AlarmlistWithAlarms } from "@/types";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { useSession } from "next-auth/react";
-import { api } from "@/trpc/react";
 import type { z } from "zod";
-import type { RouterOutputs } from "@/trpc/shared";
+import { renameAlarmlistSchema } from "@/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createAlarmlistSchema } from "@/utils";
-import { Button, Input } from "../UI";
+import { api } from "@/trpc/react";
+import { RouterOutputs } from "@/trpc/shared";
+import { useSession } from "next-auth/react";
+import { Input } from "../UI";
 
-export type AlarmlistFormValues = z.infer<typeof createAlarmlistSchema>;
+export type AlarmlistFormValues = z.infer<typeof renameAlarmlistSchema>;
 type Alarmlist = RouterOutputs["alarmlist"]["getAll"][number];
 
-type CreateAlarmlistFormProps = {
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
+const RenameAlarmlistForm = ({ alarmlist }: AlarmlistWithAlarms) => {
   const { data: session } = useSession();
 
   if (!session) return;
@@ -28,17 +25,18 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
     reset,
     formState: { errors },
   } = useForm<AlarmlistFormValues>({
-    resolver: zodResolver(createAlarmlistSchema),
+    resolver: zodResolver(renameAlarmlistSchema),
   });
 
-  const watchName = watch("name");
+  const watchName = watch("name", alarmlist.name);
 
   const ctx = api.useUtils();
+
   const {
-    mutate: createAlarmlist,
+    mutate: updateAlarmlist,
     isLoading,
     isError,
-  } = api.alarmlist.create.useMutation({
+  } = api.alarmlist.update.useMutation({
     onMutate: async (newAlarmlist) => {
       // Cancel any outgoing refetches so they don't overwrite our optimistic update
       await ctx.alarmlist.getAll.cancel();
@@ -51,11 +49,11 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
         undefined,
         (oldAlarmlists: Alarmlist[] | undefined) => {
           const optimisticAlarmlist = {
-            id: "optimistic-alarmlist-id",
+            id: newAlarmlist.id,
             name: newAlarmlist.name,
-            isOn: true,
+            isOn: alarmlist.isOn,
             userId: session?.user.id,
-            createdAt: new Date(),
+            createdAt: alarmlist.createdAt,
             updatedAt: new Date(),
           };
 
@@ -79,21 +77,20 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
     },
   });
 
-  const handleCreateAlarmlist: SubmitHandler<AlarmlistFormValues> = async (
+  const handleRenameAlarmlist: SubmitHandler<AlarmlistFormValues> = async (
     data,
   ) => {
-    createAlarmlist(data);
+    updateAlarmlist(data);
 
     if (!isError && !errors.name) {
       reset();
-      setIsModalOpen(false);
     }
   };
 
   return (
     <form
       className="flex flex-col gap-4"
-      onSubmit={handleSubmit(handleCreateAlarmlist)}
+      onSubmit={handleSubmit(handleRenameAlarmlist)}
     >
       <div className="w-min">
         <Input
@@ -110,11 +107,8 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
           </p>
         )}
       </div>
-      <Button type="submit" disabled={!!errors.name || isLoading}>
-        Create
-      </Button>
     </form>
   );
 };
 
-export default CreateAlarmlistForm;
+export default RenameAlarmlistForm;

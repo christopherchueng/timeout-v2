@@ -3,7 +3,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { getServerAuthSession } from "@/server/auth";
 import { TRPCError } from "@trpc/server";
-import { alarmlistSchema } from "@/utils";
+import { createAlarmlistSchema, renameAlarmlistSchema } from "@/utils";
 
 export const alarmlistRouter = createTRPCRouter({
   getAllWithAlarms: protectedProcedure.query(async ({ ctx }) => {
@@ -99,7 +99,7 @@ export const alarmlistRouter = createTRPCRouter({
       return alarmlist;
     }),
   create: protectedProcedure
-    .input(alarmlistSchema)
+    .input(createAlarmlistSchema)
     .mutation(async ({ ctx, input }) => {
       const { name } = input;
 
@@ -113,12 +113,7 @@ export const alarmlistRouter = createTRPCRouter({
       return alarmlist;
     }),
   update: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        name: z.string().min(1, { message: "Please enter a name." }),
-      }),
-    )
+    .input(renameAlarmlistSchema)
     .mutation(({ ctx, input }) => {
       const { id, name } = input;
       return ctx.db.alarmlist.update({

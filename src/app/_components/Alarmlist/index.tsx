@@ -15,22 +15,26 @@ import Ellipsis from "../UI/Ellipsis";
 import type { AlarmlistWithAlarms } from "@/types";
 import DeleteAlarmlistForm from "./DeleteAlarmlistForm";
 import SettingsWrapper from "./SettingsWrapper";
-import Settings from "./Settings";
 import { useWindowDimensions } from "@/hooks";
+import RenameAlarmlistForm from "../RenameAlarmlistForm";
+import EditIcon from "../UI/EditIcon";
+import DeleteAlarmlistIcon from "../UI/DeleteAlarmlistIcon";
 
 type SettingStatus = {
   isOpen: boolean;
   isHovering: boolean;
   isDeleteConfirmationOpen: boolean;
+  isEditingAlarmlist?: boolean;
 };
 
 const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
-  const settingsRef = useRef<HTMLInputElement | null>(null);
+  const settingsRef = useRef<HTMLDivElement | null>(null);
 
   const [settingsTab, setSettingsTab] = useState<SettingStatus>({
     isHovering: false,
     isOpen: false,
     isDeleteConfirmationOpen: false,
+    isEditingAlarmlist: false,
   });
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
 
@@ -110,18 +114,21 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
     [],
   );
 
-  const handleDeleteClick = useCallback(({ target }: MouseEvent) => {
+  const handleSettingsAction = useCallback((e: MouseEvent) => {
     // Clicking on "Delete" closes settings tab and opens delete modal
-    if (settingsRef?.current && settingsRef.current?.contains(target as Node)) {
-      setSettingsTab({
+    if (
+      settingsRef?.current &&
+      settingsRef.current?.contains(e.target as Node)
+    ) {
+      setSettingsTab((prev) => ({
+        ...prev,
         isOpen: false,
         isHovering: false,
-        isDeleteConfirmationOpen: true,
-      });
+      }));
     } else if (
       // Close settings outside modal
       settingsRef?.current &&
-      !settingsRef.current?.contains(target as Node)
+      !settingsRef.current?.contains(e.target as Node)
     ) {
       setSettingsTab({
         isHovering: false,
@@ -141,13 +148,23 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
     [settingsTab.isOpen, width],
   );
 
-  const handleSettingsClick = useCallback(() => {
+  const handleDeleteAction = () => {
     setSettingsTab({
       isOpen: false,
       isHovering: true,
       isDeleteConfirmationOpen: true,
+      isEditingAlarmlist: false,
     });
-  }, []);
+  };
+
+  const handleRenameAction = () => {
+    setSettingsTab({
+      isOpen: false,
+      isHovering: false,
+      isDeleteConfirmationOpen: false,
+      isEditingAlarmlist: true,
+    });
+  };
 
   if (!alarms) return <div>No alarms</div>;
 
@@ -175,19 +192,21 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
             "absolute flex w-3/4 items-center gap-2",
           )}
         >
-          <div>
-            <AlarmlistIcon isOn={isOn} />
-          </div>
-          <span
-            className={clsx(
-              "line-clamp-1 inline-block self-center truncate transition",
-              {
-                "text-gray-400": !isOn,
-              },
-            )}
-          >
-            {alarmlist.name}
-          </span>
+          <AlarmlistIcon isOn={isOn} />
+          {settingsTab.isEditingAlarmlist ? (
+            <RenameAlarmlistForm alarmlist={alarmlist} />
+          ) : (
+            <span
+              className={clsx(
+                "line-clamp-1 inline-block self-center truncate transition",
+                {
+                  "text-gray-400": !isOn,
+                },
+              )}
+            >
+              {alarmlist.name}
+            </span>
+          )}
         </div>
         <div className="absolute right-1 inline-flex w-auto gap-1.5">
           <div
@@ -204,10 +223,25 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
                 <SettingsWrapper
                   ref={settingsRef}
                   isOpen={settingsTab.isOpen}
-                  handleClose={handleDeleteClick}
                   cursorPosition={cursorPosition}
+                  handleClose={(e) => handleSettingsAction(e)}
                 >
-                  <Settings handleSettingsClick={handleSettingsClick} />
+                  <div className="flex flex-col justify-center text-sm">
+                    <button
+                      onClick={handleRenameAction}
+                      className="flex cursor-pointer items-center gap-1.5 px-2 py-2 transition hover:bg-gray-200"
+                    >
+                      <EditIcon />
+                      <span>Rename</span>
+                    </button>
+                    <button
+                      onClick={handleDeleteAction}
+                      className="flex cursor-pointer items-center gap-1.5 px-2 py-2 transition hover:bg-gray-200"
+                    >
+                      <DeleteAlarmlistIcon />
+                      <span>Delete</span>
+                    </button>
+                  </div>
                 </SettingsWrapper>
               )}
             </div>
