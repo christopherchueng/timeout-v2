@@ -17,8 +17,7 @@ import DeleteAlarmlistForm from "./DeleteAlarmlistForm";
 import SettingsWrapper from "./SettingsWrapper";
 import { useWindowDimensions } from "@/hooks";
 import RenameAlarmlistForm from "../RenameAlarmlistForm";
-import EditIcon from "../UI/EditIcon";
-import DeleteAlarmlistIcon from "../UI/DeleteAlarmlistIcon";
+import Settings from "./Settings";
 
 type SettingStatus = {
   isOpen: boolean;
@@ -148,23 +147,23 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
     [settingsTab.isOpen, width],
   );
 
-  const handleDeleteAction = () => {
+  const handleDeleteAction = useCallback(() => {
     setSettingsTab({
       isOpen: false,
       isHovering: true,
       isDeleteConfirmationOpen: true,
       isEditingAlarmlist: false,
     });
-  };
+  }, []);
 
-  const handleRenameAction = () => {
+  const handleRenameAction = useCallback(() => {
     setSettingsTab({
       isOpen: false,
       isHovering: false,
       isDeleteConfirmationOpen: false,
       isEditingAlarmlist: true,
     });
-  };
+  }, []);
 
   if (!alarms) return <div>No alarms</div>;
 
@@ -226,22 +225,10 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
                   cursorPosition={cursorPosition}
                   handleClose={(e) => handleSettingsAction(e)}
                 >
-                  <div className="flex flex-col justify-center text-sm">
-                    <button
-                      onClick={handleRenameAction}
-                      className="flex cursor-pointer items-center gap-1.5 px-2 py-2 transition hover:bg-gray-200"
-                    >
-                      <EditIcon />
-                      <span>Rename</span>
-                    </button>
-                    <button
-                      onClick={handleDeleteAction}
-                      className="flex cursor-pointer items-center gap-1.5 px-2 py-2 transition hover:bg-gray-200"
-                    >
-                      <DeleteAlarmlistIcon />
-                      <span>Delete</span>
-                    </button>
-                  </div>
+                  <Settings
+                    handleRenameAction={handleRenameAction}
+                    handleDeleteAction={handleDeleteAction}
+                  />
                 </SettingsWrapper>
               )}
             </div>
