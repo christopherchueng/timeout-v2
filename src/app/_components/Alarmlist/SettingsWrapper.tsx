@@ -41,8 +41,8 @@ const SettingsWrapper = forwardRef<HTMLInputElement, SettingsWrapperProps>(
           <div
             ref={ref}
             style={{
-              left: `${cursorPosition.x - 5}px`,
-              top: `${cursorPosition.y + 10}px`,
+              left: `${cursorPosition.x}px`,
+              top: `${cursorPosition.y}px`,
             }}
             className="fixed left-0 z-20 rounded border bg-white"
           >

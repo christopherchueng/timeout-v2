@@ -16,6 +16,7 @@ import type { AlarmlistWithAlarms } from "@/types";
 import DeleteAlarmlistForm from "./DeleteAlarmlistForm";
 import SettingsWrapper from "./SettingsWrapper";
 import Settings from "./Settings";
+import { useWindowDimensions } from "@/hooks";
 
 type SettingStatus = {
   isOpen: boolean;
@@ -39,6 +40,8 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
   };
   const [state, dispatch] = useReducer(alarmlistReducer, initialState);
   const { isOn, alarms } = state;
+
+  const { width } = useWindowDimensions();
 
   const ctx = api.useUtils();
 
@@ -129,9 +132,13 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
   }, []);
 
   const onMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>
-      setCursorPosition({ x: e.clientX, y: e.clientY }),
-    [settingsTab.isOpen],
+    (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      setCursorPosition({
+        x: width! >= 640 ? e.clientX - 5 : e.clientX - 80,
+        y: e.clientY + 10,
+      });
+    },
+    [settingsTab.isOpen, width],
   );
 
   const handleSettingsClick = useCallback(() => {
