@@ -101,15 +101,20 @@ const RenameAlarmlistForm = ({
 
   return (
     <form
-      className="flex"
+      className="flex w-full md:mr-2"
       onSubmit={handleSubmit(handleRenameAlarmlist, handleErrors)}
+      onKeyDown={(e) => {
+        if (e.code === "Escape") {
+          handleSuccessfulRename("");
+        }
+      }}
     >
       <input
         {...register("name")}
         type="text"
         value={watchName}
         placeholder={alarmlist.name}
-        className="bg-transparent outline-none"
+        className="w-full bg-transparent outline-none"
         autoFocus
       />
     </form>

@@ -170,12 +170,14 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
   }, []);
 
   const handleSuccessfulRename = useCallback(
-    (name: string) => {
-      dispatch({
-        ...state,
-        type: RENAME_ALARMLIST,
-        name,
-      });
+    (name?: string | undefined) => {
+      if (name) {
+        dispatch({
+          ...state,
+          type: RENAME_ALARMLIST,
+          name,
+        });
+      }
 
       setSettingsTab({
         isOpen: false,
