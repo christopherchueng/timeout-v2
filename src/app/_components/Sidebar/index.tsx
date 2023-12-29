@@ -8,6 +8,7 @@ import Loading from "./loading";
 const Alarmlists = () => {
   const { data: alarmlists, isLoading } =
     api.alarmlist.getAllWithAlarms.useQuery();
+
   if (isLoading) return <Loading />;
 
   if (!alarmlists)
@@ -27,6 +28,7 @@ const Alarmlists = () => {
 };
 
 const Sidebar = () => {
+  // Start fetching data asap
   api.alarmlist.getAllWithAlarms.useQuery();
 
   return (

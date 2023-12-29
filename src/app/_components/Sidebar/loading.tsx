@@ -1,5 +1,5 @@
 const Loading = () => (
-  <aside className="h-full w-full overflow-y-hidden pt-16 sm:w-72 sm:flex-none">
+  <aside className="h-full w-full overflow-y-hidden sm:w-72 sm:flex-none">
     <ul className="flex h-full flex-col gap-4 px-4">
       {Array.from({ length: 20 }).map((_, idx) => (
         <li
