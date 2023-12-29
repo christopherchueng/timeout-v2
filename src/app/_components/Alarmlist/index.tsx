@@ -227,7 +227,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
         >
           <div className="w-3.5">
             {isHoveringIcon ? (
-              <Chevron isOpen={isShowingAlarms} />
+              <Chevron isOpen={isShowingAlarms} isToggleOn={isOn} />
             ) : (
               <AlarmlistIcon isOn={isOn} />
             )}

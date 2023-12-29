@@ -1,15 +1,20 @@
 import clsx from "clsx";
 
-const Chevron = ({ isOpen }: { isOpen: boolean }) => (
+type ChevronProps = {
+  isOpen: boolean;
+  isToggleOn?: boolean;
+};
+const Chevron = ({ isOpen, isToggleOn }: ChevronProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"
-    strokeWidth="1.5"
+    strokeWidth="2"
     stroke="currentColor"
     data-slot="icon"
     className={clsx(
-      "h-4 w-4 -rotate-90 transition duration-75",
+      "h-3.5 w-3.5 -rotate-90 transition duration-75",
+      isToggleOn ? "stroke-slate-900" : "stroke-gray-400",
       isOpen && "rotate-0",
     )}
   >
