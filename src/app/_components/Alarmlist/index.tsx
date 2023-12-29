@@ -2,6 +2,7 @@
 
 import { useCallback, useReducer, useRef, useState } from "react";
 import clsx from "clsx";
+import { motion } from "framer-motion";
 import { api } from "@/trpc/react";
 import { useWindowDimensions } from "@/hooks";
 import { alarmlistReducer } from "@/store";
@@ -288,14 +289,50 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
           />
         </div>
       </li>
-      {isShowingAlarms &&
-        alarms.map((alarm) => (
+      <motion.div
+        id={alarmlist.id}
+        initial={false}
+        animate={
+          isShowingAlarms
+            ? {
+                height: "auto",
+                opacity: 1,
+                display: "block",
+                transition: {
+                  height: {
+                    duration: 0.2,
+                  },
+                  opacity: {
+                    duration: 0.2,
+                    delay: 0.1,
+                  },
+                },
+              }
+            : {
+                height: 0,
+                opacity: 0,
+                transition: {
+                  height: {
+                    duration: 0.2,
+                  },
+                  opacity: {
+                    duration: 0.2,
+                  },
+                },
+                transitionEnd: {
+                  display: "none",
+                },
+              }
+        }
+      >
+        {alarms.map((alarm) => (
           <Alarm
             key={alarm.id}
             alarm={alarm}
             handleAlarmlistToggle={handleAlarmlistToggle}
           />
         ))}
+      </motion.div>
       {settingsTab.isDeleteConfirmationOpen && (
         <DeleteAlarmlistForm
           alarmlist={alarmlist}
