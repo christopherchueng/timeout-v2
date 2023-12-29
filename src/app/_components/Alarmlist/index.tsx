@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { api } from "@/trpc/react";
 import { alarmlistReducer } from "@/store";
 import {
+  RENAME_ALARMLIST,
   TOGGLE_ALARMLIST,
   TOGGLE_ALARMLIST_AND_ALARMS,
 } from "@/store/constants";
@@ -38,11 +39,12 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
 
   const initialState = {
+    name: alarmlist.name,
     isOn: alarmlist.isOn,
     alarms: alarmlist.alarms,
   };
   const [state, dispatch] = useReducer(alarmlistReducer, initialState);
-  const { isOn, alarms } = state;
+  const { name, isOn, alarms } = state;
 
   const { width } = useWindowDimensions();
 
@@ -80,6 +82,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
 
     onSuccess: (_data, { isOn }) => {
       dispatch({
+        ...state,
         type: TOGGLE_ALARMLIST_AND_ALARMS,
         alarms,
         isOn,
@@ -105,6 +108,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
   const handleAlarmlistToggle = useCallback(
     (updatedAlarms: Alarm[], isOn: boolean) => {
       dispatch({
+        ...state,
         type: TOGGLE_ALARMLIST,
         alarms: updatedAlarms,
         isOn,
@@ -163,16 +167,25 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
       isDeleteConfirmationOpen: false,
       isEditingAlarmlist: true,
     });
-  }, []);
+  }, [alarmlist.name]);
 
-  const handleSuccessfulRename = useCallback(() => {
-    setSettingsTab({
-      isOpen: false,
-      isHovering: false,
-      isDeleteConfirmationOpen: false,
-      isEditingAlarmlist: false,
-    });
-  }, []);
+  const handleSuccessfulRename = useCallback(
+    (name: string) => {
+      dispatch({
+        ...state,
+        type: RENAME_ALARMLIST,
+        name,
+      });
+
+      setSettingsTab({
+        isOpen: false,
+        isHovering: false,
+        isDeleteConfirmationOpen: false,
+        isEditingAlarmlist: false,
+      });
+    },
+    [dispatch, name, settingsTab.isEditingAlarmlist],
+  );
 
   if (!alarms) return <div>No alarms</div>;
 
@@ -217,7 +230,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
                 },
               )}
             >
-              {alarmlist.name}
+              {name}
             </span>
           )}
         </div>

@@ -5,7 +5,7 @@ import { Switch } from "../UI";
 import { api } from "@/trpc/react";
 import type { RouterOutputs } from "@/trpc/shared";
 import AlarmIcon from "../UI/AlarmIcon";
-import Ellipsis from "../UI/Ellipsis";
+// import Ellipsis from "../UI/Ellipsis";
 
 type Alarm = RouterOutputs["alarm"]["getAllByAlarmlistId"][number];
 

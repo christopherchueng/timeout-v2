@@ -4,6 +4,7 @@ import { z } from "zod";
 export const createAlarmlistSchema = z.object({
   name: z
     .string()
+    .trim()
     .min(1, { message: "Please enter a name." })
     .max(20, { message: "Name must contain at most 20 character(s)." }),
 });
@@ -12,6 +13,7 @@ export const renameAlarmlistSchema = z.object({
   id: z.string(),
   name: z
     .string()
+    .trim()
     .min(1, { message: "Please enter a name." })
     .max(20, { message: "Name must contain at most 20 character(s)." }),
 });
