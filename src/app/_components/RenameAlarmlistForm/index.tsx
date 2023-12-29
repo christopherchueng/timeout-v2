@@ -46,50 +46,48 @@ const RenameAlarmlistForm = ({
 
   const ctx = api.useUtils();
 
-  const {
-    mutate: updateAlarmlist,
-    isLoading,
-    isError,
-  } = api.alarmlist.update.useMutation({
-    onMutate: async (newAlarmlist: AlarmlistFormValues) => {
-      // Cancel any outgoing refetches so they don't overwrite our optimistic update
-      await ctx.alarmlist.getAll.cancel();
+  const { mutate: updateAlarmlist, isError } = api.alarmlist.update.useMutation(
+    {
+      onMutate: async (newAlarmlist: AlarmlistFormValues) => {
+        // Cancel any outgoing refetches so they don't overwrite our optimistic update
+        await ctx.alarmlist.getAll.cancel();
 
-      // Snapshot the previous value
-      const previousAlarmlists = ctx.alarmlist.getAll.getData();
+        // Snapshot the previous value
+        const previousAlarmlists = ctx.alarmlist.getAll.getData();
 
-      // Optimistically update to the new value
-      ctx.alarmlist.getAll.setData(
-        undefined,
-        (oldAlarmlists: Alarmlist[] | undefined) => {
-          if (!oldAlarmlists) return [];
+        // Optimistically update to the new value
+        ctx.alarmlist.getAll.setData(
+          undefined,
+          (oldAlarmlists: Alarmlist[] | undefined) => {
+            if (!oldAlarmlists) return [];
 
-          oldAlarmlists.forEach((prevAlarmlist) => {
-            if (prevAlarmlist.id === newAlarmlist.id) {
-              prevAlarmlist = {
-                ...prevAlarmlist,
-                name: newAlarmlist.name,
-              };
-            }
-          });
+            oldAlarmlists.forEach((prevAlarmlist) => {
+              if (prevAlarmlist.id === newAlarmlist.id) {
+                prevAlarmlist = {
+                  ...prevAlarmlist,
+                  name: newAlarmlist.name,
+                };
+              }
+            });
 
-          return oldAlarmlists;
-        },
-      );
+            return oldAlarmlists;
+          },
+        );
 
-      // Clear input
-      reset();
+        // Clear input
+        reset();
 
-      // Return a context object with the snapshotted value
-      return previousAlarmlists;
+        // Return a context object with the snapshotted value
+        return previousAlarmlists;
+      },
+      onSuccess: () => {
+        void ctx.alarmlist.getAllWithAlarms.invalidate();
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
     },
-    onSuccess: () => {
-      void ctx.alarmlist.getAllWithAlarms.invalidate();
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+  );
 
   const handleRenameAlarmlist: SubmitHandler<AlarmlistFormValues> = (data) => {
     updateAlarmlist(data);
