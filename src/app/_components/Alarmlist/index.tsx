@@ -169,7 +169,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
     });
   }, []);
 
-  const handleSuccessfulRename = useCallback(
+  const handleCloseRename = useCallback(
     (name?: string | undefined) => {
       if (name) {
         dispatch({
@@ -223,7 +223,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
           {settingsTab.isEditingAlarmlist ? (
             <RenameAlarmlistForm
               alarmlist={alarmlist}
-              handleSuccessfulRename={handleSuccessfulRename}
+              handleCloseRename={handleCloseRename}
             />
           ) : (
             <span

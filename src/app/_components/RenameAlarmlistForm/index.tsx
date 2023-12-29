@@ -17,12 +17,12 @@ type Alarmlist = RouterOutputs["alarmlist"]["getAll"][number];
 
 type RenameAlarmlistFormProps = {
   alarmlist: Alarmlist;
-  handleSuccessfulRename: (name: string) => void;
+  handleCloseRename: (name: string) => void;
 };
 
 const RenameAlarmlistForm = ({
   alarmlist,
-  handleSuccessfulRename,
+  handleCloseRename,
 }: RenameAlarmlistFormProps) => {
   const { data: session } = useSession();
 
@@ -35,6 +35,7 @@ const RenameAlarmlistForm = ({
         id: alarmlist.id,
         name: alarmlist.name,
       },
+      mode: "all",
     },
   );
 
@@ -77,7 +78,7 @@ const RenameAlarmlistForm = ({
     onSuccess: (data) => {
       void ctx.alarmlist.getAllWithAlarms.invalidate();
       reset();
-      handleSuccessfulRename(data.name.trim());
+      handleCloseRename(data.name.trim());
     },
     onError: (error) => {
       toast.error(error.message);
@@ -88,7 +89,7 @@ const RenameAlarmlistForm = ({
     data,
   ) => {
     if (data.name.trim() === alarmlist.name) {
-      handleSuccessfulRename(data.name.trim());
+      handleCloseRename(data.name.trim());
       return;
     }
 
@@ -105,9 +106,10 @@ const RenameAlarmlistForm = ({
       onSubmit={handleSubmit(handleRenameAlarmlist, handleErrors)}
       onKeyDown={(e) => {
         if (e.code === "Escape") {
-          handleSuccessfulRename("");
+          handleCloseRename("");
         }
       }}
+      onBlur={handleSubmit(handleRenameAlarmlist, handleErrors)}
     >
       <input
         {...register("name")}
