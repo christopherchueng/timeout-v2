@@ -3,21 +3,21 @@
 import { useCallback, useReducer, useRef, useState } from "react";
 import clsx from "clsx";
 import { api } from "@/trpc/react";
+import { useWindowDimensions } from "@/hooks";
 import { alarmlistReducer } from "@/store";
 import {
   RENAME_ALARMLIST,
   TOGGLE_ALARMLIST,
   TOGGLE_ALARMLIST_AND_ALARMS,
 } from "@/store/constants";
+import type { AlarmlistWithAlarms } from "@/types";
 import Alarm from "../Alarm";
 import { Switch } from "../UI";
 import AlarmlistIcon from "../UI/AlarmlistIcon";
 import Ellipsis from "../UI/Ellipsis";
-import type { AlarmlistWithAlarms } from "@/types";
 import DeleteAlarmlistForm from "./DeleteAlarmlistForm";
 import SettingsWrapper from "./SettingsWrapper";
-import { useWindowDimensions } from "@/hooks";
-import RenameAlarmlistForm from "../RenameAlarmlistForm";
+import RenameAlarmlistForm from "./RenameAlarmlistForm";
 import Settings from "./Settings";
 
 type SettingStatus = {
