@@ -325,13 +325,26 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
               }
         }
       >
-        {alarms.map((alarm) => (
-          <Alarm
-            key={alarm.id}
-            alarm={alarm}
-            handleAlarmlistToggle={handleAlarmlistToggle}
-          />
-        ))}
+        {!!alarms.length ? (
+          <ul>
+            {alarms.map((alarm) => (
+              <Alarm
+                key={alarm.id}
+                alarm={alarm}
+                handleAlarmlistToggle={handleAlarmlistToggle}
+              />
+            ))}
+          </ul>
+        ) : (
+          <p
+            className={clsx(
+              "flex h-full py-1 pl-4 pr-2 text-xs italic transition",
+              isOn ? "text-slate-900" : "text-gray-400",
+            )}
+          >
+            No alarms under '{name}'!
+          </p>
+        )}
       </motion.div>
       {settingsTab.isDeleteConfirmationOpen && (
         <DeleteAlarmlistForm
