@@ -12,7 +12,7 @@ import {
 } from "@/store/constants";
 import type { AlarmlistWithAlarms } from "@/types";
 import Alarm from "../Alarm";
-import { Switch } from "../UI";
+import { Chevron, Switch } from "../UI";
 import AlarmlistIcon from "../UI/AlarmlistIcon";
 import Ellipsis from "../UI/Ellipsis";
 import DeleteAlarmlistForm from "./DeleteAlarmlistForm";
@@ -37,6 +37,8 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
     isEditingAlarmlist: false,
   });
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [isHoveringIcon, setIsHoveringIcon] = useState(false);
+  const [isShowingAlarms, setIsShowingAlarms] = useState(false);
 
   const initialState = {
     name: alarmlist.name,
@@ -194,17 +196,22 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
   return (
     <>
       <li
-        onMouseEnter={() =>
+        onMouseEnter={() => {
           !settingsTab.isEditingAlarmlist &&
-          setSettingsTab((prev) => ({ ...prev, isHovering: true }))
-        }
-        onMouseLeave={() =>
+            setSettingsTab((prev) => ({ ...prev, isHovering: true }));
+          setIsHoveringIcon(true);
+        }}
+        onMouseLeave={() => {
           !settingsTab.isEditingAlarmlist &&
-          setSettingsTab((prev) => ({ ...prev, isHovering: false }))
+            setSettingsTab((prev) => ({ ...prev, isHovering: false }));
+          setIsHoveringIcon(false);
+        }}
+        onClick={() =>
+          !settingsTab.isEditingAlarmlist && setIsShowingAlarms((prev) => !prev)
         }
         className={clsx(
           settingsTab.isHovering && "bg-gray-200",
-          "relative flex h-10 items-center justify-between rounded-lg border border-transparent px-2 py-2 text-sm transition duration-200",
+          "relative flex h-10 cursor-pointer items-center justify-between rounded-lg border border-transparent px-2 py-2 text-sm transition duration-200",
         )}
       >
         {/*
@@ -218,7 +225,11 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
           )}
         >
           <div className="w-3.5">
-            <AlarmlistIcon isOn={isOn} />
+            {isHoveringIcon ? (
+              <Chevron isOpen={isShowingAlarms} />
+            ) : (
+              <AlarmlistIcon isOn={isOn} />
+            )}
           </div>
           {settingsTab.isEditingAlarmlist ? (
             <RenameAlarmlistForm
@@ -233,7 +244,10 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
                   "text-gray-400": !isOn,
                 },
               )}
-              onDoubleClick={handleRenameAction}
+              onDoubleClick={() => {
+                setIsShowingAlarms((prev) => !prev);
+                handleRenameAction();
+              }}
             >
               {name}
             </span>
@@ -274,13 +288,14 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
           />
         </div>
       </li>
-      {alarms.map((alarm) => (
-        <Alarm
-          key={alarm.id}
-          alarm={alarm}
-          handleAlarmlistToggle={handleAlarmlistToggle}
-        />
-      ))}
+      {isShowingAlarms &&
+        alarms.map((alarm) => (
+          <Alarm
+            key={alarm.id}
+            alarm={alarm}
+            handleAlarmlistToggle={handleAlarmlistToggle}
+          />
+        ))}
       {settingsTab.isDeleteConfirmationOpen && (
         <DeleteAlarmlistForm
           alarmlist={alarmlist}
