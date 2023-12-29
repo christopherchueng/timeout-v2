@@ -122,7 +122,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
       setSettingsTab((prev) => ({
         ...prev,
         isOpen: false,
-        isHovering: false,
+        // isHovering: false,
       }));
     } else if (
       // Close settings outside modal
@@ -159,9 +159,18 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
   const handleRenameAction = useCallback(() => {
     setSettingsTab({
       isOpen: false,
-      isHovering: false,
+      isHovering: true,
       isDeleteConfirmationOpen: false,
       isEditingAlarmlist: true,
+    });
+  }, []);
+
+  const handleSuccessfulRename = useCallback(() => {
+    setSettingsTab({
+      isOpen: false,
+      isHovering: false,
+      isDeleteConfirmationOpen: false,
+      isEditingAlarmlist: false,
     });
   }, []);
 
@@ -171,9 +180,11 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
     <>
       <li
         onMouseEnter={() =>
+          !settingsTab.isEditingAlarmlist &&
           setSettingsTab((prev) => ({ ...prev, isHovering: true }))
         }
         onMouseLeave={() =>
+          !settingsTab.isEditingAlarmlist &&
           setSettingsTab((prev) => ({ ...prev, isHovering: false }))
         }
         className={clsx(
@@ -193,7 +204,10 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
         >
           <AlarmlistIcon isOn={isOn} />
           {settingsTab.isEditingAlarmlist ? (
-            <RenameAlarmlistForm alarmlist={alarmlist} />
+            <RenameAlarmlistForm
+              alarmlist={alarmlist}
+              handleSuccessfulRename={handleSuccessfulRename}
+            />
           ) : (
             <span
               className={clsx(

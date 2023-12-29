@@ -118,11 +118,7 @@ export const alarmlistRouter = createTRPCRouter({
       const { id, name } = input;
       return ctx.db.alarmlist.update({
         where: { id },
-        data: {
-          name,
-          // Turn on alarmlist if updated
-          isOn: true,
-        },
+        data: { name },
       });
     }),
   delete: protectedProcedure

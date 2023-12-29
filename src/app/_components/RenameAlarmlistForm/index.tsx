@@ -1,18 +1,29 @@
 import React from "react";
-import type { AlarmlistWithAlarms } from "@/types";
-import { useForm, type SubmitHandler } from "react-hook-form";
+import {
+  useForm,
+  type SubmitHandler,
+  SubmitErrorHandler,
+} from "react-hook-form";
 import type { z } from "zod";
 import { renameAlarmlistSchema } from "@/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@/trpc/react";
 import { RouterOutputs } from "@/trpc/shared";
 import { useSession } from "next-auth/react";
-import { Input } from "../UI";
+import toast from "react-hot-toast";
 
 export type AlarmlistFormValues = z.infer<typeof renameAlarmlistSchema>;
 type Alarmlist = RouterOutputs["alarmlist"]["getAll"][number];
 
-const RenameAlarmlistForm = ({ alarmlist }: AlarmlistWithAlarms) => {
+type RenameAlarmlistFormProps = {
+  alarmlist: Alarmlist;
+  handleSuccessfulRename: () => void;
+};
+
+const RenameAlarmlistForm = ({
+  alarmlist,
+  handleSuccessfulRename,
+}: RenameAlarmlistFormProps) => {
   const { data: session } = useSession();
 
   if (!session) return;
@@ -20,15 +31,18 @@ const RenameAlarmlistForm = ({ alarmlist }: AlarmlistWithAlarms) => {
   const {
     register,
     handleSubmit,
-    setError,
     watch,
     reset,
     formState: { errors },
   } = useForm<AlarmlistFormValues>({
     resolver: zodResolver(renameAlarmlistSchema),
+    defaultValues: {
+      id: alarmlist.id,
+      name: alarmlist.name,
+    },
   });
 
-  const watchName = watch("name", alarmlist.name);
+  const watchName = watch("name");
 
   const ctx = api.useUtils();
 
@@ -37,7 +51,7 @@ const RenameAlarmlistForm = ({ alarmlist }: AlarmlistWithAlarms) => {
     isLoading,
     isError,
   } = api.alarmlist.update.useMutation({
-    onMutate: async (newAlarmlist) => {
+    onMutate: async (newAlarmlist: AlarmlistFormValues) => {
       // Cancel any outgoing refetches so they don't overwrite our optimistic update
       await ctx.alarmlist.getAll.cancel();
 
@@ -48,18 +62,18 @@ const RenameAlarmlistForm = ({ alarmlist }: AlarmlistWithAlarms) => {
       ctx.alarmlist.getAll.setData(
         undefined,
         (oldAlarmlists: Alarmlist[] | undefined) => {
-          const optimisticAlarmlist = {
-            id: newAlarmlist.id,
-            name: newAlarmlist.name,
-            isOn: alarmlist.isOn,
-            userId: session?.user.id,
-            createdAt: alarmlist.createdAt,
-            updatedAt: new Date(),
-          };
+          if (!oldAlarmlists) return [];
 
-          if (!oldAlarmlists) return [optimisticAlarmlist];
+          oldAlarmlists.forEach((prevAlarmlist) => {
+            if (prevAlarmlist.id === newAlarmlist.id) {
+              prevAlarmlist = {
+                ...prevAlarmlist,
+                name: newAlarmlist.name,
+              };
+            }
+          });
 
-          return [...oldAlarmlists, optimisticAlarmlist];
+          return oldAlarmlists;
         },
       );
 
@@ -73,40 +87,39 @@ const RenameAlarmlistForm = ({ alarmlist }: AlarmlistWithAlarms) => {
       void ctx.alarmlist.getAllWithAlarms.invalidate();
     },
     onError: (error) => {
-      setError("name", { type: "server", message: error.message });
+      toast.error(error.message);
     },
   });
 
-  const handleRenameAlarmlist: SubmitHandler<AlarmlistFormValues> = async (
-    data,
-  ) => {
+  const handleRenameAlarmlist: SubmitHandler<AlarmlistFormValues> = (data) => {
+    console.log("here is the payload", data);
     updateAlarmlist(data);
 
     if (!isError && !errors.name) {
       reset();
+      handleSuccessfulRename();
+    }
+  };
+
+  const handleErrors: SubmitErrorHandler<AlarmlistFormValues> = (errors) => {
+    if (errors.name && errors.name.message) {
+      toast.error(errors.name.message);
     }
   };
 
   return (
     <form
-      className="flex flex-col gap-4"
-      onSubmit={handleSubmit(handleRenameAlarmlist)}
+      className="flex"
+      onSubmit={handleSubmit(handleRenameAlarmlist, handleErrors)}
     >
-      <div className="w-min">
-        <Input
-          {...register("name")}
-          label="name"
-          type="text"
-          value={watchName}
-          placeholder="Enter Alarmlist name"
-          autoFocus
-        />
-        {errors && (
-          <p className="whitespace-break-spaces pt-2 text-2xs text-red-600">
-            {errors.name?.message}
-          </p>
-        )}
-      </div>
+      <input
+        {...register("name")}
+        type="text"
+        value={watchName}
+        placeholder={alarmlist.name}
+        className="bg-transparent outline-none"
+        autoFocus
+      />
     </form>
   );
 };
