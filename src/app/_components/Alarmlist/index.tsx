@@ -233,6 +233,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
                   "text-gray-400": !isOn,
                 },
               )}
+              onDoubleClick={handleRenameAction}
             >
               {name}
             </span>
