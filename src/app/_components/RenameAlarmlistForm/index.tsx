@@ -92,7 +92,6 @@ const RenameAlarmlistForm = ({
   });
 
   const handleRenameAlarmlist: SubmitHandler<AlarmlistFormValues> = (data) => {
-    console.log("here is the payload", data);
     updateAlarmlist(data);
 
     if (!isError && !errors.name) {
