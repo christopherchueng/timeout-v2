@@ -217,7 +217,9 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
             "absolute flex w-3/4 items-center gap-2",
           )}
         >
-          <AlarmlistIcon isOn={isOn} />
+          <div className="w-3.5">
+            <AlarmlistIcon isOn={isOn} />
+          </div>
           {settingsTab.isEditingAlarmlist ? (
             <RenameAlarmlistForm
               alarmlist={alarmlist}
