@@ -167,7 +167,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
       isDeleteConfirmationOpen: false,
       isEditingAlarmlist: true,
     });
-  }, [alarmlist.name]);
+  }, []);
 
   const handleSuccessfulRename = useCallback(
     (name: string) => {
