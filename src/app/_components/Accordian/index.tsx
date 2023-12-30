@@ -22,7 +22,7 @@ const useAccordion = () => {
   return context;
 };
 
-function Accordion({ children, defaultIndex = 0 }: AccordianProps) {
+export const Accordion = ({ children, defaultIndex = 0 }: AccordianProps) => {
   const [activeIndex, setActiveIndex] = useState([defaultIndex]);
 
   function onChangeIndex(index: number) {
@@ -46,13 +46,17 @@ function Accordion({ children, defaultIndex = 0 }: AccordianProps) {
       </AccordionContext.Provider>
     );
   });
-}
+};
 
-function AccordionItem({ children }: { children: React.ReactNode }) {
+export const AccordionItem = ({ children }: { children: React.ReactNode }) => {
   return <div className="mb-8 overflow-hidden rounded">{children}</div>;
-}
+};
 
-function AccordionHeader({ children }: { children: React.ReactNode }) {
+export const AccordionHeader = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const { isActive, index, onChangeIndex } = useAccordion();
 
   return (
@@ -63,9 +67,9 @@ function AccordionHeader({ children }: { children: React.ReactNode }) {
       {children}
     </motion.div>
   );
-}
+};
 
-function AccordionPanel({ children }: { children: React.ReactNode }) {
+const AccordionPanel = ({ children }: { children: React.ReactNode }) => {
   const { isActive } = useAccordion();
 
   return (
@@ -82,24 +86,24 @@ function AccordionPanel({ children }: { children: React.ReactNode }) {
       )}
     </AnimatePresence>
   );
-}
+};
 
-export default function App() {
-  return (
-    <section className="App">
-      <Accordion>
-        {[...Array(2)].map((_, i) => (
-          <AccordionItem key={i}>
-            <AccordionHeader>Accordion</AccordionHeader>
-            <AccordionPanel>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos quod
-              explicabo, nam sapiente id nostrum ex, ab numquam, doloremque
-              aspernatur quisquam illo! Officiis explicabo laborum incidunt
-              corrupti provident esse eligendi.
-            </AccordionPanel>
-          </AccordionItem>
-        ))}
-      </Accordion>
-    </section>
-  );
-}
+// export default function App() {
+//   return (
+//     <section className="App">
+//       <Accordion>
+//         {[...Array(2)].map((_, i) => (
+//           <AccordionItem key={i}>
+//             <AccordionHeader>Accordion</AccordionHeader>
+//             <AccordionPanel>
+//               Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos quod
+//               explicabo, nam sapiente id nostrum ex, ab numquam, doloremque
+//               aspernatur quisquam illo! Officiis explicabo laborum incidunt
+//               corrupti provident esse eligendi.
+//             </AccordionPanel>
+//           </AccordionItem>
+//         ))}
+//       </Accordion>
+//     </section>
+//   );
+// }
