@@ -291,7 +291,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
       </li>
       <motion.div
         id={alarmlist.id}
-        initial={false}
+        initial={{ height: 0 }}
         animate={
           isShowingAlarms
             ? {
