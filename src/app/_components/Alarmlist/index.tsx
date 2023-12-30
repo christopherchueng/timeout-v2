@@ -29,7 +29,8 @@ type SettingStatus = {
 };
 
 const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
-  const settingsRef = useRef<HTMLDivElement | null>(null);
+  const settingsRef = useRef<HTMLDivElement>(null);
+  const ellipsisRef = useRef<HTMLDivElement>(null);
 
   const [settingsTab, setSettingsTab] = useState<SettingStatus>({
     isHovering: false,
@@ -129,7 +130,6 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
       setSettingsTab((prev) => ({
         ...prev,
         isOpen: false,
-        // isHovering: false,
       }));
     } else if (
       // Close settings outside modal
@@ -192,14 +192,39 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
     [dispatch, name, settingsTab.isEditingAlarmlist],
   );
 
-  const handleToggleAccordion = useCallback(() => {
-    !settingsTab.isEditingAlarmlist && setIsShowingAlarms((prev) => !prev);
-  }, []);
+  const handleToggleAccordion = useCallback(
+    (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+      /*
+        Accordion should not toggle if user clicks on settings/ellipsis.
+        Accordion should remain the same status when opening/closing settings tab
+        or if settings tab is open and gets clicked out.
+        Otherwise, as long as click is within alarmlist header, accordion should open.
+
+        Return boolean to help AccordionHeader decide whether
+        onChange function should trigger.
+      */
+      if (
+        (ellipsisRef?.current &&
+          ellipsisRef.current?.contains(e.target as Node)) ||
+        (ellipsisRef?.current &&
+          !ellipsisRef.current?.contains(e.target as Node) &&
+          settingsTab.isOpen)
+      ) {
+        setIsShowingAlarms((prev) => prev);
+        return false;
+      } else {
+        setIsShowingAlarms((prev) => !prev);
+        return true;
+      }
+    },
+    [settingsTab.isOpen],
+  );
 
   return (
     <AccordionItem>
       <AccordionHeader
         handleToggleAccordion={handleToggleAccordion}
+        isSettingsTabOpen={settingsTab.isOpen}
         onMouseEnter={() => {
           !settingsTab.isEditingAlarmlist &&
             setSettingsTab((prev) => ({ ...prev, isHovering: true }));
@@ -246,7 +271,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
                 },
               )}
               onDoubleClick={() => {
-                setIsShowingAlarms((prev) => !prev);
+                setIsShowingAlarms((prev) => prev);
                 handleRenameAction();
               }}
             >
@@ -261,7 +286,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
               onMouseMove(e);
             }}
           >
-            <div className="relative">
+            <div className="relative" ref={ellipsisRef}>
               {settingsTab.isHovering && (
                 <Ellipsis isSettingsTabOpen={settingsTab.isOpen} />
               )}

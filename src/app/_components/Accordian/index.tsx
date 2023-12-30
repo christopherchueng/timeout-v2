@@ -69,12 +69,16 @@ export const AccordionItem = ({ children, ...rest }: TAccordionItem) => {
 
 interface TAccordionHeader extends HTMLMotionProps<"li"> {
   children: React.ReactNode;
-  handleToggleAccordion: () => void;
+  isSettingsTabOpen: boolean;
+  handleToggleAccordion: (
+    e: React.MouseEvent<HTMLLIElement, MouseEvent>,
+  ) => boolean;
 }
 
 // Alarmlist header/tab
 export const AccordionHeader = ({
   children,
+  isSettingsTabOpen,
   handleToggleAccordion,
   ...rest
 }: TAccordionHeader) => {
@@ -83,9 +87,10 @@ export const AccordionHeader = ({
   return (
     <motion.li
       {...rest}
-      onClick={() => {
-        handleToggleAccordion();
-        onChangeIndex(index);
+      onClick={(e) => {
+        if (handleToggleAccordion(e)) {
+          onChangeIndex(index);
+        }
       }}
     >
       {children}
