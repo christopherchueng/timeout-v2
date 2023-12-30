@@ -29,7 +29,7 @@ const useAccordion = () => {
 };
 
 // Parent wrapper
-export const Accordion = ({ children, defaultIndex = 0 }: AccordianProps) => {
+export const Accordion = ({ children, defaultIndex = -1 }: AccordianProps) => {
   const [activeIndex, setActiveIndex] = useState([defaultIndex]);
 
   function onChangeIndex(index: number) {
