@@ -2,7 +2,6 @@
 
 import { useCallback, useReducer, useRef, useState } from "react";
 import clsx from "clsx";
-import { motion } from "framer-motion";
 import { api } from "@/trpc/react";
 import { useWindowDimensions } from "@/hooks";
 import { alarmlistReducer } from "@/store";
@@ -20,6 +19,7 @@ import DeleteAlarmlistForm from "./DeleteAlarmlistForm";
 import SettingsWrapper from "./SettingsWrapper";
 import RenameAlarmlistForm from "./RenameAlarmlistForm";
 import Settings from "./Settings";
+import { AccordionHeader, AccordionItem, AccordionPanel } from "../Accordian";
 
 type SettingStatus = {
   isOpen: boolean;
@@ -192,11 +192,14 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
     [dispatch, name, settingsTab.isEditingAlarmlist],
   );
 
-  if (!alarms) return <div>No alarms</div>;
+  const handleToggleAccordion = useCallback(() => {
+    !settingsTab.isEditingAlarmlist && setIsShowingAlarms((prev) => !prev);
+  }, []);
 
   return (
-    <>
-      <li
+    <AccordionItem>
+      <AccordionHeader
+        handleToggleAccordion={handleToggleAccordion}
         onMouseEnter={() => {
           !settingsTab.isEditingAlarmlist &&
             setSettingsTab((prev) => ({ ...prev, isHovering: true }));
@@ -207,9 +210,6 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
             setSettingsTab((prev) => ({ ...prev, isHovering: false }));
           setIsHoveringIcon(false);
         }}
-        onClick={() =>
-          !settingsTab.isEditingAlarmlist && setIsShowingAlarms((prev) => !prev)
-        }
         className={clsx(
           settingsTab.isHovering && "bg-gray-200",
           "relative flex h-10 cursor-pointer items-center justify-between rounded-lg border border-transparent px-2 py-2 text-sm transition duration-200",
@@ -288,43 +288,8 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
             }}
           />
         </div>
-      </li>
-      <motion.div
-        id={alarmlist.id}
-        initial={{ height: 0 }}
-        animate={
-          isShowingAlarms
-            ? {
-                height: "auto",
-                opacity: 1,
-                display: "block",
-                transition: {
-                  height: {
-                    duration: 0.2,
-                  },
-                  opacity: {
-                    duration: 0.2,
-                    delay: 0.1,
-                  },
-                },
-              }
-            : {
-                height: 0,
-                opacity: 0,
-                transition: {
-                  height: {
-                    duration: 0.2,
-                  },
-                  opacity: {
-                    duration: 0.2,
-                  },
-                },
-                transitionEnd: {
-                  display: "none",
-                },
-              }
-        }
-      >
+      </AccordionHeader>
+      <AccordionPanel>
         {!!alarms.length ? (
           <ul>
             {alarms.map((alarm) => (
@@ -345,7 +310,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
             No alarms under '{name}'!
           </p>
         )}
-      </motion.div>
+      </AccordionPanel>
       {settingsTab.isDeleteConfirmationOpen && (
         <DeleteAlarmlistForm
           alarmlist={alarmlist}
@@ -359,7 +324,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
           }
         />
       )}
-    </>
+    </AccordionItem>
   );
 };
 

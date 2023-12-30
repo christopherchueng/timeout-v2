@@ -4,6 +4,7 @@ import { api } from "@/trpc/react";
 
 import Alarmlist from "../Alarmlist";
 import Loading from "./loading";
+import { Accordion } from "../Accordian";
 
 const Alarmlists = () => {
   const { data: alarmlists, isLoading } =
@@ -19,11 +20,11 @@ const Alarmlists = () => {
     );
 
   return (
-    <ul className="px-4">
+    <Accordion>
       {alarmlists.map((alarmlist) => (
         <Alarmlist key={alarmlist.id} alarmlist={alarmlist} />
       ))}
-    </ul>
+    </Accordion>
   );
 };
 

@@ -1,5 +1,11 @@
-import { Children, createContext, useContext, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import {
+  Children,
+  HTMLAttributes,
+  createContext,
+  useContext,
+  useState,
+} from "react";
+import { AnimatePresence, HTMLMotionProps, motion } from "framer-motion";
 
 type TAccordianContext = {
   isActive: boolean;
@@ -22,6 +28,7 @@ const useAccordion = () => {
   return context;
 };
 
+// Parent wrapper
 export const Accordion = ({ children, defaultIndex = 0 }: AccordianProps) => {
   const [activeIndex, setActiveIndex] = useState([defaultIndex]);
 
@@ -48,28 +55,46 @@ export const Accordion = ({ children, defaultIndex = 0 }: AccordianProps) => {
   });
 };
 
-export const AccordionItem = ({ children }: { children: React.ReactNode }) => {
-  return <div className="mb-8 overflow-hidden rounded">{children}</div>;
-};
-
-export const AccordionHeader = ({
-  children,
-}: {
+interface TAccordionItem extends HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
-}) => {
-  const { isActive, index, onChangeIndex } = useAccordion();
-
+}
+// Each alarmlist
+export const AccordionItem = ({ children, ...rest }: TAccordionItem) => {
   return (
-    <motion.div
-      className={`AccordionHeader ${isActive ? "active" : ""}`}
-      onClick={() => onChangeIndex(index)}
-    >
+    <div {...rest} className="overflow-hidden rounded px-4">
       {children}
-    </motion.div>
+    </div>
   );
 };
 
-const AccordionPanel = ({ children }: { children: React.ReactNode }) => {
+interface TAccordionHeader extends HTMLMotionProps<"li"> {
+  children: React.ReactNode;
+  handleToggleAccordion: () => void;
+}
+
+// Alarmlist header/tab
+export const AccordionHeader = ({
+  children,
+  handleToggleAccordion,
+  ...rest
+}: TAccordionHeader) => {
+  const { index, onChangeIndex } = useAccordion();
+
+  return (
+    <motion.li
+      {...rest}
+      onClick={() => {
+        handleToggleAccordion();
+        onChangeIndex(index);
+      }}
+    >
+      {children}
+    </motion.li>
+  );
+};
+
+// Alarms
+export const AccordionPanel = ({ children }: { children: React.ReactNode }) => {
   const { isActive } = useAccordion();
 
   return (
@@ -87,23 +112,3 @@ const AccordionPanel = ({ children }: { children: React.ReactNode }) => {
     </AnimatePresence>
   );
 };
-
-// export default function App() {
-//   return (
-//     <section className="App">
-//       <Accordion>
-//         {[...Array(2)].map((_, i) => (
-//           <AccordionItem key={i}>
-//             <AccordionHeader>Accordion</AccordionHeader>
-//             <AccordionPanel>
-//               Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos quod
-//               explicabo, nam sapiente id nostrum ex, ab numquam, doloremque
-//               aspernatur quisquam illo! Officiis explicabo laborum incidunt
-//               corrupti provident esse eligendi.
-//             </AccordionPanel>
-//           </AccordionItem>
-//         ))}
-//       </Accordion>
-//     </section>
-//   );
-// }
