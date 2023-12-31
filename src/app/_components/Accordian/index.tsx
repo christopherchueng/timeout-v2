@@ -15,7 +15,7 @@ type TAccordionContext = {
 
 type AccordionProps = {
   children: React.ReactElement[];
-  defaultId: string;
+  defaultId?: string;
 };
 const AccordionContext = createContext<TAccordionContext | null>(null);
 const useAccordion = () => {
@@ -62,7 +62,7 @@ interface TAccordionItem extends HTMLAttributes<HTMLDivElement> {
 // Each alarmlist
 export const AccordionItem = ({ children, ...rest }: TAccordionItem) => {
   return (
-    <div {...rest} className="overflow-hidden rounded px-4">
+    <div {...rest} className="mt-0.5 overflow-hidden rounded px-4 first:mt-0">
       {children}
     </div>
   );
