@@ -220,10 +220,6 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
     [settingsTab.isOpen],
   );
 
-  const closeAccordion = useCallback(() => {
-    setIsShowingAlarms(false);
-  }, []);
-
   return (
     <AccordionItem>
       <AccordionHeader
@@ -342,7 +338,6 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
       {settingsTab.isDeleteConfirmationOpen && (
         <DeleteAlarmlistForm
           alarmlist={alarmlist}
-          closeAccordion={closeAccordion}
           isDeleteAlarmlistModalOpen={settingsTab.isDeleteConfirmationOpen}
           handleCloseModal={() =>
             setSettingsTab((prev) => ({
