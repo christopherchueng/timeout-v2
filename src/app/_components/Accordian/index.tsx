@@ -7,17 +7,17 @@ import {
 } from "react";
 import { AnimatePresence, HTMLMotionProps, motion } from "framer-motion";
 
-type TAccordianContext = {
+type TAccordionContext = {
   isActive: boolean;
   id: string;
   onChangeIndex: (id: string) => void;
 };
 
-type AccordianProps = {
+type AccordionProps = {
   children: React.ReactElement[];
-  defaultId?: string;
+  defaultId: string;
 };
-const AccordionContext = createContext<TAccordianContext | null>(null);
+const AccordionContext = createContext<TAccordionContext | null>(null);
 const useAccordion = () => {
   const context = useContext(AccordionContext);
 
@@ -29,7 +29,7 @@ const useAccordion = () => {
 };
 
 // Parent wrapper
-export const Accordion = ({ children, defaultId = "" }: AccordianProps) => {
+export const Accordion = ({ children, defaultId = "" }: AccordionProps) => {
   const [activeAlarmlistIds, setActiveAlarmlistIds] = useState([defaultId]);
 
   const onChangeIndex = (id: string) => {
