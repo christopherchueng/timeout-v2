@@ -9,13 +9,13 @@ import { AnimatePresence, HTMLMotionProps, motion } from "framer-motion";
 
 type TAccordianContext = {
   isActive: boolean;
-  index: number;
-  onChangeIndex: (index: number) => void;
+  id: string | null;
+  onChangeIndex: (id: string) => void;
 };
 
 type AccordianProps = {
-  children: React.ReactNode;
-  defaultIndex?: number;
+  children: React.ReactElement[];
+  defaultId?: string;
 };
 const AccordionContext = createContext<TAccordianContext | null>(null);
 const useAccordion = () => {
@@ -29,26 +29,25 @@ const useAccordion = () => {
 };
 
 // Parent wrapper
-export const Accordion = ({ children, defaultIndex = -1 }: AccordianProps) => {
-  const [activeIndex, setActiveIndex] = useState([defaultIndex]);
+export const Accordion = ({ children, defaultId = "" }: AccordianProps) => {
+  const [activeAlarmlists, setActiveAlarmlists] = useState([defaultId]);
 
-  function onChangeIndex(index: number) {
-    setActiveIndex((currentActiveIndex: number[]) => {
-      if (currentActiveIndex.includes(index)) {
-        return currentActiveIndex.filter((i) => i !== index);
+  const onChangeIndex = (id: string) => {
+    setActiveAlarmlists((currentActiveAlarmlists: string[]) => {
+      if (currentActiveAlarmlists.includes(id)) {
+        return currentActiveAlarmlists.filter((activeId) => activeId !== id);
       }
 
-      return currentActiveIndex.concat(index);
+      return [...currentActiveAlarmlists, id];
     });
-  }
+  };
 
-  return Children.map(children, (child, index) => {
-    const isActive = Array.isArray(activeIndex)
-      ? activeIndex.includes(index)
-      : activeIndex === index;
+  return Children.map(children, (child: React.ReactElement) => {
+    const { key: id } = child;
+    const isActive = !!child.key && activeAlarmlists.includes(child.key);
 
     return (
-      <AccordionContext.Provider value={{ isActive, index, onChangeIndex }}>
+      <AccordionContext.Provider value={{ isActive, id, onChangeIndex }}>
         {child}
       </AccordionContext.Provider>
     );
@@ -69,7 +68,6 @@ export const AccordionItem = ({ children, ...rest }: TAccordionItem) => {
 
 interface TAccordionHeader extends HTMLMotionProps<"li"> {
   children: React.ReactNode;
-  isSettingsTabOpen: boolean;
   handleToggleAccordion: (
     e: React.MouseEvent<HTMLLIElement, MouseEvent>,
   ) => boolean;
@@ -78,18 +76,18 @@ interface TAccordionHeader extends HTMLMotionProps<"li"> {
 // Alarmlist header/tab
 export const AccordionHeader = ({
   children,
-  isSettingsTabOpen,
   handleToggleAccordion,
   ...rest
 }: TAccordionHeader) => {
-  const { index, onChangeIndex } = useAccordion();
+  const { id, onChangeIndex } = useAccordion();
 
   return (
     <motion.li
       {...rest}
       onClick={(e) => {
         if (handleToggleAccordion(e)) {
-          onChangeIndex(index);
+          if (!id) return;
+          onChangeIndex(id);
         }
       }}
     >

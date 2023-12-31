@@ -220,11 +220,14 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
     [settingsTab.isOpen],
   );
 
+  const closeAccordion = useCallback(() => {
+    setIsShowingAlarms(false);
+  }, []);
+
   return (
     <AccordionItem>
       <AccordionHeader
         handleToggleAccordion={handleToggleAccordion}
-        isSettingsTabOpen={settingsTab.isOpen}
         onMouseEnter={() => {
           !settingsTab.isEditingAlarmlist &&
             setSettingsTab((prev) => ({ ...prev, isHovering: true }));
@@ -339,6 +342,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
       {settingsTab.isDeleteConfirmationOpen && (
         <DeleteAlarmlistForm
           alarmlist={alarmlist}
+          closeAccordion={closeAccordion}
           isDeleteAlarmlistModalOpen={settingsTab.isDeleteConfirmationOpen}
           handleCloseModal={() =>
             setSettingsTab((prev) => ({

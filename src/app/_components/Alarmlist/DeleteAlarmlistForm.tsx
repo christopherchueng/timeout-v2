@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 type DeleteAlarmlistFormProps = {
   alarmlist: Alarmlist;
   isDeleteAlarmlistModalOpen: boolean;
+  closeAccordion: () => void;
   handleCloseModal: () => void;
 };
 
@@ -17,6 +18,7 @@ const DeleteAlarmlistForm = ({
   alarmlist,
   isDeleteAlarmlistModalOpen,
   handleCloseModal,
+  closeAccordion,
 }: DeleteAlarmlistFormProps) => {
   const ctx = api.useUtils();
 
@@ -68,6 +70,7 @@ const DeleteAlarmlistForm = ({
           disabled={isLoading}
           onClick={() => {
             deleteAlarmlist({ id: alarmlist.id });
+            closeAccordion();
             handleCloseModal();
           }}
         >
