@@ -30,21 +30,21 @@ const useAccordion = () => {
 
 // Parent wrapper
 export const Accordion = ({ children, defaultId = "" }: AccordianProps) => {
-  const [activeAlarmlists, setActiveAlarmlists] = useState([defaultId]);
+  const [activeAlarmlistIds, setActiveAlarmlistIds] = useState([defaultId]);
 
   const onChangeIndex = (id: string) => {
-    setActiveAlarmlists((currentActiveAlarmlists: string[]) => {
-      if (currentActiveAlarmlists.includes(id)) {
-        return currentActiveAlarmlists.filter((activeId) => activeId !== id);
+    setActiveAlarmlistIds((currentActiveAlarmlistIds: string[]) => {
+      if (currentActiveAlarmlistIds.includes(id)) {
+        return currentActiveAlarmlistIds.filter((activeId) => activeId !== id);
       }
 
-      return [...currentActiveAlarmlists, id];
+      return [...currentActiveAlarmlistIds, id];
     });
   };
 
   return Children.map(children, (child: React.ReactElement) => {
     const { key: id } = child;
-    const isActive = !!child.key && activeAlarmlists.includes(child.key);
+    const isActive = !!child.key && activeAlarmlistIds.includes(child.key);
 
     if (!id) return;
 
