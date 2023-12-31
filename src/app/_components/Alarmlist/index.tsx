@@ -32,15 +32,15 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
   const settingsRef = useRef<HTMLDivElement>(null);
   const ellipsisRef = useRef<HTMLDivElement>(null);
 
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [isHoveringIcon, setIsHoveringIcon] = useState(false);
+  const [isShowingAlarms, setIsShowingAlarms] = useState(false);
   const [settingsTab, setSettingsTab] = useState<SettingStatus>({
     isHovering: false,
     isOpen: false,
     isDeleteConfirmationOpen: false,
     isEditingAlarmlist: false,
   });
-  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
-  const [isHoveringIcon, setIsHoveringIcon] = useState(false);
-  const [isShowingAlarms, setIsShowingAlarms] = useState(false);
 
   const initialState = {
     name: alarmlist.name,
@@ -80,7 +80,6 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
         return newAlarmlists;
       });
 
-      // Return a context object with the snapshotted value
       return { previousAlarmlists };
     },
 
@@ -91,6 +90,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
         alarms,
         isOn,
       });
+      void ctx.alarmlist.getAllWithAlarms.invalidate();
     },
 
     // If the mutation fails,
@@ -102,10 +102,6 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
         undefined,
         () => context.previousAlarmlists,
       );
-    },
-    // Always refetch after error or success:
-    onSettled: () => {
-      void ctx.alarmlist.getAllWithAlarms.invalidate();
     },
   });
 
