@@ -194,6 +194,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
         Accordion should not toggle if user clicks on settings/ellipsis.
         Accordion should remain the same status when opening/closing settings tab
         or if settings tab is open and gets clicked out.
+        Accordion should also not toggle if editing alarmlist
         Otherwise, as long as click is within alarmlist header, accordion should open.
 
         Return boolean to help AccordionHeader decide whether
@@ -202,7 +203,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
       if (
         (ellipsisRef?.current?.contains(e.target as Node) ?? false) ||
         ((!ellipsisRef?.current?.contains(e.target as Node) &&
-          settingsTab.isOpen) ??
+          (settingsTab.isOpen || settingsTab.isEditingAlarmlist)) ??
           false)
       ) {
         setIsShowingAlarms((prev) => prev);
@@ -212,7 +213,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
         return true;
       }
     },
-    [settingsTab.isOpen],
+    [settingsTab.isOpen, settingsTab.isEditingAlarmlist],
   );
 
   return (
