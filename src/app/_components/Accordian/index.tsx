@@ -1,11 +1,11 @@
 import {
   Children,
-  HTMLAttributes,
+  type HTMLAttributes,
   createContext,
   useContext,
   useState,
 } from "react";
-import { AnimatePresence, HTMLMotionProps, motion } from "framer-motion";
+import { AnimatePresence, type HTMLMotionProps, motion } from "framer-motion";
 
 type TAccordionContext = {
   isActive: boolean;

@@ -200,11 +200,10 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
         onChange function should trigger.
       */
       if (
-        (ellipsisRef?.current &&
-          ellipsisRef.current?.contains(e.target as Node)) ||
-        (ellipsisRef?.current &&
-          !ellipsisRef.current?.contains(e.target as Node) &&
-          settingsTab.isOpen)
+        (ellipsisRef?.current?.contains(e.target as Node) ?? false) ||
+        ((!ellipsisRef?.current?.contains(e.target as Node) &&
+          settingsTab.isOpen) ??
+          false)
       ) {
         setIsShowingAlarms((prev) => prev);
         return false;
