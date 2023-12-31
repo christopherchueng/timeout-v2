@@ -9,7 +9,7 @@ import { AnimatePresence, HTMLMotionProps, motion } from "framer-motion";
 
 type TAccordianContext = {
   isActive: boolean;
-  id: string | null;
+  id: string;
   onChangeIndex: (id: string) => void;
 };
 
@@ -45,6 +45,8 @@ export const Accordion = ({ children, defaultId = "" }: AccordianProps) => {
   return Children.map(children, (child: React.ReactElement) => {
     const { key: id } = child;
     const isActive = !!child.key && activeAlarmlists.includes(child.key);
+
+    if (!id) return;
 
     return (
       <AccordionContext.Provider value={{ isActive, id, onChangeIndex }}>
@@ -86,7 +88,6 @@ export const AccordionHeader = ({
       {...rest}
       onClick={(e) => {
         if (handleToggleAccordion(e)) {
-          if (!id) return;
           onChangeIndex(id);
         }
       }}
