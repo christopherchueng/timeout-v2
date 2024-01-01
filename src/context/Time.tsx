@@ -24,6 +24,7 @@ type Part = {
   minute: string | number;
   second: string | number;
   meridiem: string;
+  day: string;
 };
 
 type TimeProps = {
@@ -37,6 +38,7 @@ const TimeProvider = ({ children }: TimeProps) => {
     minute: "",
     second: "",
     meridiem: "",
+    day: "",
   });
 
   useEffect(() => {
@@ -47,6 +49,7 @@ const TimeProvider = ({ children }: TimeProps) => {
           minute: dayjs(date).format("mm"),
           second: dayjs(date).format("s"),
           meridiem: dayjs(date).format("A"),
+          day: dayjs(date).format("ddd"),
         }),
       0,
     );
