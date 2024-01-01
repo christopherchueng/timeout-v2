@@ -1,21 +1,43 @@
 import { type MutableRefObject, type RefCallback } from "react";
 import { z } from "zod";
 
-export const createAlarmlistSchema = z.object({
+// Alarmlist schemas
+const nameSchema = {
   name: z
     .string()
     .trim()
     .min(1, { message: "Please enter a name." })
     .max(20, { message: "Name must contain at most 20 character(s)." }),
+};
+export const createAlarmlistSchema = z.object({
+  ...nameSchema,
 });
 
 export const renameAlarmlistSchema = z.object({
   id: z.string(),
-  name: z
-    .string()
-    .trim()
-    .min(1, { message: "Please enter a name." })
-    .max(20, { message: "Name must contain at most 20 character(s)." }),
+  ...nameSchema,
+});
+
+// Alarm schemas
+export const alarmSchema = {
+  name: z.string().min(1).optional(),
+  hour: z.number().gt(0).lt(13).int(),
+  minutes: z.number().gte(0).lt(60).int(),
+  meridiem: z.string(),
+  sound: z.string().optional(),
+  repeat: z.string().optional(),
+  snooze: z.boolean(),
+  alarmlistId: z.string(),
+  userId: z.string(),
+};
+
+export const createAlarmSchema = z.object({
+  ...alarmSchema,
+});
+
+export const updateAlarmSchema = z.object({
+  id: z.string(),
+  ...alarmSchema,
 });
 
 type MutableRefList<T> = Array<

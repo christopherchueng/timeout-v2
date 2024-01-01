@@ -96,8 +96,10 @@ const CreateButton = () => {
                 onClick={() => setIsAlarmModalOpen((prev) => !prev)}
                 className="cursor-pointer rounded-md px-2 py-2 hover:z-50 hover:bg-gray-200"
               >
-                <CreateAlarmIcon />
-                <span>New alarm</span>
+                <div className="flex items-center gap-1.5">
+                  <CreateAlarmIcon />
+                  <span>New alarm</span>
+                </div>
               </div>
             </div>
           </div>

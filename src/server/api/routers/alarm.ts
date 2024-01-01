@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
+import { createAlarmSchema, updateAlarmSchema } from "@/utils";
 
 // const addUserDataToAlarm = async (alarms: Alarm[]) => {
 //   const session = await getServerAuthSession();
@@ -55,19 +56,7 @@ export const alarmRouter = createTRPCRouter({
       return alarms;
     }),
   create: protectedProcedure
-    .input(
-      z.object({
-        name: z.string().min(1).optional(),
-        hour: z.number(),
-        minutes: z.number(),
-        meridiem: z.string(),
-        sound: z.string().optional(),
-        repeat: z.string().optional(),
-        snooze: z.boolean(),
-        alarmlistId: z.string(),
-        userId: z.string(),
-      }),
-    )
+    .input(createAlarmSchema)
     .mutation(async ({ ctx, input }) => {
       const {
         name,
@@ -96,19 +85,7 @@ export const alarmRouter = createTRPCRouter({
       });
     }),
   update: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        name: z.string().min(1).optional(),
-        hour: z.number(),
-        minutes: z.number(),
-        meridiem: z.string(),
-        sound: z.string().optional(),
-        repeat: z.string().optional(),
-        snooze: z.boolean(),
-        alarmlistId: z.string(),
-      }),
-    )
+    .input(updateAlarmSchema)
     .mutation(async ({ ctx, input }) => {
       const {
         id,
