@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { createAlarmSchema, updateAlarmSchema } from "@/utils";
+import { getServerAuthSession } from "@/server/auth";
 
 // const addUserDataToAlarm = async (alarms: Alarm[]) => {
 //   const session = await getServerAuthSession();
@@ -55,6 +56,24 @@ export const alarmRouter = createTRPCRouter({
 
       return alarms;
     }),
+  getAll: protectedProcedure.query(async ({ ctx }) => {
+    const session = await getServerAuthSession();
+
+    if (!session) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "User not found",
+      });
+    }
+
+    const alarms = await ctx.db.alarm.findMany({
+      where: {
+        userId: session.user.id,
+      },
+    });
+
+    return alarms;
+  }),
   create: protectedProcedure
     .input(createAlarmSchema)
     .mutation(async ({ ctx, input }) => {
