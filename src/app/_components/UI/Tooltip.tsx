@@ -1,5 +1,4 @@
 import React from "react";
-import clsx from "clsx";
 
 type TooltipProps = {
   text: string;
@@ -7,16 +6,12 @@ type TooltipProps = {
 };
 
 const Tooltip = ({ text, children }: TooltipProps) => {
-  const classes = clsx(
-    `
-      ${
-        text && "animate-dilate"
-      } absolute -bottom-16 z-50 whitespace-nowrap rounded border px-2 py-1.5 text-xs transition-all delay-75 duration-300`,
-  );
   return (
-    <div className="group relative inline-block">
+    <div className="relative inline-block">
       {children}
-      <span className={classes}>{text}</span>
+      <span className="absolute -bottom-16 -left-4 z-50 animate-dilate whitespace-nowrap rounded border px-2 py-1.5 text-xs transition duration-75">
+        {text}
+      </span>
     </div>
   );
 };

@@ -104,7 +104,7 @@ const CreateButton = () => {
       </button>
       {isHovering && !isTabOpen && (
         <div className="absolute mx-auto inline-flex justify-center">
-          <Tooltip text="Create" />
+          <Tooltip text="Create new" />
         </div>
       )}
       {isModalOpen && (
