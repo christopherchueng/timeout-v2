@@ -1,3 +1,4 @@
+import { SelectedItems } from "@nextui-org/select";
 import { type MutableRefObject, type RefCallback } from "react";
 import { z } from "zod";
 
@@ -59,3 +60,46 @@ export function setRef<T>(val: T, ...refs: MutableRefList<T>): void {
     }
   });
 }
+
+export const repeatDays = (days: SelectedItems<object>): string => {
+  if (!days.length) return "";
+
+  const sortedDays = [...days].sort((a, b) => {
+    return a.props!.value - b.props!.value;
+  });
+
+  if (!sortedDays[0]?.textValue) return "";
+
+  if (days.length === 1) return sortedDays[0].textValue;
+  if (days.length === 7) return "Every day";
+
+  const isWeekend = sortedDays.every(
+    (day) => day.textValue === "Sun" || day.textValue === "Sat",
+  );
+
+  if (isWeekend) {
+    return "Weekends";
+  }
+
+  const isWeekday =
+    sortedDays.length === 5 &&
+    sortedDays.every(
+      (day) => day.textValue !== "Sun" && day.textValue !== "Sat",
+    );
+
+  if (isWeekday) {
+    return "Weekdays";
+  }
+
+  const formattedDays = sortedDays.map((day) => day.textValue);
+  const lastDay = formattedDays.pop();
+
+  if (formattedDays.length >= 3) {
+    return `${formattedDays.join(", ")}, and ${lastDay}`;
+  }
+  if (formattedDays.length) {
+    return `${formattedDays.join(", ")} and ${lastDay}`;
+  }
+
+  return lastDay || "";
+};

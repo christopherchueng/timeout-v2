@@ -2,7 +2,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { RouterOutputs } from "@/trpc/shared";
 import { api } from "@/trpc/react";
 import { Select, SelectItem } from "@nextui-org/select";
-import { createAlarmSchema } from "@/utils";
+import { createAlarmSchema, repeatDays } from "@/utils";
 import { useSession } from "next-auth/react";
 import type { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -101,7 +101,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
   if (!alarmlists) return;
 
   return (
-    <form className="mx-auto my-10 flex h-full w-96 flex-col justify-center">
+    <form className="mx-auto my-10 flex h-full w-96 flex-col justify-center gap-4">
       <div className="mb-6 flex w-full flex-row gap-4 md:mb-0 md:flex-nowrap">
         {/* ------------------------- HOUR ------------------------- */}
         <label htmlFor="hour" className="w-full">
@@ -216,9 +216,12 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
           label="Repeat"
           radius="none"
           classNames={{ listboxWrapper: ["bg-white"] }}
+          renderValue={(days) => {
+            return repeatDays(days);
+          }}
         >
-          {DAYS.map((DAY) => (
-            <SelectItem key={DAY} textValue={DAY} value={DAY}>
+          {DAYS.map((DAY, index) => (
+            <SelectItem key={DAY} textValue={DAY} value={index + 1}>
               {DAY}
             </SelectItem>
           ))}
