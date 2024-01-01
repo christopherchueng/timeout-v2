@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import clsx from "clsx";
 import { CreateAlarmlistIcon, Plus } from "../UI";
 import Tooltip from "../UI/Tooltip";
 import Modal from "../Modal";
 import CreateAlarmlistForm from "../Alarmlist/CreateForm";
+import CreateAlarmForm from "../Alarm/CreateForm";
 
 // Chevron is different from alarmlist chevron to avoid toggle logic.
 // This chevron will never be grayed out whereas the alarmlist chevron could.
@@ -48,6 +48,7 @@ const CreateButton = () => {
   const [isTabOpen, setIsTabOpen] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [isAlarmlistModalOpen, setIsAlarmlistModalOpen] = useState(false);
+  const [isAlarmModalOpen, setIsAlarmModalOpen] = useState(false);
 
   useEffect(() => {
     if (!isTabOpen) return;
@@ -91,13 +92,13 @@ const CreateButton = () => {
                   <span>New alarmlist</span>
                 </div>
               </div>
-              <Link
-                className="flex items-center gap-1.5 rounded-md px-2 py-2 hover:bg-gray-200"
-                href="/create"
+              <div
+                onClick={() => setIsAlarmModalOpen((prev) => !prev)}
+                className="cursor-pointer rounded-md px-2 py-2 hover:z-50 hover:bg-gray-200"
               >
                 <CreateAlarmIcon />
                 <span>New alarm</span>
-              </Link>
+              </div>
             </div>
           </div>
         )}
@@ -107,14 +108,22 @@ const CreateButton = () => {
           <Tooltip text="Create new" />
         </div>
       )}
-      {isAlarmlistModalOpen && (
+      {isAlarmlistModalOpen ? (
         <Modal
           isOpen={isAlarmlistModalOpen}
           handleClose={() => setIsAlarmlistModalOpen((prev) => !prev)}
         >
           <CreateAlarmlistForm setIsModalOpen={setIsAlarmlistModalOpen} />
         </Modal>
-      )}
+      ) : null}
+      {isAlarmModalOpen ? (
+        <Modal
+          isOpen={isAlarmModalOpen}
+          handleClose={() => setIsAlarmModalOpen((prev) => !prev)}
+        >
+          <CreateAlarmForm setIsModalOpen={setIsAlarmModalOpen} />
+        </Modal>
+      ) : null}
     </div>
   );
 };
