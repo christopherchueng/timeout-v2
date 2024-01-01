@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { Switch as SwitchComponent } from "@nextui-org/switch";
 import { extendVariants } from "@nextui-org/system";
 

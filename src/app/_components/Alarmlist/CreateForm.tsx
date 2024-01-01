@@ -1,4 +1,3 @@
-import React from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { api } from "@/trpc/react";

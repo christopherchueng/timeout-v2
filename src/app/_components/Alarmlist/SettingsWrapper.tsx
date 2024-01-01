@@ -1,8 +1,4 @@
-import React, {
-  useEffect,
-  type ComponentPropsWithoutRef,
-  forwardRef,
-} from "react";
+import { useEffect, type ComponentPropsWithoutRef, forwardRef } from "react";
 import Portal from "../Portal";
 
 interface SettingsWrapperProps extends ComponentPropsWithoutRef<"div"> {

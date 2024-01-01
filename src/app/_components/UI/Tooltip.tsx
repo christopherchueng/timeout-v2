@@ -1,5 +1,3 @@
-import React from "react";
-
 type TooltipProps = {
   text: string;
   children?: React.ReactNode;

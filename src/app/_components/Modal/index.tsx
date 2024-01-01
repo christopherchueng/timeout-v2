@@ -1,4 +1,4 @@
-import React, { useEffect, type ComponentPropsWithoutRef, useRef } from "react";
+import { useEffect, type ComponentPropsWithoutRef, useRef } from "react";
 import Portal from "../Portal";
 
 interface ModalProps extends ComponentPropsWithoutRef<"button"> {
