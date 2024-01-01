@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createAlarmlistSchema } from "@/utils";
 import { Button, Input } from "../UI";
 
-export type AlarmlistFormValues = z.infer<typeof createAlarmlistSchema>;
+type AlarmlistFormValues = z.infer<typeof createAlarmlistSchema>;
 type Alarmlist = RouterOutputs["alarmlist"]["getAll"][number];
 
 type CreateAlarmlistFormProps = {
@@ -91,7 +91,7 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
 
   return (
     <form
-      className="flex flex-col gap-4"
+      className="mx-4 my-6 flex flex-col justify-center gap-4"
       onSubmit={handleSubmit(handleCreateAlarmlist)}
     >
       <div className="w-min">

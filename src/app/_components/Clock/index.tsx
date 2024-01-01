@@ -3,12 +3,11 @@
 import { useTimeContext } from "@/context/Time";
 import clsx from "clsx";
 import Loading from "./loading";
+import { DAYS } from "@/utils/constants";
 
 type ClockProps = {
   size: "sm" | "lg";
 };
-
-const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
 
 const Clock = ({ size = "lg" }: ClockProps) => {
   const { parts } = useTimeContext();

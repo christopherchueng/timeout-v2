@@ -71,7 +71,7 @@ const Switch = ({ id, checked, onChange }: SwitchProps) => {
   return (
     <div className="flex w-8">
       <MySwitch
-        id={`switch_${id}`}
+        id={`switch-${id}`}
         name={id}
         aria-labelledby={`switch_${id}`}
         onChange={onChange}

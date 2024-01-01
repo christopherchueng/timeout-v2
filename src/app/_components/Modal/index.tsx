@@ -48,11 +48,12 @@ const Modal = ({ children, isOpen, handleClose }: ModalProps) => {
       >
         <div
           ref={modalRef}
-          className="relative box-border flex h-56 w-72 items-center justify-center rounded border bg-white p-8 shadow-lg"
+          className="relative box-border flex items-center justify-center rounded border bg-white p-8 shadow-lg"
+          // className="relative box-border flex h-56 w-72 items-center justify-center rounded border bg-white p-8 shadow-lg"
         >
           <button
             onClick={handleClose}
-            className="absolute right-5 top-0 my-3 outline-none"
+            className="absolute right-4 top-0 my-3 outline-none"
           >
             &#x2715;
           </button>
