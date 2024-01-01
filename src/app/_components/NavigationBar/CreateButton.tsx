@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import clsx from "clsx";
-import { CreateAlarmlistIcon, Plus } from ".";
-import Tooltip from "./Tooltip";
+import { CreateAlarmlistIcon, Plus } from "../UI";
+import Tooltip from "../UI/Tooltip";
 import Modal from "../Modal";
 import CreateAlarmlistForm from "../Alarmlist/CreateForm";
 

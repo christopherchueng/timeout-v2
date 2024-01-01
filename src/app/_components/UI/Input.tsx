@@ -19,8 +19,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         className="row-reverse relative mb-1 flex w-48 translate-y-0 cursor-text items-center border-b border-b-gray-400 transition focus-within:border-b-slate-900"
       >
         <input
+          id={label}
+          name={label}
+          aria-labelledby={label}
           ref={ref}
           data-testid={testId}
+          autoComplete="on"
           className="peer w-full bg-transparent pb-1.5 pt-4 text-xs outline-none"
           {...rest}
         />
