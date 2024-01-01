@@ -5,7 +5,7 @@ import { nextui } from "@nextui-org/theme";
 export default {
   content: [
     "./src/**/*.tsx",
-    "./node_modules/@nextui-org/theme/dist/components/button.js",
+    "./node_modules/@nextui-org/theme/dist/components/(button|select).js",
   ],
   theme: {
     extend: {

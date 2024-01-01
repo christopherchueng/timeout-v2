@@ -15,6 +15,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
     "@next-auth/prisma-adapter": "^1.0.7",
+    "@nextui-org/select": "^2.1.20",
     "@nextui-org/switch": "^2.0.25",
     "@nextui-org/system": "^2.0.15",
     "@nextui-org/theme": "^2.1.17",
