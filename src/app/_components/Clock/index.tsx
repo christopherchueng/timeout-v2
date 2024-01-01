@@ -14,8 +14,6 @@ const Clock = ({ size = "lg" }: ClockProps) => {
   const { parts } = useTimeContext();
   const { hour, minute, meridiem, day } = parts;
 
-  // console.log("what is day", day);
-
   if (!parts.hour) return <Loading size={size} />;
 
   return (
