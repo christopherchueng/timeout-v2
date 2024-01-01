@@ -38,7 +38,7 @@ const Clock = ({ size = "lg" }: ClockProps) => {
           {meridiem}
         </span>
       </div>
-      <div className="inline-flex justify-center gap-5 transition md:gap-10">
+      <div className="inline-flex justify-center gap-5 md:gap-10">
         {DAYS.map((DAY) => (
           <div
             key={DAY}
