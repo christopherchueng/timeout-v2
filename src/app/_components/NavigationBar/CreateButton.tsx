@@ -47,7 +47,7 @@ const CreateAlarmIcon = () => (
 const CreateButton = () => {
   const [isTabOpen, setIsTabOpen] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAlarmlistModalOpen, setIsAlarmlistModalOpen] = useState(false);
 
   useEffect(() => {
     if (!isTabOpen) return;
@@ -83,7 +83,7 @@ const CreateButton = () => {
           <div className="relative animate-dilate transition-all">
             <div className="absolute left-0 top-1.5 z-50 flex h-fit w-36 flex-col whitespace-nowrap rounded-md border bg-white p-2 shadow-lg">
               <div
-                onClick={() => setIsModalOpen((prev) => !prev)}
+                onClick={() => setIsAlarmlistModalOpen((prev) => !prev)}
                 className="cursor-pointer rounded-md px-2 py-2 hover:z-50 hover:bg-gray-200"
               >
                 <div className="flex items-center gap-1.5">
@@ -107,12 +107,12 @@ const CreateButton = () => {
           <Tooltip text="Create new" />
         </div>
       )}
-      {isModalOpen && (
+      {isAlarmlistModalOpen && (
         <Modal
-          isOpen={isModalOpen}
-          handleClose={() => setIsModalOpen((prev) => !prev)}
+          isOpen={isAlarmlistModalOpen}
+          handleClose={() => setIsAlarmlistModalOpen((prev) => !prev)}
         >
-          <CreateAlarmlistForm setIsModalOpen={setIsModalOpen} />
+          <CreateAlarmlistForm setIsModalOpen={setIsAlarmlistModalOpen} />
         </Modal>
       )}
     </div>
