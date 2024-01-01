@@ -15,24 +15,26 @@ const Clock = ({ size = "lg" }: ClockProps) => {
 
   return (
     <div className="flex w-full flex-row justify-center">
-      <span>{hour}</span>
-      <span
-        className={clsx("animate-blink text-center transition", {
-          "w-2": size === "sm",
-          "w-20": size === "lg",
-        })}
-      >
-        :
-      </span>
-      <span>{minute}</span>&nbsp;
-      <span
-        className={clsx("self-end font-normal", {
-          "text-2xs leading-5": size === "sm",
-          "text-sm leading-[45px]": size === "lg",
-        })}
-      >
-        {meridiem}
-      </span>
+      <div className="flex gap-1">
+        <span>{hour}</span>
+        <span
+          className={clsx("animate-blink text-center transition", {
+            "w-2": size === "sm",
+            "w-20": size === "lg",
+          })}
+        >
+          :
+        </span>
+        <span>{minute}</span>&nbsp;
+        <span
+          className={clsx("self-end font-normal", {
+            "text-2xs leading-5": size === "sm",
+            "text-sm leading-[45px]": size === "lg",
+          })}
+        >
+          {meridiem}
+        </span>
+      </div>
     </div>
   );
 };
