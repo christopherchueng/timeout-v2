@@ -113,10 +113,12 @@ const RenameAlarmlistForm = ({
     >
       <input
         {...register("name")}
+        // id={alarmlist.name}
         type="text"
         value={watchName}
         placeholder={alarmlist.name}
         className="w-full bg-transparent outline-none"
+        autoComplete="on"
         autoFocus
       />
     </form>

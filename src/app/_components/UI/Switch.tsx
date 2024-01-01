@@ -68,10 +68,13 @@ export const MySwitch = extendVariants(SwitchComponent, {
   },
 });
 
-const Switch = ({ checked, onChange }: SwitchProps) => {
+const Switch = ({ id, checked, onChange }: SwitchProps) => {
   return (
     <div className="flex w-8">
       <MySwitch
+        id={`switch_${id}`}
+        name={id}
+        aria-labelledby={`switch_${id}`}
         onChange={onChange}
         size="xs"
         color="default"
