@@ -99,7 +99,6 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
         <Input
           {...register("name")}
           label="name"
-          aria-labelledBy="alarmlist name input"
           type="text"
           value={watchName}
           placeholder="Enter Alarmlist name"
