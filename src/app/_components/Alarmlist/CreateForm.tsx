@@ -94,17 +94,17 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
       className="mx-4 my-6 flex flex-col justify-center gap-4"
       onSubmit={handleSubmit(handleCreateAlarmlist)}
     >
-      <div className="w-min">
+      <div className="w-48">
         <Input
           {...register("name")}
           label="name"
           type="text"
           value={watchName}
-          placeholder="Enter Alarmlist name"
+          title="Enter Alarmlist name"
           autoFocus
         />
         {errors && (
-          <p className="whitespace-break-spaces pt-2 text-2xs text-red-600">
+          <p className="h-3.5 whitespace-break-spaces pt-2 text-2xs text-red-600">
             {errors.name?.message}
           </p>
         )}

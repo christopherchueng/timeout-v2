@@ -17,7 +17,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <label
         htmlFor={label}
-        className="row-reverse relative mb-1 flex w-48 translate-y-0 cursor-text items-center border-b border-b-gray-400 transition focus-within:border-b-slate-900"
+        className="row-reverse relative mb-1 flex w-full translate-y-0 cursor-text items-center border-b border-b-gray-400 transition focus-within:border-b-slate-900"
       >
         <input
           id={label}
