@@ -15,9 +15,9 @@ import Alarm from "../Alarm";
 import { Chevron, Switch } from "../UI";
 import AlarmlistIcon from "../UI/AlarmlistIcon";
 import Ellipsis from "../UI/Ellipsis";
-import DeleteAlarmlistForm from "./DeleteAlarmlistForm";
+import DeleteAlarmlistForm from "./DeleteForm";
 import SettingsWrapper from "./SettingsWrapper";
-import RenameAlarmlistForm from "./RenameAlarmlistForm";
+import RenameAlarmlistForm from "./RenameForm";
 import Settings from "./Settings";
 import { AccordionHeader, AccordionItem, AccordionPanel } from "../Accordian";
 

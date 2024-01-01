@@ -6,7 +6,7 @@ import clsx from "clsx";
 import { CreateAlarmlistIcon, Plus } from ".";
 import Tooltip from "./Tooltip";
 import Modal from "../Modal";
-import CreateAlarmlistForm from "../CreateAlarmlistForm";
+import CreateAlarmlistForm from "../Alarmlist/CreateForm";
 
 // Chevron is different from alarmlist chevron to avoid toggle logic.
 // This chevron will never be grayed out whereas the alarmlist chevron could.
