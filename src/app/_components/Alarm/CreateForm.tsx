@@ -1,7 +1,7 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { RouterOutputs } from "@/trpc/shared";
 import { api } from "@/trpc/react";
-import { Select, SelectItem } from "@nextui-org/select";
+import { SelectItem, Select } from "@nextui-org/select";
 import { createAlarmSchema, repeatDays } from "@/utils";
 import { useSession } from "next-auth/react";
 import type { z } from "zod";
@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTimeContext } from "@/context/Time";
 import { Button, Input, Switch } from "../UI";
 import { DAYS } from "@/utils/constants";
+import dayjs from "dayjs";
 
 type AlarmFormValues = z.infer<typeof createAlarmSchema>;
 type Alarm = RouterOutputs["alarm"]["getAllByAlarmlistId"][number];
@@ -23,9 +24,11 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
 
   if (!session) return;
 
-  const {
-    parts: { hour, minute, meridiem },
-  } = useTimeContext();
+  const todaysDate = new Date();
+
+  const hour = dayjs(todaysDate).format("h");
+  const minute = dayjs(todaysDate).format("mm");
+  const meridiem = dayjs(todaysDate).format("A");
 
   const {
     register,
@@ -102,10 +105,10 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
 
   return (
     <form className="mx-auto my-10 flex h-full w-96 flex-col justify-center gap-4">
-      <div className="mb-6 flex w-full flex-row gap-4 md:mb-0 md:flex-nowrap">
+      <div className="flex w-full flex-row items-center justify-center gap-2 md:mb-0">
         {/* ------------------------- HOUR ------------------------- */}
-        <label htmlFor="hour" className="w-full">
-          <Select
+        <label htmlFor="hour" className="">
+          {/* <Select
             id="hour"
             label="hour"
             className="w-full"
@@ -115,27 +118,41 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
             size="sm"
             isRequired
             classNames={{ listboxWrapper: ["bg-white"] }}
-          >
-            {Array.from({ length: 12 }, (_, i) => i + 1).map((hour) => (
-              <SelectItem
-                textValue={`${hour}`}
-                className="w-fit"
-                key={hour}
-                value={hour}
-              >
+          > */}
+          <input
+            id="hour"
+            value={hour}
+            type="number"
+            min={1}
+            max={12}
+            className="flex w-fit pr-2 text-end text-7xl outline-none"
+          />
+          {/* {Array.from({ length: 12 }, (_, i) => i + 1).map((hour) => (
+              <option className="w-fit text-center" key={hour} value={hour}>
                 {hour}
-              </SelectItem>
+              </option>
             ))}
-          </Select>
+          </input> */}
+          {/* </Select> */}
         </label>
+        <span className="h-full text-7xl">:</span>
         {/* ------------------------- MINUTES ------------------------- */}
-        <label htmlFor="minute" className="w-full">
-          <Select
+        <label htmlFor="minute" className="">
+          <input
+            id="minute"
+            type="number"
+            value={minute}
+            min={0}
+            max={59}
+            className="flex text-center text-7xl outline-none"
+          />
+          {/* <Select
             id="minute"
             label="minute"
             className="w-full"
             radius="none"
             placeholder={minute.toString()}
+            variant="underlined"
             size="sm"
             isRequired
             classNames={{ listboxWrapper: ["bg-white"] }}
@@ -150,16 +167,24 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
                 {minute >= 10 ? minute : `0${minute}`}
               </SelectItem>
             ))}
-          </Select>
+          </Select> */}
         </label>
         {/* ------------------------- MERIDIEM ------------------------- */}
-        <label htmlFor="meridiem" className="w-full">
-          <Select
+        <div className="flex h-full flex-row items-end">
+          <label htmlFor="meridiem" className="">
+            <input
+              id="meridiem"
+              type="text"
+              value={meridiem}
+              className="mb-3 w-10"
+            />
+            {/* <Select
             id="meridiem"
             label="meridiem"
             className="w-full"
             radius="none"
             placeholder={meridiem.toString()}
+            variant="underlined"
             size="sm"
             isRequired
             classNames={{ listboxWrapper: ["bg-white"] }}
@@ -169,8 +194,9 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
                 {value}
               </SelectItem>
             ))}
-          </Select>
-        </label>
+          </Select> */}
+          </label>
+        </div>
       </div>
       {/* ------------------------- NAME ------------------------- */}
       <div>
@@ -192,10 +218,17 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
       {/* ------------------------- ALARMLIST ------------------------- */}
       <div>
         <Select
-          classNames={{ listboxWrapper: ["bg-white"] }}
+          classNames={{
+            listboxWrapper: ["bg-white", "rounded-small"],
+            // listbox: ["bg-red-400", "hover:bg-yellow-400"],
+            popoverContent: "border-1.5 border-slate-900 p-0 rounded-small",
+          }}
           id="alarmlist"
           label="Alarmlist"
+          variant="underlined"
+          size="sm"
           radius="none"
+          disableAnimation={false}
         >
           {alarmlists.map((alarmlist: Alarmlist) => (
             <SelectItem
@@ -215,10 +248,10 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
           id="repeat"
           label="Repeat"
           radius="none"
+          size="sm"
+          variant="underlined"
           classNames={{ listboxWrapper: ["bg-white"] }}
-          renderValue={(days) => {
-            return repeatDays(days);
-          }}
+          renderValue={(days) => repeatDays(days)}
         >
           {DAYS.map((DAY, index) => (
             <SelectItem key={DAY} textValue={DAY} value={index + 1}>
@@ -228,7 +261,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
         </Select>
       </div>
       {/* ------------------------- SNOOZE ------------------------- */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between py-4">
         <span className="text-sm">Snooze</span>
         <Switch id="snooze-alarm" checked={true} onChange={() => {}} />
       </div>

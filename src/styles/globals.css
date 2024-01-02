@@ -7,3 +7,11 @@ body {
   width: 100vw;
   overscroll-behavior: none;
 }
+
+@layer base {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
