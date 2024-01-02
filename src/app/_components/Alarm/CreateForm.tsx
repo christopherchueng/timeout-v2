@@ -19,14 +19,24 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
 
   if (!session) return;
 
-  const todaysDate = new Date();
+  const selectClassNames = {
+    label:
+      "text-xs text-slate-900 group-data-[filled=true]:text-xs group-data-[filled=true]:text-slate-900",
+    value: "text-xs",
+    popoverContent: "border bg-white rounded-small",
+    trigger:
+      "transition border-b border-b-gray-400 after:h-[0px] data-[open=true]:border-b-slate-900 data-[open=false]:border-b-gray-400",
+  };
+
   const { hour, minute, meridiem } = useMemo(() => {
+    const todaysDate = new Date();
+
     const hour = dayjs(todaysDate).format("h");
     const minute = dayjs(todaysDate).format("mm");
     const meridiem = dayjs(todaysDate).format("A");
 
     return { hour, minute, meridiem };
-  }, [todaysDate]);
+  }, []);
 
   const {
     register,
@@ -202,11 +212,6 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
       {/* ------------------------- ALARMLIST ------------------------- */}
       <div>
         <Select
-          classNames={{
-            listboxWrapper: ["bg-white", "rounded-small"],
-            // listbox: ["bg-red-400", "hover:bg-yellow-400"],
-            popoverContent: "border-1.5 border-slate-900 p-0 rounded-small",
-          }}
           {...register("alarmlistId")}
           id="alarmlist"
           label="Alarmlist"
@@ -215,6 +220,9 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
           radius="none"
           disableAnimation={false}
           isDisabled={!alarmlists}
+          classNames={selectClassNames}
+          selectorIcon={<></>}
+          disableSelectorIconRotation
         >
           {alarmlists ? (
             alarmlists.map((alarmlist: Alarmlist) => (
@@ -222,6 +230,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
                 key={alarmlist.id}
                 textValue={alarmlist.name}
                 value={alarmlist.name}
+                className="rounded-small transition hover:bg-gray-200"
               >
                 {alarmlist.name}
               </SelectItem>
@@ -251,12 +260,19 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
               radius="none"
               size="sm"
               variant="underlined"
-              classNames={{ listboxWrapper: ["bg-white"] }}
+              classNames={selectClassNames}
               renderValue={(days) => repeatDays(days)}
               onChange={onChange}
+              selectorIcon={<></>}
+              disableSelectorIconRotation
             >
               {DAYS.map((DAY) => (
-                <SelectItem key={DAY} textValue={DAY} value={value}>
+                <SelectItem
+                  key={DAY}
+                  textValue={DAY}
+                  value={value}
+                  className="rounded-small transition hover:bg-gray-200"
+                >
                   {DAY}
                 </SelectItem>
               ))}

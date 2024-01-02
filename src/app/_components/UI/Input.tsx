@@ -17,7 +17,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <label
         htmlFor={label}
-        className="row-reverse relative mb-1 flex w-full translate-y-0 cursor-text items-center border-b border-b-gray-400 transition focus-within:border-b-slate-900"
+        className="row-reverse relative mb-1 flex w-full translate-y-0 cursor-text items-center border-b border-b-gray-400 transition focus-within:border-b-slate-900 hover:border-b-gray-300"
       >
         <input
           id={label}
@@ -27,12 +27,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           placeholder={placeholder}
           data-testid={testId}
           autoComplete="on"
-          className="peer w-full bg-transparent px-1 pb-1.5 pt-4 text-xs outline-none placeholder:opacity-0 placeholder:transition-all focus:placeholder:opacity-100"
+          className="peer w-full bg-transparent px-1 pb-1 pt-4 text-xs outline-none placeholder:opacity-0 placeholder:transition-all focus:placeholder:opacity-100"
           {...rest}
         />
         <span
           className={clsx(
-            "group:-translate-y-3.5 group:pt-1 empty:translate-y-0! pointer-events-none absolute left-0 top-4 select-none px-1 text-slate-900 transition-all duration-75 placeholder:text-white peer-focus:-translate-y-4 peer-focus:pt-1 peer-focus:text-2xs",
+            "group:-translate-y-3.5 group:pt-1 empty:translate-y-0! pointer-events-none absolute left-0 top-2.5 select-none px-1 text-slate-900 transition-all duration-75 placeholder:text-white peer-focus:-translate-y-4 peer-focus:pt-1 peer-focus:text-2xs",
             // Show placeholder above value if input is filled out and user clicks out of input field
             value ? "-translate-y-4 pt-1 text-2xs" : "text-xs",
           )}
