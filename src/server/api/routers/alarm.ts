@@ -82,19 +82,28 @@ export const alarmRouter = createTRPCRouter({
         hour,
         minutes,
         meridiem,
-        sound,
         repeat,
         snooze,
         alarmlistId,
         userId,
       } = input;
+
+      const updatedHour = typeof hour === "string" ? Number(hour) : hour;
+      const updatedMinutes =
+        typeof minutes === "string" ? Number(minutes) : minutes;
+
+      if (!alarmlistId)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Please select an alarmlist.",
+        });
+
       return ctx.db.alarm.create({
         data: {
-          name,
-          hour,
-          minutes,
+          name: name || "Alarm",
+          hour: updatedHour,
+          minutes: updatedMinutes,
           meridiem,
-          sound,
           repeat,
           snooze,
           isOn: true,
@@ -106,34 +115,27 @@ export const alarmRouter = createTRPCRouter({
   update: protectedProcedure
     .input(updateAlarmSchema)
     .mutation(async ({ ctx, input }) => {
-      const {
-        id,
-        name,
-        hour,
-        minutes,
-        meridiem,
-        sound,
-        repeat,
-        snooze,
-        alarmlistId,
-      } = input;
+      const { id, name, hour, minutes, meridiem, repeat, snooze, alarmlistId } =
+        input;
 
       const alarmlist = await ctx.db.alarmlist.findFirst({
         where: {
           id: alarmlistId,
         },
       });
+      const updatedHour = typeof hour === "string" ? Number(hour) : hour;
+      const updatedMinutes =
+        typeof minutes === "string" ? Number(minutes) : minutes;
 
       if (!alarmlist) throw new TRPCError({ code: "NOT_FOUND" });
 
       const alarm = ctx.db.alarm.update({
         where: { id },
         data: {
-          name,
-          hour,
-          minutes,
+          name: name || "Alarm",
+          hour: updatedHour,
+          minutes: updatedMinutes,
           meridiem,
-          sound,
           repeat,
           snooze,
           isOn: true,

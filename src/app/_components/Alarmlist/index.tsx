@@ -28,7 +28,7 @@ type SettingStatus = {
   isEditingAlarmlist?: boolean;
 };
 
-const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
+const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
   const settingsRef = useRef<HTMLDivElement>(null);
   const ellipsisRef = useRef<HTMLDivElement>(null);
 
@@ -312,7 +312,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistWithAlarms) => {
       <AccordionPanel>
         {!!alarms.length ? (
           <ul>
-            {alarms.map((alarm) => (
+            {alarmlist.alarms.map((alarm) => (
               <Alarm
                 key={alarm.id}
                 alarm={alarm}

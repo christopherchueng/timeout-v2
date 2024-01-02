@@ -3,16 +3,12 @@ import {
   type SubmitHandler,
   type SubmitErrorHandler,
 } from "react-hook-form";
-import type { z } from "zod";
 import { renameAlarmlistSchema } from "@/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@/trpc/react";
-import type { RouterOutputs } from "@/trpc/shared";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
-
-type AlarmlistFormValues = z.infer<typeof renameAlarmlistSchema>;
-type Alarmlist = RouterOutputs["alarmlist"]["getAll"][number];
+import type { Alarmlist, RenameAlarmlistFormValues } from "@/types";
 
 type RenameAlarmlistFormProps = {
   alarmlist: Alarmlist;
@@ -27,16 +23,15 @@ const RenameAlarmlistForm = ({
 
   if (!session) return;
 
-  const { register, handleSubmit, watch, reset } = useForm<AlarmlistFormValues>(
-    {
+  const { register, handleSubmit, watch, reset } =
+    useForm<RenameAlarmlistFormValues>({
       resolver: zodResolver(renameAlarmlistSchema),
       defaultValues: {
         id: alarmlist.id,
         name: alarmlist.name,
       },
       mode: "all",
-    },
-  );
+    });
 
   const watchName = watch("name");
 
@@ -84,9 +79,9 @@ const RenameAlarmlistForm = ({
     },
   });
 
-  const handleRenameAlarmlist: SubmitHandler<AlarmlistFormValues> = async (
-    data,
-  ) => {
+  const handleRenameAlarmlist: SubmitHandler<
+    RenameAlarmlistFormValues
+  > = async (data) => {
     if (data.name.trim() === alarmlist.name) {
       handleCloseRename(data.name.trim());
       return;
@@ -95,7 +90,9 @@ const RenameAlarmlistForm = ({
     updateAlarmlist(data);
   };
 
-  const handleErrors: SubmitErrorHandler<AlarmlistFormValues> = (errors) => {
+  const handleErrors: SubmitErrorHandler<RenameAlarmlistFormValues> = (
+    errors,
+  ) => {
     !!errors.name?.message && toast.error(errors.name.message);
   };
 

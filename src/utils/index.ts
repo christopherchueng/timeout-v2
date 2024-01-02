@@ -1,4 +1,4 @@
-import { SelectedItems } from "@nextui-org/select";
+import type { SelectedItems } from "@nextui-org/select";
 import { type MutableRefObject, type RefCallback } from "react";
 import { z } from "zod";
 
@@ -21,9 +21,9 @@ export const renameAlarmlistSchema = z.object({
 
 // Alarm schemas
 export const alarmSchema = {
-  name: z.string().min(1).optional(),
-  hour: z.number().gt(0).lt(13).int(),
-  minutes: z.number().gte(0).lt(60).int(),
+  name: z.string().optional().default("Alarm"),
+  hour: z.string().or(z.number().gt(0).lt(13).int()),
+  minutes: z.string().or(z.number().gte(0).lt(60).int()),
   meridiem: z.string(),
   sound: z.string().optional(),
   repeat: z.string().optional(),
@@ -101,5 +101,5 @@ export const repeatDays = (days: SelectedItems<object>): string => {
     return `${formattedDays.join(", ")} and ${lastDay}`;
   }
 
-  return lastDay || "";
+  return lastDay ?? "";
 };

@@ -1,14 +1,10 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { api } from "@/trpc/react";
-import type { z } from "zod";
-import type { RouterOutputs } from "@/trpc/shared";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createAlarmlistSchema } from "@/utils";
 import { Button, Input } from "../UI";
-
-type AlarmlistFormValues = z.infer<typeof createAlarmlistSchema>;
-type Alarmlist = RouterOutputs["alarmlist"]["getAll"][number];
+import type { Alarmlist, CreateAlarmlistFormValues } from "@/types";
 
 type CreateAlarmlistFormProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,7 +22,7 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
     watch,
     reset,
     formState: { errors },
-  } = useForm<AlarmlistFormValues>({
+  } = useForm<CreateAlarmlistFormValues>({
     resolver: zodResolver(createAlarmlistSchema),
   });
 
@@ -78,9 +74,9 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
     },
   });
 
-  const handleCreateAlarmlist: SubmitHandler<AlarmlistFormValues> = async (
-    data,
-  ) => {
+  const handleCreateAlarmlist: SubmitHandler<
+    CreateAlarmlistFormValues
+  > = async (data) => {
     createAlarmlist(data);
 
     if (!isError && !errors.name) {
