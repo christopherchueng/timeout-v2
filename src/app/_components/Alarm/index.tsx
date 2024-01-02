@@ -21,7 +21,9 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
   const { mutate } = api.alarm.toggle.useMutation({
     onMutate: async ({ id, isOn }) => {
       // Cancel any outgoing refetches so they don't overwrite our optimistic update
-      await ctx.alarm.getAllByAlarmlistId.cancel();
+      await ctx.alarm.getAllByAlarmlistId.cancel({
+        alarmlistId: alarm.alarmlistId,
+      });
 
       // Snapshot the previous value
       const previousAlarms = ctx.alarm.getAllByAlarmlistId.getData({
@@ -53,7 +55,7 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
       return { previousAlarms };
     },
 
-    onSuccess: async (data) => {
+    onSuccess: (data) => {
       handleAlarmlistToggle(data.alarms, data.alarmlist.isOn);
     },
 
@@ -68,9 +70,7 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
     },
     // Always refetch after error or success:
     onSettled: () => {
-      void ctx.alarm.getAllByAlarmlistId.invalidate({
-        alarmlistId: alarm.alarmlistId,
-      });
+      void ctx.alarmlist.getAllWithAlarms.invalidate();
     },
   });
 
