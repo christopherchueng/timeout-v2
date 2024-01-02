@@ -103,3 +103,7 @@ export const repeatDays = (days: SelectedItems<object>): string => {
 
   return lastDay ?? "";
 };
+
+export const formatMinutes = (minute: string | number) => {
+  return Number(minute) < 10 ? `0${minute}` : minute;
+};

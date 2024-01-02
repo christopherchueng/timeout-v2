@@ -5,6 +5,7 @@ import { Switch } from "../UI";
 import { api } from "@/trpc/react";
 import type { RouterOutputs } from "@/trpc/shared";
 import AlarmIcon from "../UI/AlarmIcon";
+import { formatMinutes } from "@/utils";
 // import Ellipsis from "../UI/Ellipsis";
 
 type Alarm = RouterOutputs["alarm"]["getAllByAlarmlistId"][number];
@@ -84,7 +85,7 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
         >
           <div className="flex items-end gap-0.5 text-sm font-semibold">
             <span className="leading-tight">
-              {alarm.hour}:{alarm.minutes}
+              {alarm.hour}:{formatMinutes(alarm.minutes)}
             </span>
             <span className="text-2xs">{alarm.meridiem}</span>
           </div>
