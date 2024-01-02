@@ -127,8 +127,6 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
 
   const { data: alarmlists } = api.alarmlist.getAll.useQuery();
 
-  if (!alarmlists) return;
-
   const watchName = watch("name");
 
   const handleCreateAlarm: SubmitHandler<AlarmFormValues> = async (data) => {
@@ -216,16 +214,23 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
           size="sm"
           radius="none"
           disableAnimation={false}
+          isDisabled={!alarmlists}
         >
-          {alarmlists.map((alarmlist: Alarmlist) => (
-            <SelectItem
-              key={alarmlist.id}
-              textValue={alarmlist.name}
-              value={alarmlist.name}
-            >
-              {alarmlist.name}
+          {alarmlists ? (
+            alarmlists.map((alarmlist: Alarmlist) => (
+              <SelectItem
+                key={alarmlist.id}
+                textValue={alarmlist.name}
+                value={alarmlist.name}
+              >
+                {alarmlist.name}
+              </SelectItem>
+            ))
+          ) : (
+            <SelectItem key="no alarmlists" className="fit text-xs italic">
+              No alarmlists.
             </SelectItem>
-          ))}
+          )}
         </Select>
         {errors && (
           <p className="h-3.5 whitespace-break-spaces pt-2 text-2xs text-red-600">
