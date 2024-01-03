@@ -159,7 +159,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
           <input
             {...register("hour")}
             id="hour"
-            value={hour}
+            defaultValue={hour}
             type="number"
             min={1}
             max={12}
@@ -173,7 +173,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
             {...register("minutes")}
             id="minutes"
             type="number"
-            value={minute}
+            defaultValue={minute}
             min={0}
             max={59}
             className="flex text-center text-7xl outline-none"
@@ -186,7 +186,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
               {...register("meridiem")}
               id="meridiem"
               type="text"
-              value={meridiem}
+              defaultValue={meridiem}
               className="mb-3.5 w-10 outline-none"
             />
           </label>
