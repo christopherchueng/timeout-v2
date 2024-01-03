@@ -154,31 +154,35 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
       className="mx-auto my-4 flex h-full w-96 flex-col justify-center gap-4"
     >
       <div className="flex w-full flex-row items-center justify-center gap-2 md:mb-0">
-        {/* ------------------------- HOUR ------------------------- */}
-        <label htmlFor="hour" className="">
-          <input
-            {...register("hour")}
-            id="hour"
-            defaultValue={hour}
-            type="number"
-            min={1}
-            max={12}
-            className="flex text-center text-7xl outline-none"
-          />
-        </label>
-        <span className="h-full text-7xl">:</span>
-        {/* ------------------------- MINUTES ------------------------- */}
-        <label htmlFor="minutes">
-          <input
-            {...register("minutes")}
-            id="minutes"
-            type="number"
-            defaultValue={minute}
-            min={0}
-            max={59}
-            className="flex text-center text-7xl outline-none"
-          />
-        </label>
+        <div className="flex gap-4">
+          {/* ------------------------- HOUR ------------------------- */}
+          <label htmlFor="hour">
+            <input
+              {...register("hour")}
+              id="hour"
+              defaultValue={hour}
+              type="text"
+              min={1}
+              max={12}
+              maxLength={2}
+              className="w-24 text-right text-7xl outline-none"
+            />
+          </label>
+          <span className="h-full text-7xl">:</span>
+          {/* ------------------------- MINUTES ------------------------- */}
+          <label htmlFor="minutes">
+            <input
+              {...register("minutes")}
+              id="minutes"
+              type="text"
+              defaultValue={minute}
+              min={0}
+              max={59}
+              maxLength={2}
+              className="w-24 text-7xl outline-none"
+            />
+          </label>
+        </div>
         {/* ------------------------- MERIDIEM ------------------------- */}
         <div className="flex h-full flex-row items-end">
           <Select
