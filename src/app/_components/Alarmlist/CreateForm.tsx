@@ -70,7 +70,14 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
       void ctx.alarmlist.getAllWithAlarms.invalidate();
     },
     onError: (error) => {
-      setError("name", { type: "server", message: error.message });
+      const nameError = error.data?.zodError?.fieldErrors.name;
+
+      if (nameError && nameError[0]) {
+        setError("name", {
+          type: "server",
+          message: nameError[0],
+        });
+      }
     },
   });
 
