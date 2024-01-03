@@ -13,6 +13,7 @@ import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input, Switch } from "../UI";
 import { useMemo } from "react";
+import toast from "react-hot-toast";
 
 type CreateAlarmFormProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -95,7 +96,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
             if (prevAlarmlist.id === alarmlistId) {
               const optimisticAlarm = {
                 id: "optimistic-alarm-id",
-                name: name ?? "Alarm",
+                name: name || "Alarm",
                 hour: updatedHour,
                 minutes: updatedMinutes,
                 meridiem,
@@ -124,7 +125,8 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
 
       return { previousAlarmlists };
     },
-    onSuccess: (_data, { alarmlistId }) => {
+    onSuccess: (_data, { name, alarmlistId }) => {
+      toast.success(`'${name || "Alarm"}' successfully created!`);
       void ctx.alarm.getAllByAlarmlistId.invalidate({ alarmlistId });
     },
     onError: (error) => {
@@ -161,7 +163,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
               {...register("hour")}
               id="hour"
               defaultValue={hour}
-              type="text"
+              type="number"
               min={1}
               max={12}
               maxLength={2}
@@ -174,7 +176,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
             <input
               {...register("minutes")}
               id="minutes"
-              type="text"
+              type="number"
               defaultValue={minute}
               min={0}
               max={59}
