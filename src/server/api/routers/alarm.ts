@@ -92,12 +92,6 @@ export const alarmRouter = createTRPCRouter({
       const updatedMinutes =
         typeof minutes === "string" ? Number(minutes) : minutes;
 
-      if (!alarmlistId)
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Please select an alarmlist.",
-        });
-
       return ctx.db.alarm.create({
         data: {
           name: name || "Alarm",

@@ -10,7 +10,7 @@ export type AlarmlistWithAlarms =
   RouterOutputs["alarmlist"]["getAllWithAlarms"][number];
 export type Alarmlist = RouterOutputs["alarmlist"]["getAll"][number];
 
-export type AlarmFormValues = z.infer<typeof createAlarmSchema>;
+export type CreateAlarmFormValues = z.infer<typeof createAlarmSchema>;
 
 export type CreateAlarmlistFormValues = z.infer<typeof createAlarmlistSchema>;
 export type RenameAlarmlistFormValues = z.infer<typeof renameAlarmlistSchema>;

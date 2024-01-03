@@ -2,7 +2,11 @@ import { useForm, type SubmitHandler, Controller } from "react-hook-form";
 import dayjs from "dayjs";
 import { api } from "@/trpc/react";
 import { SelectItem, Select } from "@nextui-org/select";
-import type { Alarmlist, AlarmFormValues, AlarmlistWithAlarms } from "@/types";
+import type {
+  Alarmlist,
+  CreateAlarmFormValues,
+  AlarmlistWithAlarms,
+} from "@/types";
 import { createAlarmSchema, repeatDays } from "@/utils";
 import { DAYS } from "@/utils/constants";
 import { useSession } from "next-auth/react";
@@ -46,7 +50,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
     reset,
     control,
     formState: { errors },
-  } = useForm<AlarmFormValues>({
+  } = useForm<CreateAlarmFormValues>({
     resolver: zodResolver(createAlarmSchema),
     defaultValues: {
       name: "",
@@ -133,7 +137,9 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
 
   const watchName = watch("name");
 
-  const handleCreateAlarm: SubmitHandler<AlarmFormValues> = async (data) => {
+  const handleCreateAlarm: SubmitHandler<CreateAlarmFormValues> = async (
+    data,
+  ) => {
     createAlarm(data);
 
     if (!isError && !errors.alarmlistId) {
@@ -162,7 +168,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
         </label>
         <span className="h-full text-7xl">:</span>
         {/* ------------------------- MINUTES ------------------------- */}
-        <label htmlFor="minutes" className="">
+        <label htmlFor="minutes">
           <input
             {...register("minutes")}
             id="minutes"
@@ -175,7 +181,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
         </label>
         {/* ------------------------- MERIDIEM ------------------------- */}
         <div className="flex h-full flex-row items-end">
-          <label htmlFor="meridiem" className="">
+          <label htmlFor="meridiem">
             <input
               {...register("meridiem")}
               id="meridiem"
@@ -187,22 +193,15 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
         </div>
       </div>
       {/* ------------------------- NAME ------------------------- */}
-      <div>
-        <Input
-          {...register("name")}
-          label="name"
-          type="text"
-          value={watchName ?? "Alarm"}
-          placeholder="Alarm"
-          title="Name"
-          autoComplete="off"
-        />
-        {errors && (
-          <p className="whitespace-break-spaces pt-2 text-2xs text-red-600">
-            {errors.name?.message}
-          </p>
-        )}
-      </div>
+      <Input
+        {...register("name")}
+        label="name"
+        type="text"
+        value={watchName ?? "Alarm"}
+        placeholder="Alarm"
+        title="Name"
+        autoComplete="off"
+      />
       {/* ------------------------- ALARMLIST ------------------------- */}
       <div>
         <Select
@@ -242,38 +241,36 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
         )}
       </div>
       {/* ------------------------- REPEAT ------------------------- */}
-      <div>
-        <Controller
-          name="repeat"
-          control={control}
-          render={({ field: { value, onChange } }) => (
-            <Select
-              selectionMode="multiple"
-              id="repeat"
-              label="Repeat"
-              radius="none"
-              size="sm"
-              variant="underlined"
-              classNames={selectClassNames}
-              renderValue={(days) => repeatDays(days)}
-              onChange={onChange}
-              selectorIcon={<></>}
-              disableSelectorIconRotation
-            >
-              {DAYS.map((DAY) => (
-                <SelectItem
-                  key={DAY}
-                  textValue={DAY}
-                  value={value}
-                  className="rounded-small transition hover:bg-gray-200"
-                >
-                  {DAY}
-                </SelectItem>
-              ))}
-            </Select>
-          )}
-        />
-      </div>
+      <Controller
+        name="repeat"
+        control={control}
+        render={({ field: { value, onChange } }) => (
+          <Select
+            selectionMode="multiple"
+            id="repeat"
+            label="Repeat"
+            radius="none"
+            size="sm"
+            variant="underlined"
+            classNames={selectClassNames}
+            renderValue={(days) => repeatDays(days)}
+            onChange={onChange}
+            selectorIcon={<></>}
+            disableSelectorIconRotation
+          >
+            {DAYS.map((DAY) => (
+              <SelectItem
+                key={DAY}
+                textValue={DAY}
+                value={value}
+                className="rounded-small transition hover:bg-gray-200"
+              >
+                {DAY}
+              </SelectItem>
+            ))}
+          </Select>
+        )}
+      />
       {/* ------------------------- SNOOZE ------------------------- */}
       <div className="flex items-center justify-between py-4">
         <span className="text-sm">Snooze</span>

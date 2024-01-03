@@ -28,7 +28,7 @@ export const alarmSchema = {
   sound: z.string().optional(),
   repeat: z.string().optional(),
   snooze: z.boolean(),
-  alarmlistId: z.string(),
+  alarmlistId: z.string({ required_error: "Please select an alarmlist." }),
   userId: z.string(),
 };
 
