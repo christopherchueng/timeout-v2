@@ -145,7 +145,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
   return (
     <form
       onSubmit={handleSubmit(handleCreateAlarm)}
-      className="mx-auto my-10 flex h-full w-96 flex-col justify-center gap-4"
+      className="mx-auto my-4 flex h-full w-96 flex-col justify-center gap-4"
     >
       <div className="flex w-full flex-row items-center justify-center gap-2 md:mb-0">
         {/* ------------------------- HOUR ------------------------- */}
@@ -157,7 +157,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
             type="number"
             min={1}
             max={12}
-            className="flex w-fit pr-2 text-end text-7xl outline-none"
+            className="flex text-center text-7xl outline-none"
           />
         </label>
         <span className="h-full text-7xl">:</span>
