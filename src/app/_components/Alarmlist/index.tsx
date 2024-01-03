@@ -310,7 +310,7 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
         </div>
       </AccordionHeader>
       <AccordionPanel>
-        {!!alarms.length ? (
+        {!!alarmlist.alarms.length ? (
           <ul>
             {alarmlist.alarms.map((alarm) => (
               <Alarm

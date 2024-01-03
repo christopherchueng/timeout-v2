@@ -105,12 +105,6 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
                 updatedAt: new Date(),
               };
 
-              if (!prevAlarmlist.alarms.length)
-                return {
-                  ...prevAlarmlist,
-                  alarms: [optimisticAlarm],
-                };
-
               return {
                 ...prevAlarmlist,
                 alarms: [...prevAlarmlist.alarms, optimisticAlarm],
@@ -126,8 +120,8 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
 
       return { previousAlarmlists };
     },
-    onSuccess: () => {
-      void ctx.alarmlist.getAllWithAlarms.invalidate();
+    onSuccess: (_data, { alarmlistId }) => {
+      void ctx.alarm.getAllByAlarmlistId.invalidate({ alarmlistId });
     },
     onError: (error) => {
       setError("alarmlistId", { type: "server", message: error.message });
@@ -187,7 +181,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
               id="meridiem"
               type="text"
               value={meridiem}
-              className="mb-3 w-10"
+              className="mb-3.5 w-10 outline-none"
             />
           </label>
         </div>
