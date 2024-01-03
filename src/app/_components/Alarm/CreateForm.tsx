@@ -1,4 +1,9 @@
-import { useForm, type SubmitHandler, Controller } from "react-hook-form";
+import {
+  useForm,
+  type SubmitHandler,
+  Controller,
+  SubmitErrorHandler,
+} from "react-hook-form";
 import dayjs from "dayjs";
 import { api } from "@/trpc/react";
 import { SelectItem, Select } from "@nextui-org/select";
@@ -7,13 +12,19 @@ import type {
   CreateAlarmFormValues,
   AlarmlistWithAlarms,
 } from "@/types";
-import { createAlarmSchema, repeatDays } from "@/utils";
+import {
+  createAlarmSchema,
+  parseHour,
+  parseMinutes,
+  repeatDays,
+} from "@/utils";
 import { DAYS } from "@/utils/constants";
 import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input, Switch } from "../UI";
 import { useMemo } from "react";
 import toast from "react-hot-toast";
+import Tooltip from "../UI/Tooltip";
 
 type CreateAlarmFormProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -88,17 +99,13 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
         (oldAlarmlists: AlarmlistWithAlarms[] | undefined) => {
           if (!oldAlarmlists) return [];
 
-          const updatedHour = typeof hour === "string" ? Number(hour) : hour;
-          const updatedMinutes =
-            typeof minutes === "string" ? Number(minutes) : minutes;
-
           const alarmlistsWithNewAlarm = oldAlarmlists.map((prevAlarmlist) => {
             if (prevAlarmlist.id === alarmlistId) {
               const optimisticAlarm = {
                 id: "optimistic-alarm-id",
                 name: name || "Alarm",
-                hour: updatedHour,
-                minutes: updatedMinutes,
+                hour: parseHour(hour),
+                minutes: parseMinutes(minutes),
                 meridiem,
                 snooze,
                 alarmlistId,
@@ -130,8 +137,25 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
       void ctx.alarm.getAllByAlarmlistId.invalidate({ alarmlistId });
     },
     onError: (error) => {
-      setError("alarmlistId", { type: "server", message: error.message });
-      return;
+      const alarmlistIdErrorMessage =
+        error.data?.zodError?.fieldErrors.alarmlistId;
+      const hourErrorMessage = error.data?.zodError?.fieldErrors.hour;
+      const minutesErrorMessage = error.data?.zodError?.fieldErrors.minutes;
+
+      if (alarmlistIdErrorMessage && alarmlistIdErrorMessage[0]) {
+        setError("alarmlistId", { type: "server", message: error.message });
+      }
+
+      if (hourErrorMessage && hourErrorMessage[0]) {
+        setError("hour", { type: "server", message: hourErrorMessage[0] });
+      }
+
+      if (minutesErrorMessage && minutesErrorMessage[0]) {
+        setError("minutes", {
+          type: "server",
+          message: minutesErrorMessage[0],
+        });
+      }
     },
   });
 
@@ -142,9 +166,15 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
   const handleCreateAlarm: SubmitHandler<CreateAlarmFormValues> = async (
     data,
   ) => {
-    createAlarm(data);
+    const updatedData = {
+      ...data,
+      hour: parseHour(data.hour),
+      minutes: parseMinutes(data.minutes),
+    };
 
-    if (!isError && !errors.alarmlistId) {
+    createAlarm(updatedData);
+
+    if (!isError && !errors) {
       reset();
       setIsModalOpen(false);
     }
@@ -160,64 +190,74 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
           {/* ------------------------- HOUR ------------------------- */}
           <label htmlFor="hour">
             <input
-              {...register("hour")}
+              {...register("hour", {
+                setValueAs: (hourInput) => Number(hourInput),
+              })}
               id="hour"
               defaultValue={hour}
               type="number"
-              min={1}
-              max={12}
               maxLength={2}
               className="w-24 text-right text-7xl outline-none"
             />
+            {errors.hour && <Tooltip text={errors.hour.message!} />}
           </label>
           <span className="h-full text-7xl">:</span>
           {/* ------------------------- MINUTES ------------------------- */}
           <label htmlFor="minutes">
             <input
-              {...register("minutes")}
+              {...register("minutes", {
+                setValueAs: (hourInput) => Number(hourInput),
+              })}
               id="minutes"
               type="number"
               defaultValue={minute}
-              min={0}
-              max={59}
               maxLength={2}
               className="w-24 text-7xl outline-none"
             />
+            {errors.minutes && <Tooltip text={errors.minutes.message!} />}
           </label>
         </div>
         {/* ------------------------- MERIDIEM ------------------------- */}
         <div className="flex h-full flex-row items-end">
-          <Select
-            {...register("meridiem")}
-            id="meridiem"
-            variant="underlined"
-            size="sm"
-            radius="none"
-            defaultSelectedKeys={[meridiem]}
-            disableAnimation={false}
-            classNames={{
-              base: "w-14 mb-1",
-              label:
-                "text-xs text-slate-900 group-data-[filled=true]:text-xs group-data-[filled=true]:text-slate-900",
-              value: "text-xs",
-              popoverContent:
-                "border absolute -top-2.5 w-20 bg-white rounded-small",
-              trigger:
-                "transition shadow-none border-b-0 after:h-[0px] data-[open=true]:border-b-0 data-[open=false]:border-b-0",
-            }}
-            selectorIcon={<></>}
-            disableSelectorIconRotation
-          >
-            {["AM", "PM"].map((timeOfDay) => (
-              <SelectItem
-                key={timeOfDay}
-                textValue={timeOfDay}
-                value={meridiem}
+          <Controller
+            name="meridiem"
+            control={control}
+            render={({ field: { value, onChange } }) => (
+              <Select
+                {...register("meridiem")}
+                id="meridiem"
+                variant="underlined"
+                size="sm"
+                radius="none"
+                aria-labelledby="meridiem"
+                defaultSelectedKeys={[meridiem]}
+                disableAnimation={false}
+                onChange={onChange}
+                classNames={{
+                  base: "w-14 mb-1",
+                  label:
+                    "text-xs text-slate-900 group-data-[filled=true]:text-xs group-data-[filled=true]:text-slate-900",
+                  value: "text-xs",
+                  popoverContent:
+                    "border absolute -top-2.5 w-20 bg-white rounded-small",
+                  trigger:
+                    "transition shadow-none border-b-0 after:h-[0px] data-[open=true]:border-b-0 data-[open=false]:border-b-0",
+                }}
+                selectorIcon={<></>}
+                disableSelectorIconRotation
               >
-                {timeOfDay}
-              </SelectItem>
-            ))}
-          </Select>
+                {["AM", "PM"].map((timeOfDay) => (
+                  <SelectItem
+                    key={timeOfDay}
+                    textValue={timeOfDay}
+                    value={value}
+                  >
+                    {timeOfDay}
+                  </SelectItem>
+                ))}
+              </Select>
+            )}
+          />
         </div>
       </div>
       {/* ------------------------- NAME ------------------------- */}
@@ -232,36 +272,45 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
       />
       {/* ------------------------- ALARMLIST ------------------------- */}
       <div>
-        <Select
-          {...register("alarmlistId")}
-          id="alarmlist"
-          label="Alarmlist"
-          variant="underlined"
-          size="sm"
-          radius="none"
-          disableAnimation={false}
-          isDisabled={!alarmlists}
-          classNames={selectClassNames}
-          selectorIcon={<></>}
-          disableSelectorIconRotation
-        >
-          {alarmlists ? (
-            alarmlists.map((alarmlist: Alarmlist) => (
-              <SelectItem
-                key={alarmlist.id}
-                textValue={alarmlist.name}
-                value={alarmlist.name}
-                className="rounded-small transition hover:bg-gray-200"
-              >
-                {alarmlist.name}
-              </SelectItem>
-            ))
-          ) : (
-            <SelectItem key="no alarmlists" className="fit text-xs italic">
-              No alarmlists.
-            </SelectItem>
+        <Controller
+          name="alarmlistId"
+          control={control}
+          render={({ field: { value, onChange } }) => (
+            <Select
+              {...register("alarmlistId")}
+              id="alarmlist"
+              label="Alarmlist"
+              variant="underlined"
+              size="sm"
+              radius="none"
+              aria-labelledby="alarmlistId"
+              disableAnimation={false}
+              isDisabled={!alarmlists}
+              classNames={selectClassNames}
+              selectorIcon={<></>}
+              disableSelectorIconRotation
+              onChange={onChange}
+            >
+              {alarmlists ? (
+                alarmlists.map((alarmlist: Alarmlist) => (
+                  <SelectItem
+                    key={alarmlist.id}
+                    textValue={alarmlist.name}
+                    value={value}
+                    className="rounded-small transition hover:bg-gray-200"
+                  >
+                    {alarmlist.name}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem key="no alarmlists" className="fit text-xs italic">
+                  No alarmlists.
+                </SelectItem>
+              )}
+            </Select>
           )}
-        </Select>
+        />
+
         {errors.alarmlistId && (
           <p className="h-3.5 whitespace-break-spaces pt-2 text-2xs text-red-600">
             {errors.alarmlistId?.message}
@@ -280,6 +329,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
             radius="none"
             size="sm"
             variant="underlined"
+            aria-labelledby="repeat"
             classNames={selectClassNames}
             renderValue={(days) => repeatDays(days)}
             onChange={onChange}

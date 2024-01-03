@@ -22,8 +22,16 @@ export const renameAlarmlistSchema = z.object({
 // Alarm schemas
 export const alarmSchema = {
   name: z.string().optional().default("Alarm"),
-  hour: z.string().or(z.number().gt(0).lt(13).int()),
-  minutes: z.string().or(z.number().gte(0).lt(60).int()),
+  hour: z
+    .number()
+    .gte(1, { message: "Number must be in between 1 and 12." })
+    .lte(12, { message: "Number must be in between 1 and 12." })
+    .int(),
+  minutes: z.coerce
+    .number()
+    .gte(0, { message: "Number must be in between 0 and 59." })
+    .lte(59, { message: "Number must be in between 0 and 59." })
+    .int(),
   meridiem: z.string(),
   sound: z.string().optional(),
   repeat: z.string().optional(),

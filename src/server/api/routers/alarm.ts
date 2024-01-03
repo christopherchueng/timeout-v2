@@ -2,7 +2,12 @@ import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
-import { createAlarmSchema, updateAlarmSchema } from "@/utils";
+import {
+  createAlarmSchema,
+  parseHour,
+  parseMinutes,
+  updateAlarmSchema,
+} from "@/utils";
 import { getServerAuthSession } from "@/server/auth";
 
 // const addUserDataToAlarm = async (alarms: Alarm[]) => {
@@ -88,15 +93,11 @@ export const alarmRouter = createTRPCRouter({
         userId,
       } = input;
 
-      const updatedHour = typeof hour === "string" ? Number(hour) : hour;
-      const updatedMinutes =
-        typeof minutes === "string" ? Number(minutes) : minutes;
-
       return ctx.db.alarm.create({
         data: {
           name: name || "Alarm",
-          hour: updatedHour,
-          minutes: updatedMinutes,
+          hour: parseHour(hour),
+          minutes: parseMinutes(minutes),
           meridiem,
           repeat,
           snooze,
@@ -117,9 +118,6 @@ export const alarmRouter = createTRPCRouter({
           id: alarmlistId,
         },
       });
-      const updatedHour = typeof hour === "string" ? Number(hour) : hour;
-      const updatedMinutes =
-        typeof minutes === "string" ? Number(minutes) : minutes;
 
       if (!alarmlist) throw new TRPCError({ code: "NOT_FOUND" });
 
@@ -127,8 +125,8 @@ export const alarmRouter = createTRPCRouter({
         where: { id },
         data: {
           name: name || "Alarm",
-          hour: updatedHour,
-          minutes: updatedMinutes,
+          hour: parseHour(hour),
+          minutes: parseMinutes(minutes),
           meridiem,
           repeat,
           snooze,
