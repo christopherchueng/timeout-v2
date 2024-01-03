@@ -104,6 +104,12 @@ export const repeatDays = (days: SelectedItems<object>): string => {
   return lastDay ?? "";
 };
 
-export const formatMinutes = (minute: string | number) => {
+export const formatMinutes = (minute: string | number): string | number => {
   return Number(minute) < 10 ? `0${minute}` : minute;
 };
+
+export const parseHour = (hour: string | number): number =>
+  typeof hour === "string" ? Number(hour) : hour;
+
+export const parseMinutes = (minutes: string | number): number =>
+  typeof minutes === "string" ? Number(minutes) : minutes;
