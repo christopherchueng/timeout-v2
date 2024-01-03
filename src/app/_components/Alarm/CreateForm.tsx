@@ -29,7 +29,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
     value: "text-xs",
     popoverContent: "border bg-white rounded-small",
     trigger:
-      "transition border-b border-b-gray-400 after:h-[0px] data-[open=true]:border-b-slate-900 data-[open=false]:border-b-gray-400",
+      "transition border-b h-10 border-b-gray-400 after:h-[0px] data-[open=true]:border-b-slate-900 data-[open=false]:border-b-gray-400",
   };
 
   const { hour, minute, meridiem } = useMemo(() => {
@@ -181,15 +181,37 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
         </label>
         {/* ------------------------- MERIDIEM ------------------------- */}
         <div className="flex h-full flex-row items-end">
-          <label htmlFor="meridiem">
-            <input
-              {...register("meridiem")}
-              id="meridiem"
-              type="text"
-              defaultValue={meridiem}
-              className="mb-3.5 w-10 outline-none"
-            />
-          </label>
+          <Select
+            {...register("meridiem")}
+            id="meridiem"
+            variant="underlined"
+            size="sm"
+            radius="none"
+            defaultSelectedKeys={[meridiem]}
+            disableAnimation={false}
+            classNames={{
+              base: "w-14 mb-1",
+              label:
+                "text-xs text-slate-900 group-data-[filled=true]:text-xs group-data-[filled=true]:text-slate-900",
+              value: "text-xs",
+              popoverContent:
+                "border absolute -top-2.5 w-20 bg-white rounded-small",
+              trigger:
+                "transition shadow-none border-b-0 after:h-[0px] data-[open=true]:border-b-0 data-[open=false]:border-b-0",
+            }}
+            selectorIcon={<></>}
+            disableSelectorIconRotation
+          >
+            {["AM", "PM"].map((timeOfDay) => (
+              <SelectItem
+                key={timeOfDay}
+                textValue={timeOfDay}
+                value={meridiem}
+              >
+                {timeOfDay}
+              </SelectItem>
+            ))}
+          </Select>
         </div>
       </div>
       {/* ------------------------- NAME ------------------------- */}
@@ -234,7 +256,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
             </SelectItem>
           )}
         </Select>
-        {errors && (
+        {errors.alarmlistId && (
           <p className="h-3.5 whitespace-break-spaces pt-2 text-2xs text-red-600">
             {errors.alarmlistId?.message}
           </p>
@@ -273,7 +295,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
       />
       {/* ------------------------- SNOOZE ------------------------- */}
       <div className="flex items-center justify-between py-4">
-        <span className="text-sm">Snooze</span>
+        <span className="pl-1 text-xs">Snooze</span>
         <Controller
           name="snooze"
           control={control}
