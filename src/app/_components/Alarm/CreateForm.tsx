@@ -96,7 +96,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
             if (prevAlarmlist.id === alarmlistId) {
               const optimisticAlarm = {
                 id: "optimistic-alarm-id",
-                name: name || "Alarm",
+                name: name || "Alarm", // eslint-disable-line @typescript-eslint/prefer-nullish-coalescing
                 hour: parseHour(hour),
                 minutes: parseMinutes(minutes),
                 meridiem,
@@ -127,7 +127,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
       return { previousAlarmlists };
     },
     onSuccess: (_data, { name }) => {
-      toast.success(`'${name || "Alarm"}' successfully created!`);
+      toast.success(`'${name || "Alarm"}' successfully created!`); // eslint-disable-line @typescript-eslint/prefer-nullish-coalescing
 
       /*
         When creating a new alarm, the alarm is turned on.
@@ -147,51 +147,45 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
       }
 
       const alarmlistIdErrorMessage =
-        error.data?.zodError?.fieldErrors.alarmlistId;
-      const hourErrorMessage = error.data?.zodError?.fieldErrors.hour;
-      const minutesErrorMessage = error.data?.zodError?.fieldErrors.minutes;
-      const meridiemErrorMessage = error.data?.zodError?.fieldErrors.meridiem;
-      const snoozeErrorMessage = error.data?.zodError?.fieldErrors.snooze;
-      const userErrorMessage = error.data?.zodError?.fieldErrors.userId;
+        error?.data?.zodError?.fieldErrors?.alarmlistId;
+      const hourErrorMessage = error?.data?.zodError?.fieldErrors?.hour;
+      const minutesErrorMessage = error?.data?.zodError?.fieldErrors?.minutes;
+      const meridiemErrorMessage = error?.data?.zodError?.fieldErrors?.meridiem;
+      const snoozeErrorMessage = error?.data?.zodError?.fieldErrors?.snooze;
+      const userErrorMessage = error?.data?.zodError?.fieldErrors?.userId;
 
-      if (alarmlistIdErrorMessage && alarmlistIdErrorMessage[0]) {
+      alarmlistIdErrorMessage &&
         setError("alarmlistId", {
           type: "zod",
           message: alarmlistIdErrorMessage[0],
         });
-      }
 
-      if (hourErrorMessage && hourErrorMessage[0]) {
+      hourErrorMessage &&
         setError("hour", { type: "zod", message: hourErrorMessage[0] });
-      }
 
-      if (minutesErrorMessage && minutesErrorMessage[0]) {
+      minutesErrorMessage &&
         setError("minutes", {
           type: "zod",
           message: minutesErrorMessage[0],
         });
-      }
 
-      if (meridiemErrorMessage && meridiemErrorMessage[0]) {
+      meridiemErrorMessage &&
         setError("meridiem", {
           type: "zod",
           message: meridiemErrorMessage[0],
         });
-      }
 
-      if (snoozeErrorMessage && snoozeErrorMessage[0]) {
+      snoozeErrorMessage &&
         setError("snooze", {
           type: "zod",
           message: snoozeErrorMessage[0],
         });
-      }
 
-      if (userErrorMessage && userErrorMessage[0]) {
+      userErrorMessage &&
         setError("userId", {
           type: "zod",
           message: userErrorMessage[0],
         });
-      }
     },
   });
 

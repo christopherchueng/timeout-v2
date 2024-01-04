@@ -72,12 +72,11 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
     onError: (error) => {
       const nameError = error.data?.zodError?.fieldErrors.name;
 
-      if (nameError && nameError[0]) {
+      nameError &&
         setError("name", {
           type: "server",
           message: nameError[0],
         });
-      }
     },
   });
 
