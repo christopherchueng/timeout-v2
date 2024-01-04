@@ -40,7 +40,12 @@ export const alarmSchema = {
   sound: z.string().optional(),
   repeat: z.string().optional(),
   snooze: z.boolean(),
-  alarmlistId: z.string({ required_error: "Please select an alarmlist." }),
+  // Weird react hook form/zod behavior:
+  // On initial render, required_error will be displayed
+  // If user exits and reopens form, min validation will be displayed.
+  alarmlistId: z
+    .string({ required_error: "Please select an alarmlist." })
+    .min(1, { message: "Please select an alarmlist." }),
   userId: z.string(),
 };
 

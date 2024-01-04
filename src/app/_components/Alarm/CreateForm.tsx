@@ -70,11 +70,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
 
   const ctx = api.useUtils();
 
-  const {
-    mutate: createAlarm,
-    isLoading,
-    isError,
-  } = api.alarm.create.useMutation({
+  const { mutateAsync: createAlarm, isLoading } = api.alarm.create.useMutation({
     onMutate: async (newAlarm) => {
       const {
         name,
@@ -165,15 +161,9 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
   const handleCreateAlarm: SubmitHandler<CreateAlarmFormValues> = async (
     data,
   ) => {
-    const updatedData = {
-      ...data,
-      hour: parseHour(data.hour),
-      minutes: parseMinutes(data.minutes),
-    };
+    const newAlarm = await createAlarm(data);
 
-    createAlarm(updatedData);
-
-    if (!isError && !Object.values(errors).length) {
+    if (newAlarm) {
       reset();
       setIsModalOpen(false);
     }
