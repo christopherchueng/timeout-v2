@@ -129,6 +129,13 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
       void ctx.alarm.getAllByAlarmlistId.invalidate({ alarmlistId });
     },
     onError: (error) => {
+      if (error.message) {
+        setError("alarmlistId", {
+          type: "server",
+          message: error.message,
+        });
+      }
+
       const alarmlistIdErrorMessage =
         error.data?.zodError?.fieldErrors.alarmlistId;
       const hourErrorMessage = error.data?.zodError?.fieldErrors.hour;
@@ -136,18 +143,18 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
 
       if (alarmlistIdErrorMessage && alarmlistIdErrorMessage[0]) {
         setError("alarmlistId", {
-          type: "server",
+          type: "zod",
           message: alarmlistIdErrorMessage[0],
         });
       }
 
       if (hourErrorMessage && hourErrorMessage[0]) {
-        setError("hour", { type: "server", message: hourErrorMessage[0] });
+        setError("hour", { type: "zod", message: hourErrorMessage[0] });
       }
 
       if (minutesErrorMessage && minutesErrorMessage[0]) {
         setError("minutes", {
-          type: "server",
+          type: "zod",
           message: minutesErrorMessage[0],
         });
       }

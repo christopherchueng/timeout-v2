@@ -93,6 +93,18 @@ export const alarmRouter = createTRPCRouter({
         userId,
       } = input;
 
+      const alarmlist = await ctx.db.alarmlist.findFirst({
+        where: {
+          id: alarmlistId,
+        },
+      });
+
+      if (!alarmlist)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Alarmlist not found! Please select another one.",
+        });
+
       return ctx.db.alarm.create({
         data: {
           name: name || "Alarm",
