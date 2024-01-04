@@ -125,9 +125,17 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
 
       return { previousAlarmlists };
     },
-    onSuccess: (_data, { name, alarmlistId }) => {
+    onSuccess: (_data, { name }) => {
       toast.success(`'${name || "Alarm"}' successfully created!`);
-      void ctx.alarm.getAllByAlarmlistId.invalidate({ alarmlistId });
+
+      /*
+        When creating a new alarm, the alarm is turned on.
+        When turning it off immediately after creation, the newly created alarm cannot be toggled
+        even after running void ctx.alarm.getAllByAlarmlistId.invalidate({ alarmlistId }).
+        This is because the alarm id is still "optimistic-alarm-id" and not the cuid generated in the backend.
+        Thus, we must invalidate all alarmlists in order to interact with the real alarm id.
+      */
+      void ctx.alarmlist.getAllWithAlarms.invalidate();
     },
     onError: (error) => {
       if (error.message) {
