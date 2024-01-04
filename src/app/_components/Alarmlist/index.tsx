@@ -16,10 +16,11 @@ import { Chevron, Switch } from "../UI";
 import AlarmlistIcon from "../UI/AlarmlistIcon";
 import Ellipsis from "../UI/Ellipsis";
 import DeleteAlarmlistForm from "./DeleteForm";
-import SettingsWrapper from "./SettingsWrapper";
+import SettingsWrapper from "../Settings/SettingsWrapper";
 import RenameAlarmlistForm from "./RenameForm";
-import Settings from "./Settings";
+import Settings from "../Settings";
 import { AccordionHeader, AccordionItem, AccordionPanel } from "../Accordian";
+import { DeleteAlarmlistIcon, EditIcon } from "../UI";
 
 type SettingStatus = {
   isOpen: boolean;
@@ -293,6 +294,10 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
                   handleClose={(e) => handleSettingsAction(e)}
                 >
                   <Settings
+                    editIcon={<EditIcon />}
+                    editText="Rename"
+                    deleteIcon={<DeleteAlarmlistIcon />}
+                    deleteText="Delete"
                     handleRenameAction={handleRenameAction}
                     handleDeleteAction={handleDeleteAction}
                   />
