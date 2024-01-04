@@ -184,11 +184,9 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
     field: "hour" | "minutes",
   ) => {
     const val = e.target.value;
-    if (val.length > 2) {
-      setValue(field, val.slice(0, 2));
-    } else {
-      return;
-    }
+    if (val.length <= 2) return;
+
+    setValue(field, val.slice(0, 2));
   };
 
   return (
