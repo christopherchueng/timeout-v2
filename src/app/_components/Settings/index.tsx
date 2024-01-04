@@ -1,8 +1,5 @@
 "use client";
 
-import DeleteAlarmlistIcon from "../UI/DeleteAlarmlistIcon";
-import EditIcon from "../UI/EditIcon";
-
 type SettingsProps = {
   editIcon: JSX.Element;
   editText: string;

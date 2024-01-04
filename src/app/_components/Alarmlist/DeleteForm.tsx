@@ -2,9 +2,8 @@
 
 import type { Alarmlist } from "@prisma/client";
 import { api } from "@/trpc/react";
-import DeleteAlarmlistIcon from "../UI/DeleteAlarmlistIcon";
 import Modal from "../Modal";
-import { Button } from "../UI";
+import { Button, DeleteAlarmlistIcon } from "../UI";
 import toast from "react-hot-toast";
 
 type DeleteAlarmlistFormProps = {

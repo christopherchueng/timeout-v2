@@ -12,15 +12,19 @@ import {
 } from "@/store/constants";
 import type { AlarmlistWithAlarms } from "@/types";
 import Alarm from "../Alarm";
-import { Chevron, Switch } from "../UI";
-import AlarmlistIcon from "../UI/AlarmlistIcon";
-import Ellipsis from "../UI/Ellipsis";
 import DeleteAlarmlistForm from "./DeleteForm";
 import SettingsWrapper from "../Settings/SettingsWrapper";
 import RenameAlarmlistForm from "./RenameForm";
 import Settings from "../Settings";
 import { AccordionHeader, AccordionItem, AccordionPanel } from "../Accordian";
-import { DeleteAlarmlistIcon, EditIcon } from "../UI";
+import {
+  AlarmlistIcon,
+  DeleteAlarmlistIcon,
+  EditIcon,
+  Chevron,
+  Switch,
+  Ellipsis,
+} from "../UI";
 
 type SettingStatus = {
   isOpen: boolean;

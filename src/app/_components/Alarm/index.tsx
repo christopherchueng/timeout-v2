@@ -4,9 +4,8 @@ import clsx from "clsx";
 import { Switch } from "../UI";
 import { api } from "@/trpc/react";
 import type { RouterOutputs } from "@/trpc/shared";
-import AlarmIcon from "../UI/AlarmIcon";
+import { AlarmIcon, Ellipsis } from "../UI";
 import { formatMinutes } from "@/utils";
-// import Ellipsis from "../UI/Ellipsis";
 
 type Alarm = RouterOutputs["alarm"]["getAllByAlarmlistId"][number];
 
@@ -94,8 +93,8 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
       </div>
       <div className="absolute right-1 inline-flex w-auto gap-1.5">
         {/* <div className="relative">
-            <Ellipsis />
-          </div> */}
+          <Ellipsis />
+        </div> */}
         <Switch
           id={alarm.id}
           checked={alarm.isOn}

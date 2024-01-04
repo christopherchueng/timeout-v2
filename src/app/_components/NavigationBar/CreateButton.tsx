@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import clsx from "clsx";
-import { CreateAlarmlistIcon, Plus } from "../UI";
-import Tooltip from "../UI/Tooltip";
+import { CreateAlarmlistIcon, Plus, Tooltip } from "../UI";
 import Modal from "../Modal";
 import CreateAlarmlistForm from "../Alarmlist/CreateForm";
 import CreateAlarmForm from "../Alarm/CreateForm";
