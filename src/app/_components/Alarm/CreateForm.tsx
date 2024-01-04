@@ -53,7 +53,6 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
     handleSubmit,
     setError,
     setValue,
-    getValues,
     watch,
     reset,
     control,
@@ -66,6 +65,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
       repeat: "",
       userId: session.user.id,
     },
+    criteriaMode: "all",
   });
 
   const ctx = api.useUtils();
@@ -173,7 +173,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
 
     createAlarm(updatedData);
 
-    if (!isError && !errors) {
+    if (!isError && !Object.values(errors).length) {
       reset();
       setIsModalOpen(false);
     }
@@ -201,11 +201,6 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
           <div className="flex flex-row gap-4">
             {/* ------------------------- HOUR ------------------------- */}
             <label htmlFor="hour">
-              {/* <Tooltip
-              color="error"
-              isShowing={!!errors.hour}
-              text={errors.hour?.message!}
-            > */}
               <input
                 {...register("hour", {
                   setValueAs: (hourInput) => Number(hourInput),
@@ -217,7 +212,6 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
                 className="w-24 text-right text-7xl outline-none"
                 onChange={(e) => handleInputCharCount(e, "hour")}
               />
-              {/* </Tooltip> */}
             </label>
             <span className="h-full text-7xl">:</span>
             {/* ------------------------- MINUTES ------------------------- */}
