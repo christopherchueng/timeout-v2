@@ -46,7 +46,10 @@ export const alarmSchema = {
   }),
   sound: z.string().optional(),
   repeat: z.string().optional(),
-  snooze: z.boolean(),
+  snooze: z.boolean({
+    required_error: "Snooze is required.",
+    invalid_type_error: "Snooze must be on or off.",
+  }),
   // Weird react hook form/zod behavior:
   // On initial render, required_error will be displayed
   // If user exits and reopens form, min validation will be displayed.
