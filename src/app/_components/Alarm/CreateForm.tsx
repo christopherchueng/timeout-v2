@@ -33,6 +33,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
     label:
       "text-xs text-slate-900 group-data-[filled=true]:text-xs group-data-[filled=true]:text-slate-900",
     value: "text-xs",
+    contentWrapper: "p-0",
     popoverContent: "border bg-white rounded-small",
     trigger:
       "transition border-b h-10 border-b-gray-400 after:h-[0px] data-[open=true]:border-b-slate-900 data-[open=false]:border-b-gray-400",
@@ -252,8 +253,9 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
                     label:
                       "text-xs text-slate-900 group-data-[filled=true]:text-xs group-data-[filled=true]:text-slate-900",
                     value: "text-xs",
+                    listbox: "p-0",
                     popoverContent:
-                      "border absolute -top-2.5 w-20 bg-white rounded-small",
+                      "border absolute p-0 -top-2.5 w-20 bg-white rounded-small",
                     trigger:
                       "transition shadow-none border-b-0 after:h-[0px] data-[open=true]:border-b-0 data-[open=false]:border-b-0",
                   }}
@@ -282,6 +284,11 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
         {errors.minutes && (
           <p className="h-3.5 whitespace-break-spaces text-2xs text-red-600">
             {errors.minutes?.message}
+          </p>
+        )}
+        {errors.meridiem && (
+          <p className="h-3.5 whitespace-break-spaces text-2xs text-red-600">
+            {errors.meridiem?.message}
           </p>
         )}
       </div>

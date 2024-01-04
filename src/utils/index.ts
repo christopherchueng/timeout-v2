@@ -19,6 +19,11 @@ export const renameAlarmlistSchema = z.object({
   ...nameSchema,
 });
 
+enum Meridiem {
+  AM = "AM",
+  PM = "PM",
+}
+
 // Alarm schemas
 export const alarmSchema = {
   name: z.string().optional().default("Alarm"),
@@ -36,7 +41,9 @@ export const alarmSchema = {
         .lte(59, { message: "Minutes must be in between 0 and 59." })
         .int(),
     ),
-  meridiem: z.string(),
+  meridiem: z.nativeEnum(Meridiem, {
+    errorMap: () => ({ message: "Please select AM or PM." }),
+  }),
   sound: z.string().optional(),
   repeat: z.string().optional(),
   snooze: z.boolean(),
