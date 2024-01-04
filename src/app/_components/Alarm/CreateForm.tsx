@@ -193,37 +193,35 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
     >
       <div className="flex w-full flex-col items-center justify-center md:mb-0">
         <div className="flex flex-row gap-4">
-          <div className="flex flex-row gap-4">
-            {/* ------------------------- HOUR ------------------------- */}
-            <label htmlFor="hour">
-              <input
-                {...register("hour", {
-                  setValueAs: (hourInput) => Number(hourInput),
-                })}
-                id="hour"
-                defaultValue={hour}
-                type="number"
-                maxLength={2}
-                className="w-24 text-right text-7xl outline-none"
-                onChange={(e) => handleInputCharCount(e, "hour")}
-              />
-            </label>
-            <span className="h-full text-7xl">:</span>
-            {/* ------------------------- MINUTES ------------------------- */}
-            <label htmlFor="minutes">
-              <input
-                {...register("minutes", {
-                  setValueAs: (hourInput) => Number(hourInput),
-                })}
-                id="minutes"
-                type="number"
-                defaultValue={minute}
-                maxLength={2}
-                className="w-24 text-7xl outline-none"
-                onChange={(e) => handleInputCharCount(e, "minutes")}
-              />
-            </label>
-          </div>
+          {/* ------------------------- HOUR ------------------------- */}
+          <label htmlFor="hour">
+            <input
+              {...register("hour", {
+                setValueAs: (hourInput) => Number(hourInput),
+              })}
+              id="hour"
+              defaultValue={hour}
+              type="number"
+              maxLength={2}
+              className="w-24 text-right text-7xl outline-none"
+              onChange={(e) => handleInputCharCount(e, "hour")}
+            />
+          </label>
+          <span className="h-full text-7xl">:</span>
+          {/* ------------------------- MINUTES ------------------------- */}
+          <label htmlFor="minutes">
+            <input
+              {...register("minutes", {
+                setValueAs: (hourInput) => Number(hourInput),
+              })}
+              id="minutes"
+              type="number"
+              defaultValue={minute}
+              maxLength={2}
+              className="w-24 text-7xl outline-none"
+              onChange={(e) => handleInputCharCount(e, "minutes")}
+            />
+          </label>
           {/* ------------------------- MERIDIEM ------------------------- */}
           <div className="flex h-full flex-row items-end">
             <Controller
