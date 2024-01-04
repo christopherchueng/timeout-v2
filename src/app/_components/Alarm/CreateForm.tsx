@@ -411,7 +411,12 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
           name="snooze"
           control={control}
           render={({ field: { onChange, value } }) => (
-            <Switch id="snooze-alarm" checked={value} onChange={onChange} />
+            <Switch
+              id="snooze-alarm"
+              checked={value}
+              onChange={onChange}
+              aria-labelledby="snooze-alarm"
+            />
           )}
         />
         {errors.snooze && (
