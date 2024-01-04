@@ -185,7 +185,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
   ) => {
     const val = e.target.value;
     if (val.length > 2) {
-      setValue(field, Number(val.slice(0, 2)));
+      setValue(field, val.slice(0, 2));
     } else {
       return;
     }
@@ -215,6 +215,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
                 type="number"
                 maxLength={2}
                 className="w-24 text-right text-7xl outline-none"
+                onChange={(e) => handleInputCharCount(e, "hour")}
               />
               {/* </Tooltip> */}
             </label>

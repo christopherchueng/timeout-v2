@@ -28,10 +28,14 @@ export const alarmSchema = {
     .lte(12, { message: "Hours must be in between 1 and 12." })
     .int(),
   minutes: z
-    .number()
-    .gte(0, { message: "Minutes must be in between 0 and 59." })
-    .lte(59, { message: "Minutes must be in between 0 and 59." })
-    .int(),
+    .string()
+    .or(
+      z
+        .number()
+        .gte(0, { message: "Minutes must be in between 0 and 59." })
+        .lte(59, { message: "Minutes must be in between 0 and 59." })
+        .int(),
+    ),
   meridiem: z.string(),
   sound: z.string().optional(),
   repeat: z.string().optional(),
