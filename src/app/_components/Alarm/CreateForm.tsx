@@ -365,7 +365,6 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
             </Select>
           )}
         />
-
         {errors.alarmlistId && (
           <p className="h-3.5 whitespace-break-spaces pt-2 text-2xs text-red-600">
             {errors.alarmlistId?.message}
