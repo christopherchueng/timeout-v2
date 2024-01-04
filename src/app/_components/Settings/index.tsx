@@ -1,5 +1,7 @@
 "use client";
 
+import SettingsWrapper from "./SettingsWrapper";
+
 type SettingsProps = {
   editIcon: JSX.Element;
   editText: string;
@@ -37,4 +39,4 @@ const Settings = ({
   );
 };
 
-export default Settings;
+export { Settings, SettingsWrapper };

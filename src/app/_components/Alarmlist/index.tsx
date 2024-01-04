@@ -13,9 +13,8 @@ import {
 import type { AlarmlistWithAlarms } from "@/types";
 import Alarm from "../Alarm";
 import DeleteAlarmlistForm from "./DeleteForm";
-import SettingsWrapper from "../Settings/SettingsWrapper";
 import RenameAlarmlistForm from "./RenameForm";
-import Settings from "../Settings";
+import { Settings, SettingsWrapper } from "../Settings";
 import { AccordionHeader, AccordionItem, AccordionPanel } from "../Accordian";
 import {
   AlarmlistIcon,
