@@ -150,6 +150,9 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
         error.data?.zodError?.fieldErrors.alarmlistId;
       const hourErrorMessage = error.data?.zodError?.fieldErrors.hour;
       const minutesErrorMessage = error.data?.zodError?.fieldErrors.minutes;
+      const meridiemErrorMessage = error.data?.zodError?.fieldErrors.meridiem;
+      const snoozeErrorMessage = error.data?.zodError?.fieldErrors.snooze;
+      const userErrorMessage = error.data?.zodError?.fieldErrors.userId;
 
       if (alarmlistIdErrorMessage && alarmlistIdErrorMessage[0]) {
         setError("alarmlistId", {
@@ -166,6 +169,27 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
         setError("minutes", {
           type: "zod",
           message: minutesErrorMessage[0],
+        });
+      }
+
+      if (meridiemErrorMessage && meridiemErrorMessage[0]) {
+        setError("meridiem", {
+          type: "zod",
+          message: meridiemErrorMessage[0],
+        });
+      }
+
+      if (snoozeErrorMessage && snoozeErrorMessage[0]) {
+        setError("snooze", {
+          type: "zod",
+          message: snoozeErrorMessage[0],
+        });
+      }
+
+      if (userErrorMessage && userErrorMessage[0]) {
+        setError("userId", {
+          type: "zod",
+          message: userErrorMessage[0],
         });
       }
     },
@@ -201,6 +225,11 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
       onSubmit={handleSubmit(handleCreateAlarm)}
       className="mx-auto my-4 flex h-full w-96 flex-col justify-center gap-4"
     >
+      {errors.userId && (
+        <p className="h-3.5 whitespace-break-spaces text-2xs text-red-600">
+          {errors.userId?.message}
+        </p>
+      )}
       <div className="flex w-full flex-col items-center justify-center md:mb-0">
         <div className="flex flex-row gap-4">
           {/* ------------------------- HOUR ------------------------- */}

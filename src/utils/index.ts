@@ -56,7 +56,9 @@ export const alarmSchema = {
   alarmlistId: z
     .string({ required_error: "Please select an alarmlist." })
     .min(1, { message: "Please select an alarmlist." }),
-  userId: z.string(),
+  userId: z
+    .string({ required_error: "Please provide a user id." })
+    .min(1, { message: "Please provide a user id." }),
 };
 
 export const createAlarmSchema = z.object({
