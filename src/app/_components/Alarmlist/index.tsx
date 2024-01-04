@@ -247,9 +247,9 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
         >
           <div className="w-3.5">
             {isHoveringIcon ? (
-              <Chevron isOpen={isShowingAlarms} isToggleOn={isOn} />
+              <Chevron isOpen={isShowingAlarms} isToggleOn={alarmlist.isOn} />
             ) : (
-              <AlarmlistIcon isOn={isOn} />
+              <AlarmlistIcon isOn={alarmlist.isOn} />
             )}
           </div>
           {settingsTab.isEditingAlarmlist ? (
@@ -262,7 +262,7 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
               className={clsx(
                 "line-clamp-1 inline-block self-center truncate transition",
                 {
-                  "text-gray-400": !isOn,
+                  "text-gray-400": !alarmlist.isOn,
                 },
               )}
               onDoubleClick={() => {
@@ -302,7 +302,7 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
           </div>
           <Switch
             id={alarmlist.id}
-            checked={isOn}
+            checked={alarmlist.isOn}
             onChange={(e) => {
               mutate({ id: alarmlist.id, isOn: e.currentTarget.checked });
             }}

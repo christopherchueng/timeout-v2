@@ -111,6 +111,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
 
               return {
                 ...prevAlarmlist,
+                isOn: true,
                 alarms: [...prevAlarmlist.alarms, optimisticAlarm],
               };
             }
