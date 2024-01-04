@@ -1,9 +1,4 @@
-import {
-  useForm,
-  type SubmitHandler,
-  Controller,
-  SubmitErrorHandler,
-} from "react-hook-form";
+import { useForm, type SubmitHandler, Controller } from "react-hook-form";
 import dayjs from "dayjs";
 import { api } from "@/trpc/react";
 import { SelectItem, Select } from "@nextui-org/select";
@@ -24,7 +19,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input, Switch } from "../UI";
 import { useMemo } from "react";
 import toast from "react-hot-toast";
-import Tooltip from "../UI/Tooltip";
 
 type CreateAlarmFormProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -58,6 +52,8 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
     register,
     handleSubmit,
     setError,
+    setValue,
+    getValues,
     watch,
     reset,
     control,
@@ -143,7 +139,10 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
       const minutesErrorMessage = error.data?.zodError?.fieldErrors.minutes;
 
       if (alarmlistIdErrorMessage && alarmlistIdErrorMessage[0]) {
-        setError("alarmlistId", { type: "server", message: error.message });
+        setError("alarmlistId", {
+          type: "server",
+          message: alarmlistIdErrorMessage[0],
+        });
       }
 
       if (hourErrorMessage && hourErrorMessage[0]) {
@@ -180,85 +179,114 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
     }
   };
 
+  const handleInputCharCount = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: "hour" | "minutes",
+  ) => {
+    const val = e.target.value;
+    if (val.length > 2) {
+      setValue(field, Number(val.slice(0, 2)));
+    } else {
+      return;
+    }
+  };
+
   return (
     <form
       onSubmit={handleSubmit(handleCreateAlarm)}
       className="mx-auto my-4 flex h-full w-96 flex-col justify-center gap-4"
     >
-      <div className="flex w-full flex-row items-center justify-center gap-2 md:mb-0">
-        <div className="flex gap-4">
-          {/* ------------------------- HOUR ------------------------- */}
-          <label htmlFor="hour">
-            <input
-              {...register("hour", {
-                setValueAs: (hourInput) => Number(hourInput),
-              })}
-              id="hour"
-              defaultValue={hour}
-              type="number"
-              maxLength={2}
-              className="w-24 text-right text-7xl outline-none"
+      <div className="flex w-full flex-col items-center justify-center md:mb-0">
+        <div className="flex flex-row gap-4">
+          <div className="flex flex-row gap-4">
+            {/* ------------------------- HOUR ------------------------- */}
+            <label htmlFor="hour">
+              {/* <Tooltip
+              color="error"
+              isShowing={!!errors.hour}
+              text={errors.hour?.message!}
+            > */}
+              <input
+                {...register("hour", {
+                  setValueAs: (hourInput) => Number(hourInput),
+                })}
+                id="hour"
+                defaultValue={hour}
+                type="number"
+                maxLength={2}
+                className="w-24 text-right text-7xl outline-none"
+              />
+              {/* </Tooltip> */}
+            </label>
+            <span className="h-full text-7xl">:</span>
+            {/* ------------------------- MINUTES ------------------------- */}
+            <label htmlFor="minutes">
+              <input
+                {...register("minutes", {
+                  setValueAs: (hourInput) => Number(hourInput),
+                })}
+                id="minutes"
+                type="number"
+                defaultValue={minute}
+                maxLength={2}
+                className="w-24 text-7xl outline-none"
+                onChange={(e) => handleInputCharCount(e, "minutes")}
+              />
+            </label>
+          </div>
+          {/* ------------------------- MERIDIEM ------------------------- */}
+          <div className="flex h-full flex-row items-end">
+            <Controller
+              name="meridiem"
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <Select
+                  {...register("meridiem")}
+                  id="meridiem"
+                  variant="underlined"
+                  size="sm"
+                  radius="none"
+                  aria-labelledby="meridiem"
+                  defaultSelectedKeys={[meridiem]}
+                  disableAnimation={false}
+                  onChange={onChange}
+                  classNames={{
+                    base: "w-14 mb-1",
+                    label:
+                      "text-xs text-slate-900 group-data-[filled=true]:text-xs group-data-[filled=true]:text-slate-900",
+                    value: "text-xs",
+                    popoverContent:
+                      "border absolute -top-2.5 w-20 bg-white rounded-small",
+                    trigger:
+                      "transition shadow-none border-b-0 after:h-[0px] data-[open=true]:border-b-0 data-[open=false]:border-b-0",
+                  }}
+                  selectorIcon={<></>}
+                  disableSelectorIconRotation
+                >
+                  {["AM", "PM"].map((timeOfDay) => (
+                    <SelectItem
+                      key={timeOfDay}
+                      textValue={timeOfDay}
+                      value={value}
+                    >
+                      {timeOfDay}
+                    </SelectItem>
+                  ))}
+                </Select>
+              )}
             />
-            {errors.hour && <Tooltip text={errors.hour.message!} />}
-          </label>
-          <span className="h-full text-7xl">:</span>
-          {/* ------------------------- MINUTES ------------------------- */}
-          <label htmlFor="minutes">
-            <input
-              {...register("minutes", {
-                setValueAs: (hourInput) => Number(hourInput),
-              })}
-              id="minutes"
-              type="number"
-              defaultValue={minute}
-              maxLength={2}
-              className="w-24 text-7xl outline-none"
-            />
-            {errors.minutes && <Tooltip text={errors.minutes.message!} />}
-          </label>
+          </div>
         </div>
-        {/* ------------------------- MERIDIEM ------------------------- */}
-        <div className="flex h-full flex-row items-end">
-          <Controller
-            name="meridiem"
-            control={control}
-            render={({ field: { value, onChange } }) => (
-              <Select
-                {...register("meridiem")}
-                id="meridiem"
-                variant="underlined"
-                size="sm"
-                radius="none"
-                aria-labelledby="meridiem"
-                defaultSelectedKeys={[meridiem]}
-                disableAnimation={false}
-                onChange={onChange}
-                classNames={{
-                  base: "w-14 mb-1",
-                  label:
-                    "text-xs text-slate-900 group-data-[filled=true]:text-xs group-data-[filled=true]:text-slate-900",
-                  value: "text-xs",
-                  popoverContent:
-                    "border absolute -top-2.5 w-20 bg-white rounded-small",
-                  trigger:
-                    "transition shadow-none border-b-0 after:h-[0px] data-[open=true]:border-b-0 data-[open=false]:border-b-0",
-                }}
-                selectorIcon={<></>}
-                disableSelectorIconRotation
-              >
-                {["AM", "PM"].map((timeOfDay) => (
-                  <SelectItem
-                    key={timeOfDay}
-                    textValue={timeOfDay}
-                    value={value}
-                  >
-                    {timeOfDay}
-                  </SelectItem>
-                ))}
-              </Select>
-            )}
-          />
-        </div>
+        {errors.hour && (
+          <p className="h-3.5 whitespace-break-spaces text-2xs text-red-600">
+            {errors.hour?.message}
+          </p>
+        )}
+        {errors.minutes && (
+          <p className="h-3.5 whitespace-break-spaces text-2xs text-red-600">
+            {errors.minutes?.message}
+          </p>
+        )}
       </div>
       {/* ------------------------- NAME ------------------------- */}
       <Input

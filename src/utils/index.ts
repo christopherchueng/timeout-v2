@@ -24,13 +24,13 @@ export const alarmSchema = {
   name: z.string().optional().default("Alarm"),
   hour: z
     .number()
-    .gte(1, { message: "Number must be in between 1 and 12." })
-    .lte(12, { message: "Number must be in between 1 and 12." })
+    .gte(1, { message: "Hours must be in between 1 and 12." })
+    .lte(12, { message: "Hours must be in between 1 and 12." })
     .int(),
-  minutes: z.coerce
+  minutes: z
     .number()
-    .gte(0, { message: "Number must be in between 0 and 59." })
-    .lte(59, { message: "Number must be in between 0 and 59." })
+    .gte(0, { message: "Minutes must be in between 0 and 59." })
+    .lte(59, { message: "Minutes must be in between 0 and 59." })
     .int(),
   meridiem: z.string(),
   sound: z.string().optional(),

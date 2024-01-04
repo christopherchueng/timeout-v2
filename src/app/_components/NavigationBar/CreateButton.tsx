@@ -67,49 +67,46 @@ const CreateButton = () => {
 
   return (
     <div className="relative flex flex-col">
-      <button
-        onMouseEnter={() => setIsHovering(true)}
-        onMouseLeave={() => setIsHovering(false)}
-        onClick={() => {
-          setIsTabOpen((prev) => !prev);
-          setIsHovering(false);
-        }}
-        className="h-full rounded border border-slate-900 transition hover:border-slate-500 hover:bg-gray-100 active:bg-gray-200"
-      >
-        <div className="flex h-full items-center gap-0.5 px-1">
-          <Plus />
-          <Chevron isOpen={isTabOpen} />
-        </div>
-        {isTabOpen && (
-          <div className="relative animate-dilate transition-all">
-            <div className="absolute left-0 top-1.5 z-50 flex h-fit w-36 flex-col whitespace-nowrap rounded-md border bg-white p-2 shadow-lg">
-              <div
-                onClick={() => setIsAlarmlistModalOpen((prev) => !prev)}
-                className="cursor-pointer rounded-md px-2 py-2 hover:z-50 hover:bg-gray-200"
-              >
-                <div className="flex items-center gap-1.5">
-                  <CreateAlarmlistIcon />
-                  <span>New alarmlist</span>
+      <Tooltip isShowing={isHovering && !isTabOpen} text="Create new">
+        <button
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+          onClick={() => {
+            setIsTabOpen((prev) => !prev);
+            setIsHovering(false);
+          }}
+          className="h-full rounded border border-slate-900 transition hover:border-slate-500 hover:bg-gray-100 active:bg-gray-200"
+        >
+          <div className="flex h-full items-center gap-0.5 px-1">
+            <Plus />
+            <Chevron isOpen={isTabOpen} />
+          </div>
+          {isTabOpen && (
+            <div className="relative animate-dilate transition-all">
+              <div className="absolute left-0 top-1.5 z-50 flex h-fit w-36 flex-col whitespace-nowrap rounded-md border bg-white p-2 shadow-lg">
+                <div
+                  onClick={() => setIsAlarmlistModalOpen((prev) => !prev)}
+                  className="cursor-pointer rounded-md px-2 py-2 hover:z-50 hover:bg-gray-200"
+                >
+                  <div className="flex items-center gap-1.5">
+                    <CreateAlarmlistIcon />
+                    <span>New alarmlist</span>
+                  </div>
                 </div>
-              </div>
-              <div
-                onClick={() => setIsAlarmModalOpen((prev) => !prev)}
-                className="cursor-pointer rounded-md px-2 py-2 hover:z-50 hover:bg-gray-200"
-              >
-                <div className="flex items-center gap-1.5">
-                  <CreateAlarmIcon />
-                  <span>New alarm</span>
+                <div
+                  onClick={() => setIsAlarmModalOpen((prev) => !prev)}
+                  className="cursor-pointer rounded-md px-2 py-2 hover:z-50 hover:bg-gray-200"
+                >
+                  <div className="flex items-center gap-1.5">
+                    <CreateAlarmIcon />
+                    <span>New alarm</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
-      </button>
-      {isHovering && !isTabOpen && (
-        <div className="absolute mx-auto inline-flex justify-center">
-          <Tooltip text="Create new" />
-        </div>
-      )}
+          )}
+        </button>
+      </Tooltip>
       {isAlarmlistModalOpen ? (
         <Modal
           isOpen={isAlarmlistModalOpen}
