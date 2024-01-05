@@ -19,7 +19,7 @@ export const renameAlarmlistSchema = z.object({
   ...nameSchema,
 });
 
-enum Meridiem {
+export enum Meridiem {
   AM = "AM",
   PM = "PM",
 }
