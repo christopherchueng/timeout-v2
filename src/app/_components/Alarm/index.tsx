@@ -6,6 +6,9 @@ import { api } from "@/trpc/react";
 import type { RouterOutputs } from "@/trpc/shared";
 import { AlarmIcon, Ellipsis } from "../UI";
 import { formatMinutes } from "@/utils";
+import { useCallback, useRef } from "react";
+import { useCursorPosition, useSettingsActions } from "@/hooks";
+import { Settings } from "../Settings";
 
 type Alarm = RouterOutputs["alarm"]["getAllByAlarmlistId"][number];
 
@@ -15,6 +18,12 @@ type AlarmProps = {
 };
 
 const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
+  const ellipsisRef = useRef<HTMLDivElement>(null);
+
+  const { settingsTab, openSettings, closeSettings, setSettingsTab } =
+    useSettingsActions();
+  const { cursorPosition, onMouseMove } = useCursorPosition();
+
   const ctx = api.useUtils();
 
   const { mutate } = api.alarm.toggle.useMutation({
@@ -73,8 +82,26 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
     },
   });
 
+  const handleEditAlarm = useCallback(() => {
+    closeSettings();
+    // Open edit alarm modal
+  }, []);
+
+  const handleDeleteAlarm = useCallback(() => {
+    closeSettings();
+    // Delete alarm
+  }, []);
+
   return (
-    <li className="group relative mt-0.5 flex h-10 flex-row items-center justify-between rounded-lg border border-transparent py-1 pl-4 pr-2 transition duration-200 hover:bg-gray-200">
+    <li
+      onMouseEnter={() =>
+        setSettingsTab((prev) => ({ ...prev, isHovering: true }))
+      }
+      onMouseLeave={() =>
+        setSettingsTab((prev) => ({ ...prev, isHovering: false }))
+      }
+      className="group relative mt-0.5 flex h-10 flex-row items-center justify-between rounded-lg border border-transparent py-1 pl-4 pr-2 transition duration-200 hover:bg-gray-200"
+    >
       <div className="absolute flex w-3/4 items-center gap-2 group-hover:w-[73%]">
         <AlarmIcon isOn={alarm.isOn} />
         <div
@@ -92,9 +119,23 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
         </div>
       </div>
       <div className="absolute right-1 inline-flex w-auto gap-1.5">
-        {/* <div className="relative">
-          <Ellipsis />
-        </div> */}
+        <button
+          onClick={(e) => {
+            openSettings();
+            onMouseMove(e);
+          }}
+        >
+          <Settings
+            ref={ellipsisRef}
+            action="Alarm"
+            handleEditAction={handleEditAlarm}
+            handleDeleteAction={handleDeleteAlarm}
+            closeSettings={closeSettings}
+            isOpen={settingsTab.isOpen}
+            isHovering={settingsTab.isHovering}
+            cursorPosition={cursorPosition}
+          />
+        </button>
         <Switch
           id={alarm.id}
           checked={alarm.isOn}

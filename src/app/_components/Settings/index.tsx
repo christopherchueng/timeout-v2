@@ -69,7 +69,7 @@ const Settings = forwardRef<HTMLDivElement, SettingsProps>(
           >
             <SettingsDropdown
               editIcon={action === "Alarmlist" ? <EditIcon /> : <></>}
-              editText="Rename"
+              editText={action === "Alarmlist" ? "Rename" : "Edit"}
               deleteIcon={
                 action === "Alarmlist" ? <DeleteAlarmlistIcon /> : <></>
               }

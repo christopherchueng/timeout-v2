@@ -226,7 +226,7 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
           )}
         </div>
         <div className="absolute right-1 inline-flex w-auto gap-1.5">
-          <div
+          <button
             onClick={(e) => {
               openSettings();
               onMouseMove(e);
@@ -243,7 +243,7 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
               cursorPosition={cursorPosition}
               handleAlarmlistModal={() => setIsDeleteConfirmationOpen(false)}
             />
-          </div>
+          </button>
           <Switch
             id={alarmlist.id}
             checked={isOn || alarmlist.isOn}

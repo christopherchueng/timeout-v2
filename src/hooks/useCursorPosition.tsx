@@ -7,7 +7,7 @@ const useCursorPosition = () => {
   const { width } = useWindowDimensions();
 
   const onMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       setCursorPosition({
         x: width! >= 640 ? e.clientX - 5 : e.clientX - 80,
         y: e.clientY + 10,
