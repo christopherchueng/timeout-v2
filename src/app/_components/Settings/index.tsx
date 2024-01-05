@@ -1,42 +1,87 @@
-"use client";
-
+import {
+  type ComponentPropsWithoutRef,
+  forwardRef,
+  useCallback,
+  useRef,
+} from "react";
+import SettingsDropdown from "./SettingsDropdown";
 import SettingsWrapper from "./SettingsWrapper";
+import { DeleteAlarmlistIcon, EditIcon, Ellipsis } from "../UI";
 
-type SettingsProps = {
-  editIcon: JSX.Element;
-  editText: string;
-  deleteIcon: JSX.Element;
-  deleteText: string;
-  handleRenameAction: () => void;
+interface SettingsProps extends ComponentPropsWithoutRef<"div"> {
+  handleEditAction: () => void;
   handleDeleteAction: () => void;
-};
+  closeSettings: () => void;
+  isOpen: boolean;
+  isHovering: boolean;
+  action: "Alarm" | "Alarmlist";
+  cursorPosition: {
+    x: number;
+    y: number;
+  };
+  handleAlarmlistModal?: () => void;
+}
 
-const Settings = ({
-  editIcon,
-  editText,
-  deleteIcon,
-  deleteText,
-  handleRenameAction,
-  handleDeleteAction,
-}: SettingsProps) => {
-  return (
-    <div className="flex flex-col justify-center text-sm">
-      <button
-        onClick={handleRenameAction}
-        className="flex cursor-pointer items-center gap-1.5 px-2 py-2 transition hover:bg-gray-200"
-      >
-        {editIcon}
-        <span>{editText}</span>
-      </button>
-      <button
-        onClick={handleDeleteAction}
-        className="flex cursor-pointer items-center gap-1.5 px-2 py-2 text-red-600 transition hover:bg-gray-200"
-      >
-        {deleteIcon}
-        <span>{deleteText}</span>
-      </button>
-    </div>
-  );
-};
+const Settings = forwardRef<HTMLDivElement, SettingsProps>(
+  (
+    {
+      action,
+      handleEditAction,
+      handleDeleteAction,
+      closeSettings,
+      isOpen,
+      isHovering,
+      cursorPosition,
+      handleAlarmlistModal,
+    }: SettingsProps,
+    ref,
+  ) => {
+    const settingsRef = useRef<HTMLDivElement>(null);
 
-export { Settings, SettingsWrapper };
+    const handleSettingsAction = useCallback((e: MouseEvent) => {
+      // Clicking on "Delete" closes settings tab and opens delete modal
+      if (
+        settingsRef?.current &&
+        settingsRef.current?.contains(e.target as Node)
+      ) {
+        closeSettings();
+      } else if (
+        // Close settings outside modal
+        settingsRef?.current &&
+        !settingsRef.current?.contains(e.target as Node)
+      ) {
+        closeSettings();
+        if (action === "Alarmlist" && handleAlarmlistModal) {
+          handleAlarmlistModal();
+        }
+      }
+    }, []);
+
+    return (
+      <div className="relative" ref={ref}>
+        {isHovering && <Ellipsis isSettingsTabOpen={isOpen} />}
+        {isOpen && (
+          <SettingsWrapper
+            ref={settingsRef}
+            isOpen={isOpen}
+            cursorPosition={cursorPosition}
+            handleClose={(e) => handleSettingsAction(e)}
+          >
+            <SettingsDropdown
+              editIcon={action === "Alarmlist" ? <EditIcon /> : <></>}
+              editText="Rename"
+              deleteIcon={
+                action === "Alarmlist" ? <DeleteAlarmlistIcon /> : <></>
+              }
+              deleteText="Delete"
+              handleEditAction={handleEditAction}
+              handleDeleteAction={handleDeleteAction}
+            />
+          </SettingsWrapper>
+        )}
+      </div>
+    );
+  },
+);
+
+export { Settings, SettingsDropdown, SettingsWrapper };
