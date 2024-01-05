@@ -3,7 +3,7 @@
 import { useCallback, useReducer, useRef, useState } from "react";
 import clsx from "clsx";
 import { api } from "@/trpc/react";
-import { useWindowDimensions } from "@/hooks";
+import { useCursorPosition, useSettingsActions } from "@/hooks";
 import { alarmlistReducer } from "@/store";
 import {
   RENAME_ALARMLIST,
@@ -14,37 +14,22 @@ import type { AlarmlistWithAlarms } from "@/types";
 import Alarm from "../Alarm";
 import DeleteAlarmlistForm from "./DeleteForm";
 import RenameAlarmlistForm from "./RenameForm";
-import { Settings, SettingsWrapper } from "../Settings";
+import { Settings } from "../Settings";
 import { AccordionHeader, AccordionItem, AccordionPanel } from "../Accordian";
-import {
-  AlarmlistIcon,
-  DeleteAlarmlistIcon,
-  EditIcon,
-  Chevron,
-  Switch,
-  Ellipsis,
-} from "../UI";
-
-type SettingStatus = {
-  isOpen: boolean;
-  isHovering: boolean;
-  isDeleteConfirmationOpen: boolean;
-  isEditingAlarmlist?: boolean;
-};
+import { AlarmlistIcon, Chevron, Switch } from "../UI";
 
 const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
-  const settingsRef = useRef<HTMLDivElement>(null);
   const ellipsisRef = useRef<HTMLDivElement>(null);
 
-  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [isHoveringIcon, setIsHoveringIcon] = useState(false);
   const [isShowingAlarms, setIsShowingAlarms] = useState(false);
-  const [settingsTab, setSettingsTab] = useState<SettingStatus>({
-    isHovering: false,
-    isOpen: false,
-    isDeleteConfirmationOpen: false,
-    isEditingAlarmlist: false,
-  });
+  const [isEditingAlarmlist, setIsEditingAlarmlist] = useState(false);
+  const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
+    useState(false);
+
+  const { onMouseMove, cursorPosition } = useCursorPosition();
+  const { settingsTab, closeSettings, openSettings, setSettingsTab } =
+    useSettingsActions();
 
   const initialState = {
     name: alarmlist.name,
@@ -53,8 +38,6 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
   };
   const [state, dispatch] = useReducer(alarmlistReducer, initialState);
   const { name, isOn, alarms } = state;
-
-  const { width } = useWindowDimensions();
 
   const ctx = api.useUtils();
 
@@ -121,55 +104,20 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
     [],
   );
 
-  const handleSettingsAction = useCallback((e: MouseEvent) => {
-    // Clicking on "Delete" closes settings tab and opens delete modal
-    if (
-      settingsRef?.current &&
-      settingsRef.current?.contains(e.target as Node)
-    ) {
-      setSettingsTab((prev) => ({
-        ...prev,
-        isOpen: false,
-      }));
-    } else if (
-      // Close settings outside modal
-      settingsRef?.current &&
-      !settingsRef.current?.contains(e.target as Node)
-    ) {
-      setSettingsTab({
-        isHovering: false,
-        isOpen: false,
-        isDeleteConfirmationOpen: false,
-      });
-    }
-  }, []);
-
-  const onMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      setCursorPosition({
-        x: width! >= 640 ? e.clientX - 5 : e.clientX - 80,
-        y: e.clientY + 10,
-      });
-    },
-    [settingsTab.isOpen, width],
-  );
-
   const handleDeleteAction = useCallback(() => {
     setSettingsTab({
       isOpen: false,
       isHovering: true,
-      isDeleteConfirmationOpen: true,
-      isEditingAlarmlist: false,
     });
+    setIsDeleteConfirmationOpen(true);
   }, []);
 
   const handleRenameAction = useCallback(() => {
     setSettingsTab({
       isOpen: false,
       isHovering: true,
-      isDeleteConfirmationOpen: false,
-      isEditingAlarmlist: true,
     });
+    setIsEditingAlarmlist(true);
   }, []);
 
   const handleCloseRename = useCallback(
@@ -185,11 +133,10 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
       setSettingsTab({
         isOpen: false,
         isHovering: false,
-        isDeleteConfirmationOpen: false,
-        isEditingAlarmlist: false,
       });
+      setIsEditingAlarmlist(false);
     },
-    [dispatch, name, settingsTab.isEditingAlarmlist],
+    [dispatch, name, isEditingAlarmlist],
   );
 
   const handleToggleAccordion = useCallback(
@@ -207,7 +154,7 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
       if (
         (ellipsisRef?.current?.contains(e.target as Node) ?? false) ||
         ((!ellipsisRef?.current?.contains(e.target as Node) &&
-          (settingsTab.isOpen || settingsTab.isEditingAlarmlist)) ??
+          (settingsTab.isOpen || isEditingAlarmlist)) ??
           false)
       ) {
         setIsShowingAlarms((prev) => prev);
@@ -217,7 +164,7 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
         return true;
       }
     },
-    [settingsTab.isOpen, settingsTab.isEditingAlarmlist],
+    [settingsTab.isOpen, isEditingAlarmlist],
   );
 
   return (
@@ -225,12 +172,12 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
       <AccordionHeader
         handleToggleAccordion={handleToggleAccordion}
         onMouseEnter={() => {
-          !settingsTab.isEditingAlarmlist &&
+          !isEditingAlarmlist &&
             setSettingsTab((prev) => ({ ...prev, isHovering: true }));
           setIsHoveringIcon(true);
         }}
         onMouseLeave={() => {
-          !settingsTab.isEditingAlarmlist &&
+          !isEditingAlarmlist &&
             setSettingsTab((prev) => ({ ...prev, isHovering: false }));
           setIsHoveringIcon(false);
         }}
@@ -256,7 +203,7 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
               <AlarmlistIcon isOn={alarmlist.isOn} />
             )}
           </div>
-          {settingsTab.isEditingAlarmlist ? (
+          {isEditingAlarmlist ? (
             <RenameAlarmlistForm
               alarmlist={alarmlist}
               handleCloseRename={handleCloseRename}
@@ -281,32 +228,21 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
         <div className="absolute right-1 inline-flex w-auto gap-1.5">
           <div
             onClick={(e) => {
-              setSettingsTab((prev) => ({ ...prev, isOpen: true }));
+              openSettings();
               onMouseMove(e);
             }}
           >
-            <div className="relative" ref={ellipsisRef}>
-              {settingsTab.isHovering && (
-                <Ellipsis isSettingsTabOpen={settingsTab.isOpen} />
-              )}
-              {settingsTab.isOpen && (
-                <SettingsWrapper
-                  ref={settingsRef}
-                  isOpen={settingsTab.isOpen}
-                  cursorPosition={cursorPosition}
-                  handleClose={(e) => handleSettingsAction(e)}
-                >
-                  <Settings
-                    editIcon={<EditIcon />}
-                    editText="Rename"
-                    deleteIcon={<DeleteAlarmlistIcon />}
-                    deleteText="Delete"
-                    handleRenameAction={handleRenameAction}
-                    handleDeleteAction={handleDeleteAction}
-                  />
-                </SettingsWrapper>
-              )}
-            </div>
+            <Settings
+              ref={ellipsisRef}
+              action="Alarmlist"
+              handleEditAction={handleRenameAction}
+              handleDeleteAction={handleDeleteAction}
+              closeSettings={closeSettings}
+              isOpen={settingsTab.isOpen}
+              isHovering={settingsTab.isHovering}
+              cursorPosition={cursorPosition}
+              handleAlarmlistModal={() => setIsDeleteConfirmationOpen(false)}
+            />
           </div>
           <Switch
             id={alarmlist.id}
@@ -339,17 +275,17 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
           </p>
         )}
       </AccordionPanel>
-      {settingsTab.isDeleteConfirmationOpen && (
+      {isDeleteConfirmationOpen && (
         <DeleteAlarmlistForm
           alarmlist={alarmlist}
-          isDeleteAlarmlistModalOpen={settingsTab.isDeleteConfirmationOpen}
-          handleCloseModal={() =>
+          isDeleteAlarmlistModalOpen={isDeleteConfirmationOpen}
+          handleCloseModal={() => {
             setSettingsTab((prev) => ({
               ...prev,
               isOpen: false,
-              isDeleteConfirmationOpen: false,
-            }))
-          }
+            }));
+            setIsDeleteConfirmationOpen(false);
+          }}
         />
       )}
     </AccordionItem>
