@@ -1,5 +1,3 @@
-"use client";
-
 type SettingsProps = {
   editIcon: JSX.Element;
   editText: string;
