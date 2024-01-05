@@ -9,6 +9,7 @@ import { formatMinutes } from "@/utils";
 import { useCallback, useRef } from "react";
 import { useCursorPosition, useSettingsActions } from "@/hooks";
 import { Settings } from "../Settings";
+import toast from "react-hot-toast";
 
 type Alarm = RouterOutputs["alarm"]["getAllByAlarmlistId"][number];
 
@@ -82,6 +83,43 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
     },
   });
 
+  const { mutate: deleteAlarm } = api.alarm.delete.useMutation({
+    onMutate: async ({ id }) => {
+      await ctx.alarm.getAllByAlarmlistId.cancel({
+        alarmlistId: alarm.alarmlistId,
+      });
+
+      const previousAlarms = ctx.alarm.getAllByAlarmlistId.getData({
+        alarmlistId: alarm.alarmlistId,
+      });
+
+      ctx.alarm.getAllByAlarmlistId.setData(
+        { alarmlistId: alarm.alarmlistId },
+        (prev) => {
+          if (!prev) return previousAlarms;
+
+          return prev.filter((prevAlarm) => prevAlarm.id !== id);
+        },
+      );
+
+      // Return a context object with the snapshotted value
+      return { previousAlarms };
+    },
+    onSuccess: (data) => {
+      toast.success(`'${data.name}' has been deleted.`);
+      void ctx.alarmlist.getAllWithAlarms.invalidate();
+    },
+    onError: (_data, _payload, context) => {
+      toast.error(
+        `An error occurred while deleting ${alarm.name}. Please try again.`,
+      );
+
+      if (!context) return;
+
+      ctx.alarmlist.getAll.setData(undefined, () => context.previousAlarms);
+    },
+  });
+
   const handleEditAlarm = useCallback(() => {
     closeSettings();
     // Open edit alarm modal
@@ -89,7 +127,7 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
 
   const handleDeleteAlarm = useCallback(() => {
     closeSettings();
-    // Delete alarm
+    deleteAlarm({ id: alarm.id });
   }, []);
 
   return (
