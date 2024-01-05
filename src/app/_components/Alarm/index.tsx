@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { Switch } from "../UI";
 import { api } from "@/trpc/react";
 import type { RouterOutputs } from "@/trpc/shared";
-import { AlarmIcon, Ellipsis } from "../UI";
+import { AlarmIcon } from "../UI";
 import { formatMinutes } from "@/utils";
 import { useCallback, useRef } from "react";
 import { useCursorPosition, useSettingsActions } from "@/hooks";
