@@ -7,6 +7,7 @@ import {
 import SettingsDropdown from "./SettingsDropdown";
 import SettingsWrapper from "./SettingsWrapper";
 import { DeleteAlarmlistIcon, EditIcon, Ellipsis } from "../UI";
+import DeleteAlarmIcon from "../UI/DeleteAlarmIcon";
 
 interface SettingsProps extends ComponentPropsWithoutRef<"div"> {
   handleEditAction: () => void;
@@ -68,10 +69,14 @@ const Settings = forwardRef<HTMLDivElement, SettingsProps>(
             handleClose={(e) => handleSettingsAction(e)}
           >
             <SettingsDropdown
-              editIcon={action === "Alarmlist" ? <EditIcon /> : <></>}
+              editIcon={<EditIcon />}
               editText={action === "Alarmlist" ? "Rename" : "Edit"}
               deleteIcon={
-                action === "Alarmlist" ? <DeleteAlarmlistIcon /> : <></>
+                action === "Alarmlist" ? (
+                  <DeleteAlarmlistIcon />
+                ) : (
+                  <DeleteAlarmIcon />
+                )
               }
               deleteText="Delete"
               handleEditAction={handleEditAction}
