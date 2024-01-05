@@ -27,7 +27,7 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
 
   const ctx = api.useUtils();
 
-  const { mutate } = api.alarm.toggle.useMutation({
+  const { mutate: toggleAlarm } = api.alarm.toggle.useMutation({
     onMutate: async ({ id, isOn }) => {
       // Cancel any outgoing refetches so they don't overwrite our optimistic update
       await ctx.alarm.getAllByAlarmlistId.cancel({
@@ -178,7 +178,7 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
           id={alarm.id}
           checked={alarm.isOn}
           onChange={(e) => {
-            mutate({ id: alarm.id, isOn: e.currentTarget.checked });
+            toggleAlarm({ id: alarm.id, isOn: e.currentTarget.checked });
           }}
         />
       </div>
