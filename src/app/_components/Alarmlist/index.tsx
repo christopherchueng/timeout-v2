@@ -246,7 +246,7 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
           </button>
           <Switch
             id={alarmlist.id}
-            checked={isOn || alarmlist.isOn}
+            checked={alarmlist.isOn}
             onChange={(e) => {
               mutate({ id: alarmlist.id, isOn: e.currentTarget.checked });
             }}
