@@ -6,10 +6,12 @@ import { api } from "@/trpc/react";
 import type { RouterOutputs } from "@/trpc/shared";
 import { AlarmIcon } from "../UI";
 import { formatMinutes } from "@/utils";
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useCursorPosition, useSettingsActions } from "@/hooks";
 import { Settings } from "../Settings";
 import toast from "react-hot-toast";
+import Modal from "../Modal";
+import UpdateAlarmForm from "./UpdateForm";
 
 type Alarm = RouterOutputs["alarm"]["getAllByAlarmlistId"][number];
 
@@ -20,6 +22,8 @@ type AlarmProps = {
 
 const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
   const ellipsisRef = useRef<HTMLDivElement>(null);
+
+  const [isUpdatingAlarm, setIsUpdatingAlarm] = useState(false);
 
   const { settingsTab, openSettings, closeSettings, setSettingsTab } =
     useSettingsActions();
@@ -123,6 +127,7 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
   const handleEditAlarm = useCallback(() => {
     closeSettings();
     // Open edit alarm modal
+    setIsUpdatingAlarm(true);
   }, []);
 
   const handleDeleteAlarm = useCallback(() => {
@@ -182,6 +187,14 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
           }}
         />
       </div>
+      {isUpdatingAlarm && (
+        <Modal
+          isOpen={isUpdatingAlarm}
+          handleClose={() => setIsUpdatingAlarm((prev) => !prev)}
+        >
+          <UpdateAlarmForm alarm={alarm} setIsModalOpen={setIsUpdatingAlarm} />
+        </Modal>
+      )}
     </li>
   );
 };
