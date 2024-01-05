@@ -132,6 +132,12 @@ export const alarmRouter = createTRPCRouter({
       const { id, name, hour, minutes, meridiem, repeat, snooze, alarmlistId } =
         input;
 
+      const currentAlarm = await ctx.db.alarm.findFirst({
+        where: { id },
+      });
+
+      if (!currentAlarm) throw new TRPCError({ code: "NOT_FOUND" });
+
       const alarmlist = await ctx.db.alarmlist.findFirst({
         where: {
           id: alarmlistId,
@@ -147,7 +153,7 @@ export const alarmRouter = createTRPCRouter({
         data: { isOn: true },
       });
 
-      const alarm = ctx.db.alarm.update({
+      const alarm = await ctx.db.alarm.update({
         where: { id },
         data: {
           name: name || "Alarm",
@@ -160,6 +166,19 @@ export const alarmRouter = createTRPCRouter({
           alarmlistId,
         },
       });
+
+      if (currentAlarm.alarmlistId !== alarmlistId) {
+        const alarmsInOldAlarmlist = await ctx.db.alarm.findMany({
+          where: { alarmlistId: currentAlarm.alarmlistId },
+        });
+
+        const activeAlarms = alarmsInOldAlarmlist.filter((alarm) => alarm.isOn);
+
+        await ctx.db.alarmlist.update({
+          where: { id: currentAlarm.alarmlistId },
+          data: { isOn: activeAlarms.length > 0 },
+        });
+      }
 
       return alarm;
     }),
