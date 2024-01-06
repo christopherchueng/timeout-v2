@@ -12,12 +12,13 @@ const Alarmlists = () => {
 
   if (isLoading) return <Loading />;
 
-  if (!alarmlists)
+  if (!alarmlists?.length) {
     return (
       <p className="flex h-full justify-center pt-10 text-xs italic text-gray-400">
         No Alarmlists!
       </p>
     );
+  }
 
   return (
     <Accordion>
