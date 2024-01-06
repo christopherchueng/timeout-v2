@@ -216,10 +216,10 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
                   "text-gray-400": !alarmlist.isOn,
                 },
               )}
-              onDoubleClick={() => {
-                setIsShowingAlarms((prev) => prev);
-                handleRenameAction();
-              }}
+              // onDoubleClick={() => {
+              //   setIsShowingAlarms((prev) => prev);
+              //   handleRenameAction();
+              // }}
             >
               {name}
             </span>
