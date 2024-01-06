@@ -13,7 +13,7 @@ import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input, Switch } from "../UI";
 import toast from "react-hot-toast";
-import { RouterOutputs } from "@/trpc/shared";
+import type { RouterOutputs } from "@/trpc/shared";
 
 type UpdateAlarmFormProps = {
   alarm: RouterOutputs["alarm"]["getAll"][number];
@@ -64,17 +64,8 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
 
   const { mutateAsync: updateAlarm, isLoading } = api.alarm.update.useMutation({
     onMutate: async (currentAlarm) => {
-      const {
-        id,
-        name,
-        hour,
-        minutes,
-        meridiem,
-        snooze,
-        alarmlistId,
-        sound,
-        repeat,
-      } = currentAlarm;
+      const { id, name, hour, minutes, meridiem, snooze, alarmlistId, repeat } =
+        currentAlarm;
       await ctx.alarmlist.getAllWithAlarms.cancel();
 
       const previousAlarmlists = ctx.alarmlist.getAllWithAlarms.getData();
