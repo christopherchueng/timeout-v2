@@ -247,7 +247,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
               ) => verifyNumericalInput(e)}
             />
           </label>
-          <span className="h-full text-7xl">:</span>
+          <span className="h-full select-none text-7xl">:</span>
           {/* ------------------------- MINUTES ------------------------- */}
           <label htmlFor="minutes">
             <input

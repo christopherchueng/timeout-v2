@@ -16,7 +16,7 @@ const Clock = ({ size = "lg" }: ClockProps) => {
   if (!parts.hour) return <Loading size={size} />;
 
   return (
-    <div className="flex w-full flex-col justify-center gap-6">
+    <div className="flex w-full select-none flex-col justify-center gap-6">
       <div className="flex justify-center gap-1">
         <span>{hour}</span>
         <span

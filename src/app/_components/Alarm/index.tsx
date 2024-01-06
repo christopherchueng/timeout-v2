@@ -148,7 +148,7 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
       <div className="absolute flex w-3/4 items-center gap-2 group-hover:w-[73%]">
         <AlarmIcon isOn={alarm.isOn} />
         <div
-          className={clsx("flex flex-col transition", {
+          className={clsx("flex select-none flex-col transition", {
             "text-gray-400": !alarm.isOn,
           })}
         >

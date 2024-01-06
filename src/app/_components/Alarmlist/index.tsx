@@ -211,7 +211,7 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
           ) : (
             <span
               className={clsx(
-                "line-clamp-1 inline-block self-center truncate transition",
+                "line-clamp-1 inline-block select-none self-center truncate transition",
                 {
                   "text-gray-400": !alarmlist.isOn,
                 },

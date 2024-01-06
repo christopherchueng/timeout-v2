@@ -16,7 +16,7 @@ const SettingsDropdown = ({
   handleDeleteAction,
 }: SettingsProps) => {
   return (
-    <div className="flex flex-col justify-center text-sm">
+    <div className="flex select-none flex-col justify-center text-sm">
       <button
         onClick={handleEditAction}
         className="flex cursor-pointer items-center gap-1.5 px-2 py-2 transition hover:bg-gray-200"
