@@ -1,6 +1,7 @@
 import type { SelectedItems } from "@nextui-org/select";
 import { type MutableRefObject, type RefCallback } from "react";
 import { z } from "zod";
+import { Meridiem } from "@/types";
 
 // Alarmlist schemas
 const nameSchema = {
@@ -18,11 +19,6 @@ export const renameAlarmlistSchema = z.object({
   id: z.string(),
   ...nameSchema,
 });
-
-export enum Meridiem {
-  AM = "AM",
-  PM = "PM",
-}
 
 // Alarm schemas
 export const alarmSchema = {
@@ -142,3 +138,17 @@ export const parseHour = (hour: string | number): number =>
 
 export const parseMinutes = (minutes: string | number): number =>
   typeof minutes === "string" ? Number(minutes) : minutes;
+
+export const verifyNumericalInput = (
+  e:
+    | (React.KeyboardEvent<HTMLInputElement> & { type: "keydown" })
+    | (React.ClipboardEvent<HTMLInputElement> & { type: "paste" }),
+) => {
+  if (e.type === "paste") {
+    return !/^\d+$/.test(e.clipboardData.getData("text")) && e.preventDefault();
+  }
+
+  if (e.type === "keydown") {
+    return !/^\d+$/.test(e.key) && e.preventDefault();
+  }
+};
