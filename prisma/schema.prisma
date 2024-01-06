@@ -1,17 +1,14 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-generator client {
-    provider = "prisma-client-js"
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
-datasource db {
-    provider = "mysql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
+generator client {
+  provider = "prisma-client-js"
 }
 
 model Alarmlist {
@@ -19,13 +16,40 @@ model Alarmlist {
     name      String   @db.VarChar(20)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    isOn     Boolean   @default(true)
-
-    user      User     @relation(fields: [userId], references: [id])
+    isOn      Boolean  @default(true)
     userId    String
-    alarms    Alarm[]
 
-    @@index([name, userId])
+    alarms    Alarm[]
+    user      User     @relation(fields: [userId], references: [id])
+
+    @@unique([id])
+
+    // Data structure that improves the speed of data retrieval operations on a database table.
+    @@index([userId])
+}
+
+model Alarm {
+    id              String  @id @default(cuid())
+    name            String  @default("Alarm")
+    hour            Int
+    minutes         Int
+    meridiem        String
+    sound           String?
+    repeat          String?  @db.VarChar(64)
+    snooze          Boolean  @default(false)
+    isOn            Boolean  @default(true)
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
+    alarmlistId     String
+    userId          String
+
+    alarmlist       Alarmlist @relation(fields: [alarmlistId], references: [id], onDelete: Cascade)
+    user            User     @relation(fields: [userId], references: [id])
+
+    @@unique([id, alarmlistId])
+
+    @@index([alarmlistId])
+    @@index([userId])
 }
 
 // Necessary for Next auth
@@ -44,7 +68,7 @@ model Account {
     session_state     String?
     user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([provider, providerAccountId])
+    @@unique([userId, provider, providerAccountId])
 }
 
 model Session {
@@ -53,6 +77,8 @@ model Session {
     userId       String
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
 }
 
 model User {
@@ -73,26 +99,4 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
-}
-
-model Alarm {
-    id              String  @id @default(cuid())
-    name            String  @default("Alarm")
-    hour            Int
-    minutes         Int
-    meridiem        String
-    sound           String?  @default("https://www.dropbox.com/scl/fi/v0iuqyj5gep7tfqawycg9/Skxva-Tones.mp3?rlkey=wr68bjowr0hwevtwqqyv4oq1h&dl=0")
-    repeat          String?  @db.VarChar(64)
-    snooze          Boolean  @default(false)
-    isOn            Boolean  @default(true)
-    createdAt       DateTime @default(now())
-    updatedAt       DateTime @updatedAt
-
-    alarmlist       Alarmlist @relation(fields: [alarmlistId], references: [id], onDelete: Cascade)
-    alarmlistId     String
-
-    user            User     @relation(fields: [userId], references: [id])
-    userId          String
-
-    @@index([id, alarmlistId])
 }
