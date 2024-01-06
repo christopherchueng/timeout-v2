@@ -11,6 +11,7 @@ import {
   createAlarmSchema,
   parseHour,
   parseMinutes,
+  verifyNumericalInput,
   repeatDays,
 } from "@/utils";
 import { DAYS } from "@/utils/constants";
@@ -238,6 +239,12 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
               maxLength={2}
               className="w-24 text-right text-7xl outline-none"
               onChange={(e) => handleInputCharCount(e, "hour")}
+              onKeyDown={(
+                e: React.KeyboardEvent<HTMLInputElement> & { type: "keydown" },
+              ) => verifyNumericalInput(e)}
+              onPaste={(
+                e: React.ClipboardEvent<HTMLInputElement> & { type: "paste" },
+              ) => verifyNumericalInput(e)}
             />
           </label>
           <span className="h-full text-7xl">:</span>
@@ -253,6 +260,12 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
               maxLength={2}
               className="w-24 text-7xl outline-none"
               onChange={(e) => handleInputCharCount(e, "minutes")}
+              onKeyDown={(
+                e: React.KeyboardEvent<HTMLInputElement> & { type: "keydown" },
+              ) => verifyNumericalInput(e)}
+              onPaste={(
+                e: React.ClipboardEvent<HTMLInputElement> & { type: "paste" },
+              ) => verifyNumericalInput(e)}
             />
           </label>
           {/* ------------------------- MERIDIEM ------------------------- */}

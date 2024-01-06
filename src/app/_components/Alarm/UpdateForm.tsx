@@ -3,10 +3,11 @@ import { api } from "@/trpc/react";
 import { SelectItem, Select } from "@nextui-org/select";
 import type {
   Alarmlist,
-  UpdateAlarmFormValues,
   AlarmlistWithAlarms,
+  Meridiem,
+  UpdateAlarmFormValues,
 } from "@/types";
-import { updateAlarmSchema, repeatDays, Meridiem } from "@/utils";
+import { updateAlarmSchema, repeatDays, verifyNumericalInput } from "@/utils";
 import { DAYS } from "@/utils/constants";
 import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -244,6 +245,12 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
               maxLength={2}
               className="w-24 text-right text-7xl outline-none"
               onChange={(e) => handleInputCharCount(e, "hour")}
+              onKeyDown={(
+                e: React.KeyboardEvent<HTMLInputElement> & { type: "keydown" },
+              ) => verifyNumericalInput(e)}
+              onPaste={(
+                e: React.ClipboardEvent<HTMLInputElement> & { type: "paste" },
+              ) => verifyNumericalInput(e)}
             />
           </label>
           <span className="h-full text-7xl">:</span>
@@ -258,6 +265,12 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
               maxLength={2}
               className="w-24 text-7xl outline-none"
               onChange={(e) => handleInputCharCount(e, "minutes")}
+              onKeyDown={(
+                e: React.KeyboardEvent<HTMLInputElement> & { type: "keydown" },
+              ) => verifyNumericalInput(e)}
+              onPaste={(
+                e: React.ClipboardEvent<HTMLInputElement> & { type: "paste" },
+              ) => verifyNumericalInput(e)}
             />
           </label>
           {/* ------------------------- MERIDIEM ------------------------- */}
