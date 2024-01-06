@@ -16,3 +16,8 @@ export type UpdateAlarmFormValues = z.infer<typeof updateAlarmSchema>;
 
 export type CreateAlarmlistFormValues = z.infer<typeof createAlarmlistSchema>;
 export type RenameAlarmlistFormValues = z.infer<typeof renameAlarmlistSchema>;
+
+export enum Meridiem {
+  AM = "AM",
+  PM = "PM",
+}
