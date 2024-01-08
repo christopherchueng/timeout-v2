@@ -5,13 +5,21 @@ import { Switch } from "../UI";
 import { api } from "@/trpc/react";
 import type { RouterOutputs } from "@/trpc/shared";
 import { AlarmIcon } from "../UI";
-import { formatMinutes } from "@/utils";
+import { formatMinutes, formatRepeatDays } from "@/utils";
 import { useCallback, useRef, useState } from "react";
-import { useCursorPosition, useSettingsActions } from "@/hooks";
+import {
+  useCursorPosition,
+  useSettingsActions,
+  useSnoozeCountdown,
+} from "@/hooks";
 import { Settings } from "../Settings";
 import toast from "react-hot-toast";
 import Modal from "../Modal";
 import UpdateAlarmForm from "./UpdateForm";
+import Snooze from "../Snooze";
+import dayjs, { Dayjs } from "dayjs";
+import AbbreviatedDays from "./AbbreviatedDays";
+import { weekdaysData } from "./constants";
 
 type Alarm = RouterOutputs["alarm"]["getAllByAlarmlistId"][number];
 
@@ -24,6 +32,11 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
   const ellipsisRef = useRef<HTMLDivElement>(null);
 
   const [isUpdatingAlarm, setIsUpdatingAlarm] = useState(false);
+  const [snoozeTime, setSnoozeTime] = useState<Date | Dayjs | number>(0);
+  const { isAlarmRinging, setIsAlarmRinging } = useSnoozeCountdown(
+    snoozeTime,
+    alarm,
+  );
 
   const { settingsTab, openSettings, closeSettings, setSettingsTab } =
     useSettingsActions();
@@ -135,6 +148,44 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
     deleteAlarm({ id: alarm.id });
   }, []);
 
+  const handleSnoozeClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e.currentTarget.value === "Snooze"
+        ? setSnoozeTime(dayjs().add(10, "minute"))
+        : // Demo snooze
+          setSnoozeTime(dayjs().add(10, "second"));
+
+      setIsAlarmRinging(false);
+    },
+    [],
+  );
+
+  const displayRepeatDays = () => {
+    if (!alarm.repeat) return null;
+
+    const repeatedDays = formatRepeatDays(alarm.repeat.split(","));
+
+    return (
+      <>
+        <span>&#8226;</span>
+        <div className="flex gap-1 font-normal">
+          {repeatedDays === "Individual"
+            ? Object.entries(weekdaysData).map(([day, { value, short }]) => (
+                <AbbreviatedDays
+                  key={day}
+                  day={day}
+                  abbrDay={short}
+                  value={value}
+                  repeatedDays={alarm.repeat?.split(",")}
+                  isOn={alarm.isOn}
+                />
+              ))
+            : repeatedDays}
+        </div>
+      </>
+    );
+  };
+
   return (
     <li
       onMouseEnter={() =>
@@ -156,7 +207,10 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
             <span className="leading-tight">
               {alarm.hour}:{formatMinutes(alarm.minutes)}
             </span>
-            <span className="text-2xs">{alarm.meridiem}</span>
+            <div className="flex gap-1 text-2xs">
+              <span>{alarm.meridiem}</span>
+              {displayRepeatDays()}
+            </div>
           </div>
           <div className="text-xs">{alarm.name}</div>
         </div>
@@ -195,6 +249,12 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
           <UpdateAlarmForm alarm={alarm} setIsModalOpen={setIsUpdatingAlarm} />
         </Modal>
       )}
+      <Snooze
+        alarm={alarm}
+        isAlarmRinging={isAlarmRinging}
+        handleClose={() => setIsAlarmRinging(false)}
+        handleSnoozeClick={handleSnoozeClick}
+      />
     </li>
   );
 };
