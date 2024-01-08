@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import dayjs from "dayjs";
 
 type TimeContextType = {
+  date: Date;
   parts: Part;
 };
 
@@ -58,7 +59,9 @@ const TimeProvider = ({ children }: TimeProps) => {
   });
 
   return (
-    <TimeContext.Provider value={{ parts }}>{children}</TimeContext.Provider>
+    <TimeContext.Provider value={{ parts, date }}>
+      {children}
+    </TimeContext.Provider>
   );
 };
 
