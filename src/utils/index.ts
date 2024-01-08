@@ -86,47 +86,77 @@ export function setRef<T>(val: T, ...refs: MutableRefList<T>): void {
   });
 }
 
-export const repeatDays = (days: SelectedItems<object>): string => {
+const isArrayOfStrings = (value: unknown): value is string[] => {
+  return (
+    Array.isArray(value) &&
+    !!value.length &&
+    value.every((item) => typeof item === "string")
+  );
+};
+
+export const formatRepeatDays = (
+  days: SelectedItems<object> | string[],
+): string => {
   if (!days.length) return "";
-
-  const sortedDays = [...days].sort((a, b) => {
-    return a.props!.value - b.props!.value;
-  });
-
-  if (!sortedDays[0]?.textValue) return "";
-
-  if (days.length === 1) return sortedDays[0].textValue;
   if (days.length === 7) return "Every day";
 
-  const isWeekend = sortedDays.every(
-    (day) => day.textValue === "Sun" || day.textValue === "Sat",
-  );
+  let lastDay: string | undefined | null = null;
+  let isWeekend: boolean | null = null;
+  let isWeekday: boolean | null = null;
 
-  if (isWeekend) {
-    return "Weekends";
-  }
+  if (!isArrayOfStrings(days)) {
+    const sortedDays = [...days].sort((a, b) => {
+      return a.props!.value - b.props!.value;
+    });
 
-  const isWeekday =
-    sortedDays.length === 5 &&
-    sortedDays.every(
-      (day) => day.textValue !== "Sun" && day.textValue !== "Sat",
+    if (!sortedDays[0]?.textValue) return "";
+
+    if (sortedDays.length === 1) return sortedDays[0].textValue;
+
+    isWeekend = sortedDays.every(
+      (day) => day.textValue === "Sun" || day.textValue === "Sat",
     );
 
-  if (isWeekday) {
-    return "Weekdays";
-  }
+    if (isWeekend) {
+      return "Weekends";
+    }
 
-  const formattedDays = sortedDays.map((day) => day.textValue);
-  const lastDay = formattedDays.pop();
+    isWeekday =
+      sortedDays.length === 5 &&
+      sortedDays.every(
+        (day) => day.textValue !== "Sun" && day.textValue !== "Sat",
+      );
 
-  if (formattedDays.length >= 3) {
-    return `${formattedDays.join(", ")}, and ${lastDay}`;
-  }
-  if (formattedDays.length) {
-    return `${formattedDays.join(", ")} and ${lastDay}`;
-  }
+    if (isWeekday) {
+      return "Weekdays";
+    }
 
-  return lastDay ?? "";
+    const formattedDays = sortedDays.map((day) => day.textValue);
+    lastDay = formattedDays.pop();
+
+    return `${formattedDays.join(", ")}${
+      formattedDays.length >= 2 ? "," : ""
+    } and ${lastDay}`;
+  } else {
+    if (!days[0]) return "";
+
+    if (days.length === 1) return days[0];
+
+    isWeekend = days.every((day) => day === "Sun" || day === "Sat");
+
+    if (isWeekend) {
+      return "Weekends";
+    }
+
+    isWeekday =
+      days.length === 5 && days.every((day) => day !== "Sun" && day !== "Sat");
+
+    if (isWeekday) {
+      return "Weekdays";
+    }
+
+    return "Individual";
+  }
 };
 
 export const formatMinutes = (minute: string | number): string | number => {
