@@ -10,6 +10,7 @@ import type { z } from "zod";
 export type AlarmlistWithAlarms =
   RouterOutputs["alarmlist"]["getAllWithAlarms"][number];
 export type Alarmlist = RouterOutputs["alarmlist"]["getAll"][number];
+export type Alarm = RouterOutputs["alarm"]["getAll"][number];
 
 export type CreateAlarmFormValues = z.infer<typeof createAlarmSchema>;
 export type UpdateAlarmFormValues = z.infer<typeof updateAlarmSchema>;
