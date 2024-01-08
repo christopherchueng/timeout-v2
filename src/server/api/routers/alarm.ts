@@ -120,6 +120,7 @@ export const alarmRouter = createTRPCRouter({
           meridiem,
           repeat,
           snooze,
+          sound: process.env.NEXT_PUBLIC_SOUND_URL,
           isOn: true,
           alarmlistId,
           userId,

@@ -103,7 +103,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
                 meridiem,
                 snooze,
                 alarmlistId,
-                sound: sound ?? null,
+                sound: process.env.NEXT_PUBLIC_SOUND_URL ?? null,
                 repeat: repeat ?? null,
                 isOn: true,
                 userId: session.user.id,
