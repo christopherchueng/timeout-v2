@@ -12,7 +12,7 @@ import {
   parseHour,
   parseMinutes,
   verifyNumericalInput,
-  repeatDays,
+  formatRepeatDays,
 } from "@/utils";
 import { DAYS } from "@/utils/constants";
 import { useSession } from "next-auth/react";
@@ -388,7 +388,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
       <Controller
         name="repeat"
         control={control}
-        render={({ field: { value, onChange } }) => (
+        render={({ field: { onChange } }) => (
           <Select
             selectionMode="multiple"
             id="repeat"
@@ -398,16 +398,16 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
             variant="underlined"
             aria-labelledby="repeat"
             classNames={selectClassNames}
-            renderValue={(days) => repeatDays(days)}
+            renderValue={(days) => formatRepeatDays(days)}
             onChange={onChange}
             selectorIcon={<></>}
             disableSelectorIconRotation
           >
-            {DAYS.map((DAY) => (
+            {DAYS.map((DAY, index) => (
               <SelectItem
                 key={DAY}
                 textValue={DAY}
-                value={value}
+                value={index}
                 className="rounded-small transition hover:bg-gray-200"
               >
                 {DAY}

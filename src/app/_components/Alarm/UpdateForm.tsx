@@ -7,7 +7,11 @@ import type {
   Meridiem,
   UpdateAlarmFormValues,
 } from "@/types";
-import { updateAlarmSchema, repeatDays, verifyNumericalInput } from "@/utils";
+import {
+  updateAlarmSchema,
+  formatRepeatDays,
+  verifyNumericalInput,
+} from "@/utils";
 import { DAYS } from "@/utils/constants";
 import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -385,7 +389,7 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
       <Controller
         name="repeat"
         control={control}
-        render={({ field: { value, onChange } }) => (
+        render={({ field: { onChange } }) => (
           <Select
             selectionMode="multiple"
             id="repeat"
@@ -395,17 +399,17 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
             variant="underlined"
             aria-labelledby="repeat"
             classNames={selectClassNames}
-            renderValue={(days) => repeatDays(days)}
+            renderValue={(days) => formatRepeatDays(days)}
             defaultSelectedKeys={alarm.repeat?.split(",")}
             onChange={onChange}
             selectorIcon={<></>}
             disableSelectorIconRotation
           >
-            {DAYS.map((DAY) => (
+            {DAYS.map((DAY, index) => (
               <SelectItem
                 key={DAY}
                 textValue={DAY}
-                value={value}
+                value={index}
                 className="rounded-small transition hover:bg-gray-200"
               >
                 {DAY}
