@@ -1,9 +1,6 @@
 import dayjs, { type Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
-import duration from "dayjs/plugin/duration";
 import { saveTimeInLocalStorage, getTimeFromLocalStorage } from "@/utils";
-
-dayjs.extend(duration);
 
 const useSnoozeCountdown = (endTime: Dayjs) => {
   const [isAlarmRinging, setIsAlarmRinging] = useState(false);
