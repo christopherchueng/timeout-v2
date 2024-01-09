@@ -27,7 +27,7 @@ const Snooze = ({
         ></audio>
         <span>{alarm.name}</span>
         <Button onClick={(e) => handleSnoozeClick(e)}>Snooze</Button>
-        <Button>Stop</Button>
+        <Button onClick={handleClose}>Stop</Button>
         <button className="text-2xs" onClick={(e) => handleSnoozeClick(e)}>
           Demo snooze
         </button>
