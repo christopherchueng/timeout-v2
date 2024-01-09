@@ -6,20 +6,22 @@ import { api } from "@/trpc/react";
 import type { RouterOutputs } from "@/trpc/shared";
 import { AlarmIcon } from "../UI";
 import { formatMinutes, formatRepeatDays } from "@/utils";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   useCursorPosition,
   useSettingsActions,
   useSnoozeCountdown,
+  useTriggerAlarm,
 } from "@/hooks";
 import { Settings } from "../Settings";
 import toast from "react-hot-toast";
 import Modal from "../Modal";
 import UpdateAlarmForm from "./UpdateForm";
 import Snooze from "../Snooze";
-import dayjs, { type Dayjs } from "dayjs";
 import AbbreviatedDays from "./AbbreviatedDays";
 import { weekdaysData } from "@/utils/constants";
+import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 
 type Alarm = RouterOutputs["alarm"]["getAllByAlarmlistId"][number];
 
@@ -32,16 +34,21 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
   const ellipsisRef = useRef<HTMLDivElement>(null);
 
   const [isUpdatingAlarm, setIsUpdatingAlarm] = useState(false);
-  const [snoozeTime, setSnoozeTime] = useState<Date | Dayjs | number>(0);
+  const [snoozeEndTime, setSnoozeEndTime] = useState<Dayjs>(dayjs());
 
-  const { isAlarmRinging, setIsAlarmRinging } = useSnoozeCountdown(
-    snoozeTime,
-    alarm,
-    weekdaysData,
-  );
+  const { setSnoozed, isAlarmRinging, setIsAlarmRinging } =
+    useSnoozeCountdown(snoozeEndTime);
+  const { isAlarmTriggered } = useTriggerAlarm(alarm);
   const { settingsTab, openSettings, closeSettings, setSettingsTab } =
     useSettingsActions();
   const { cursorPosition, onMouseMove } = useCursorPosition();
+
+  useEffect(() => {
+    if (isAlarmTriggered) {
+      setIsAlarmRinging(true);
+      setSnoozed(false);
+    }
+  }, [isAlarmTriggered]);
 
   const ctx = api.useUtils();
 
@@ -140,7 +147,6 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
 
   const handleEditAlarm = useCallback(() => {
     closeSettings();
-    // Open edit alarm modal
     setIsUpdatingAlarm(true);
   }, []);
 
@@ -151,14 +157,15 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
 
   const handleSnoozeClick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      if (e.currentTarget.value === "Snooze") {
-        setSnoozeTime(dayjs().add(10, "minute"));
+      if (e.currentTarget.innerText === "Snooze") {
+        setSnoozeEndTime(dayjs().add(10, "minute"));
       }
 
-      if (e.currentTarget.value === "Demo snooze") {
-        setSnoozeTime(dayjs().add(10, "second"));
+      if (e.currentTarget.innerText === "Demo snooze") {
+        setSnoozeEndTime(dayjs().add(10, "second"));
       }
 
+      setSnoozed(true);
       setIsAlarmRinging(false);
     },
     [],
@@ -255,7 +262,11 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
       <Snooze
         alarm={alarm}
         isAlarmRinging={isAlarmRinging}
-        handleClose={() => setIsAlarmRinging(false)}
+        handleClose={() => {
+          setIsAlarmRinging(false);
+          setSnoozed(false);
+          window.localStorage.removeItem("snoozeCountdown");
+        }}
         handleSnoozeClick={handleSnoozeClick}
       />
     </li>
