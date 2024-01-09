@@ -12,12 +12,14 @@ import {
   formatRepeatDays,
   verifyNumericalInput,
 } from "@/utils";
-import { DAYS } from "@/utils/constants";
+import { weekdaysData } from "@/utils/constants";
 import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input, Switch } from "../UI";
 import toast from "react-hot-toast";
 import type { RouterOutputs } from "@/trpc/shared";
+import { type Value } from "@/types";
+import { useMemo } from "react";
 
 type UpdateAlarmFormProps = {
   alarm: RouterOutputs["alarm"]["getAll"][number];
@@ -93,7 +95,7 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
                     minutes,
                     meridiem,
                     snooze,
-                    repeat,
+                    repeat: repeat?.split(","),
                     alarmlistId,
                     isOn: true,
                   };
@@ -215,6 +217,16 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
 
     setValue(field, val.slice(0, 2));
   };
+
+  const handleSelectedKeys = useMemo((): string[] => {
+    const repeatDays = alarm.repeat?.split(",");
+
+    if (!repeatDays?.length) return [];
+
+    return repeatDays.map((value) => {
+      return weekdaysData[value as Value]!.abbr;
+    });
+  }, [alarm.repeat]);
 
   return (
     <form
@@ -400,19 +412,28 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
             aria-labelledby="repeat"
             classNames={selectClassNames}
             renderValue={(days) => formatRepeatDays(days)}
-            defaultSelectedKeys={alarm.repeat?.split(",")}
-            onChange={onChange}
+            defaultSelectedKeys={handleSelectedKeys}
+            onChange={(e) => {
+              const days = new Set(e.target.value.split(","));
+              const numberedDays: number[] = [];
+
+              Object.values(weekdaysData).forEach((dayObj) => {
+                if (days.has(dayObj.abbr)) numberedDays.push(dayObj.value);
+              });
+
+              return onChange(numberedDays.toString());
+            }}
             selectorIcon={<></>}
             disableSelectorIconRotation
           >
-            {DAYS.map((DAY, index) => (
+            {Object.entries(weekdaysData).map(([_, { value, abbr }]) => (
               <SelectItem
-                key={DAY}
-                textValue={DAY}
-                value={index}
+                key={abbr}
+                textValue={abbr}
+                value={value}
                 className="rounded-small transition hover:bg-gray-200"
               >
-                {DAY}
+                {abbr}
               </SelectItem>
             ))}
           </Select>

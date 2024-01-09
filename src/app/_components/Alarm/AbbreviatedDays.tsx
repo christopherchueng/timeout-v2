@@ -2,7 +2,6 @@ import clsx from "clsx";
 import { useMemo } from "react";
 
 type AbbreviatedDaysProps = {
-  day: string;
   abbrDay: string;
   value: number;
   repeatedDays: string[] | undefined;
@@ -10,7 +9,6 @@ type AbbreviatedDaysProps = {
 };
 
 const AbbreviatedDays = ({
-  day,
   abbrDay,
   value,
   repeatedDays,
@@ -20,8 +18,9 @@ const AbbreviatedDays = ({
   const activeDays = useMemo(() => {
     if (!repeatedDays) return activeSet;
 
-    repeatedDays.forEach((repeatDay) => {
-      if (repeatDay === day) activeSet.add(value);
+    // ['3', '4', '5']
+    repeatedDays.forEach((number) => {
+      if (Number(number) === value) activeSet.add(Number(value));
     });
 
     return activeSet;
@@ -36,7 +35,7 @@ const AbbreviatedDays = ({
           : "text-gray-400",
       )}
     >
-      {abbrDay}
+      {abbrDay[0]}
     </span>
   );
 };

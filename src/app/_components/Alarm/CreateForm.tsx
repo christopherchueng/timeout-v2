@@ -14,7 +14,7 @@ import {
   verifyNumericalInput,
   formatRepeatDays,
 } from "@/utils";
-import { DAYS } from "@/utils/constants";
+import { weekdaysData } from "@/utils/constants";
 import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input, Switch } from "../UI";
@@ -74,16 +74,9 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
 
   const { mutateAsync: createAlarm, isLoading } = api.alarm.create.useMutation({
     onMutate: async (newAlarm) => {
-      const {
-        name,
-        hour,
-        minutes,
-        meridiem,
-        snooze,
-        alarmlistId,
-        sound,
-        repeat,
-      } = newAlarm;
+      const { name, hour, minutes, meridiem, snooze, alarmlistId, repeat } =
+        newAlarm;
+
       await ctx.alarmlist.getAllWithAlarms.cancel();
 
       const previousAlarmlists = ctx.alarmlist.getAllWithAlarms.getData();
@@ -399,18 +392,27 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
             aria-labelledby="repeat"
             classNames={selectClassNames}
             renderValue={(days) => formatRepeatDays(days)}
-            onChange={onChange}
+            onChange={(e) => {
+              const days = new Set(e.target.value.split(","));
+              const numberedDays: number[] = [];
+
+              Object.values(weekdaysData).forEach((dayObj) => {
+                if (days.has(dayObj.abbr)) numberedDays.push(dayObj.value);
+              });
+
+              return onChange(numberedDays.toString());
+            }}
             selectorIcon={<></>}
             disableSelectorIconRotation
           >
-            {DAYS.map((DAY, index) => (
+            {Object.entries(weekdaysData).map(([_, { abbr, value }]) => (
               <SelectItem
-                key={DAY}
-                textValue={DAY}
-                value={index}
+                key={abbr}
+                textValue={abbr}
+                value={value}
                 className="rounded-small transition hover:bg-gray-200"
               >
-                {DAY}
+                {abbr}
               </SelectItem>
             ))}
           </Select>

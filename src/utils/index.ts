@@ -1,7 +1,8 @@
 import type { SelectedItems } from "@nextui-org/select";
 import { type MutableRefObject, type RefCallback } from "react";
 import { z } from "zod";
-import { Meridiem } from "@/types";
+import { Meridiem, type Value } from "@/types";
+import { weekdaysData } from "./constants";
 
 // Alarmlist schemas
 const nameSchema = {
@@ -140,16 +141,17 @@ export const formatRepeatDays = (
   } else {
     if (!days[0]) return "";
 
-    if (days.length === 1) return days[0];
+    if (days.length === 1) return weekdaysData[days[0] as Value]!.abbr;
 
-    isWeekend = days.every((day) => day === "Sun" || day === "Sat");
+    isWeekend = days.every((day) => Number(day) === 6 || Number(day) === 7);
 
     if (isWeekend) {
       return "Weekends";
     }
 
     isWeekday =
-      days.length === 5 && days.every((day) => day !== "Sun" && day !== "Sat");
+      days.length === 5 &&
+      days.every((day) => Number(day) !== 6 || Number(day) !== 7);
 
     if (isWeekday) {
       return "Weekdays";

@@ -22,3 +22,14 @@ export enum Meridiem {
   AM = "AM",
   PM = "PM",
 }
+
+export type Value = "1" | "2" | "3" | "4" | "5" | "6" | "7";
+
+export type WeekdaysDataType = {
+  [key in Value]: {
+    abbr: string;
+    short: string;
+    value: number;
+    long: string;
+  };
+};

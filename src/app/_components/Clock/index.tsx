@@ -38,7 +38,7 @@ const Clock = ({ size = "lg" }: ClockProps) => {
         </span>
       </div>
       <div className="inline-flex justify-center gap-5 md:gap-10">
-        {DAYS.map((DAY) => (
+        {Object.entries(DAYS).map(([DAY]) => (
           <div
             key={DAY}
             className={clsx(

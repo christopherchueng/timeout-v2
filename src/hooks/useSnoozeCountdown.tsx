@@ -1,37 +1,47 @@
 import { useTimeContext } from "@/context/Time";
-import type { Alarm } from "@/types";
-import dayjs, { Dayjs } from "dayjs";
+import type { Alarm, Value, WeekdaysDataType } from "@/types";
+import dayjs, { type Dayjs } from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 
 const useSnoozeCountdown = (
   terminalTime: Date | Dayjs | number,
   alarm: Alarm,
+  weekdaysData: WeekdaysDataType,
 ) => {
   const { date, parts } = useTimeContext();
   const { hour, minute, second, meridiem } = parts;
 
-  const initialTime = dayjs(date);
+  const currentDate = dayjs(date);
 
   const timeLeft = useMemo(
-    () => dayjs(terminalTime).diff(initialTime),
+    () => dayjs(terminalTime).diff(currentDate),
     [terminalTime],
   );
 
-  const [isAlarmRinging, setIsAlarmRinging] = useState(false);
-
-  const checkTime = useMemo(() => {
-    return (
+  const isAlarmTriggered = useMemo(() => {
+    const alarmMatchesTime =
       alarm.isOn &&
       alarm.hour === Number(hour) &&
       alarm.minutes === Number(minute) &&
       Number(second) === 0 &&
-      alarm.meridiem === meridiem
-    );
-  }, [alarm, hour, minute, meridiem]);
+      alarm.meridiem === meridiem;
+
+    if (!alarm.repeat) {
+      return alarmMatchesTime;
+    }
+
+    const repeatDays = alarm.repeat.split(",").map((number) => {
+      return weekdaysData[number as Value]!.value;
+    });
+
+    return repeatDays.includes(currentDate.get("day"));
+  }, [alarm, hour, minute, meridiem, terminalTime]);
+
+  const [isAlarmRinging, setIsAlarmRinging] = useState(isAlarmTriggered);
 
   useEffect(() => {
-    if (timeLeft === 0 || checkTime) setIsAlarmRinging(true);
-  }, [timeLeft, checkTime]);
+    if (timeLeft === 0 || isAlarmTriggered) setIsAlarmRinging(true);
+  }, [timeLeft, isAlarmTriggered]);
 
   //   // 2 cases: For repeated days
   //   // If click on Snooze, then settimeout for 10 min

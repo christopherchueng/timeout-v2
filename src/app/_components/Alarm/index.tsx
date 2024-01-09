@@ -17,9 +17,9 @@ import toast from "react-hot-toast";
 import Modal from "../Modal";
 import UpdateAlarmForm from "./UpdateForm";
 import Snooze from "../Snooze";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs, { type Dayjs } from "dayjs";
 import AbbreviatedDays from "./AbbreviatedDays";
-import { weekdaysData } from "./constants";
+import { weekdaysData } from "@/utils/constants";
 
 type Alarm = RouterOutputs["alarm"]["getAllByAlarmlistId"][number];
 
@@ -33,11 +33,12 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
 
   const [isUpdatingAlarm, setIsUpdatingAlarm] = useState(false);
   const [snoozeTime, setSnoozeTime] = useState<Date | Dayjs | number>(0);
+
   const { isAlarmRinging, setIsAlarmRinging } = useSnoozeCountdown(
     snoozeTime,
     alarm,
+    weekdaysData,
   );
-
   const { settingsTab, openSettings, closeSettings, setSettingsTab } =
     useSettingsActions();
   const { cursorPosition, onMouseMove } = useCursorPosition();
@@ -150,10 +151,13 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
 
   const handleSnoozeClick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      e.currentTarget.value === "Snooze"
-        ? setSnoozeTime(dayjs().add(10, "minute"))
-        : // Demo snooze
-          setSnoozeTime(dayjs().add(10, "second"));
+      if (e.currentTarget.value === "Snooze") {
+        setSnoozeTime(dayjs().add(10, "minute"));
+      }
+
+      if (e.currentTarget.value === "Demo snooze") {
+        setSnoozeTime(dayjs().add(10, "second"));
+      }
 
       setIsAlarmRinging(false);
     },
@@ -170,12 +174,11 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
         <span>&#8226;</span>
         <div className="flex gap-1 font-normal">
           {repeatedDays === "Individual"
-            ? Object.entries(weekdaysData).map(([day, { value, short }]) => (
+            ? Object.entries(weekdaysData).map(([_, { value, abbr }]) => (
                 <AbbreviatedDays
-                  key={day}
-                  day={day}
-                  abbrDay={short}
-                  value={value}
+                  key={abbr}
+                  abbrDay={abbr}
+                  value={Number(value)}
                   repeatedDays={alarm.repeat?.split(",")}
                   isOn={alarm.isOn}
                 />
