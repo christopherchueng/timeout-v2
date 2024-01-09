@@ -10,7 +10,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   useCursorPosition,
   useSettingsActions,
-  useSnoozeCountdown,
   useTriggerAlarm,
 } from "@/hooks";
 import { Settings } from "../Settings";
@@ -20,7 +19,6 @@ import UpdateAlarmForm from "./UpdateForm";
 import Snooze from "../Snooze";
 import AbbreviatedDays from "./AbbreviatedDays";
 import { weekdaysData } from "@/utils/constants";
-import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 
 type Alarm = RouterOutputs["alarm"]["getAllByAlarmlistId"][number];
@@ -34,10 +32,11 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
   const ellipsisRef = useRef<HTMLDivElement>(null);
 
   const [isUpdatingAlarm, setIsUpdatingAlarm] = useState(false);
-  const [snoozeEndTime, setSnoozeEndTime] = useState<Dayjs>(dayjs());
+  const [isAlarmRinging, setIsAlarmRinging] = useState(false);
+  const [timeLeft, setTimeLeft] = useState<number>(
+    dayjs(alarm.snoozeEndTime).diff(dayjs(), "seconds"),
+  );
 
-  const { setSnoozed, isAlarmRinging, setIsAlarmRinging } =
-    useSnoozeCountdown(snoozeEndTime);
   const { isAlarmTriggered } = useTriggerAlarm(alarm);
   const { settingsTab, openSettings, closeSettings, setSettingsTab } =
     useSettingsActions();
@@ -46,7 +45,6 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
   useEffect(() => {
     if (isAlarmTriggered) {
       setIsAlarmRinging(true);
-      setSnoozed(false);
     }
   }, [isAlarmTriggered]);
 
@@ -145,6 +143,71 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
     },
   });
 
+  const { mutate: saveSnoozeEndTime } = api.alarm.setSnoozeTime.useMutation({
+    onMutate: async ({ id, time }) => {
+      await ctx.alarm.getAllByAlarmlistId.cancel({
+        alarmlistId: alarm.alarmlistId,
+      });
+
+      const previousAlarms = ctx.alarm.getAllByAlarmlistId.getData({
+        alarmlistId: alarm.alarmlistId,
+      });
+
+      ctx.alarm.getAllByAlarmlistId.setData(
+        { alarmlistId: alarm.alarmlistId },
+        (prev) => {
+          if (!prev) return previousAlarms;
+
+          const newAlarms = prev.map((alarm: Alarm) => {
+            if (alarm.id === id) {
+              return {
+                ...alarm,
+                snoozeEndTime: time,
+              };
+            }
+
+            return alarm;
+          });
+
+          return newAlarms;
+        },
+      );
+
+      return { previousAlarms };
+    },
+    onSuccess: () => {
+      void ctx.alarmlist.getAllWithAlarms.invalidate();
+    },
+    onError: (_data, _payload, context) => {
+      toast.error("An error occurred while snoozing alarm. Please try again.");
+
+      if (!context) return;
+
+      ctx.alarmlist.getAll.setData(undefined, () => context.previousAlarms);
+    },
+  });
+
+  useEffect(() => {
+    if (alarm.snoozeEndTime) {
+      setTimeLeft(dayjs(alarm.snoozeEndTime).diff(dayjs(), "seconds"));
+
+      const timer = setInterval(
+        () =>
+          setTimeLeft((prev) => {
+            if (prev > 0) {
+              return prev - 1;
+            } else {
+              setIsAlarmRinging(true);
+
+              return prev;
+            }
+          }),
+        1000,
+      );
+      return () => clearInterval(timer);
+    }
+  }, [timeLeft, alarm.snoozeEndTime]);
+
   const handleEditAlarm = useCallback(() => {
     closeSettings();
     setIsUpdatingAlarm(true);
@@ -158,14 +221,19 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
   const handleSnoozeClick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       if (e.currentTarget.innerText === "Snooze") {
-        setSnoozeEndTime(dayjs().add(10, "minute"));
+        saveSnoozeEndTime({
+          id: alarm.id,
+          time: dayjs().add(10, "minute").toDate(),
+        });
       }
 
       if (e.currentTarget.innerText === "Demo snooze") {
-        setSnoozeEndTime(dayjs().add(10, "second"));
+        saveSnoozeEndTime({
+          id: alarm.id,
+          time: dayjs().add(10, "second").toDate(),
+        });
       }
 
-      setSnoozed(true);
       setIsAlarmRinging(false);
     },
     [],
@@ -264,8 +332,7 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
         isAlarmRinging={isAlarmRinging}
         handleClose={() => {
           setIsAlarmRinging(false);
-          setSnoozed(false);
-          window.localStorage.removeItem("snoozeCountdown");
+          saveSnoozeEndTime({ id: alarm.id, time: null });
         }}
         handleSnoozeClick={handleSnoozeClick}
       />
