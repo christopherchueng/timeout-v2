@@ -2,20 +2,25 @@ import clsx from "clsx";
 
 type TooltipProps = {
   text: string;
-  color?: "default" | "error";
+  color?: "default" | "primary" | "error";
+  placement?: "right" | "bottom";
   isShowing: boolean;
   children?: React.ReactNode;
 };
 
 const Tooltip = ({
   text,
-  color = "default",
+  color = "primary",
+  placement = "bottom",
   isShowing,
   children,
 }: TooltipProps) => {
   const classNames = clsx(
-    "absolute inset-x-0 w-fit mx-auto -bottom-9 -left-4 z-50 animate-dilate whitespace-nowrap rounded border px-2 py-1.5 text-xs transition duration-75",
-    color === "default" && "bg-white",
+    "absolute w-fit mx-auto z-50 animate-dilate whitespace-nowrap rounded border px-2 py-1.5 text-xs transition duration-75",
+    placement === "bottom" && "inset-x-0 -bottom-9 -left-4",
+    placement === "right" && "inset-y-0 left-4 my-auto h-fit",
+    color === "default" && "bg-gray-50",
+    color === "primary" && "bg-white",
     color === "error" && "bg-red-100 text-red-700 border-red-100",
   );
   return (
