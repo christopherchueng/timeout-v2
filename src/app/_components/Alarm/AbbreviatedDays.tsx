@@ -29,10 +29,8 @@ const AbbreviatedDays = ({
   return (
     <span
       className={clsx(
-        "transition",
-        isOn && activeDays.has(value)
-          ? "font-semibold text-slate-900"
-          : "text-gray-400",
+        "font-semibold transition",
+        isOn && activeDays.has(value) ? "text-slate-900" : "text-gray-400",
       )}
     >
       {abbrDay[0]}
