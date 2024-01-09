@@ -1,10 +1,10 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
-import dayjs from "dayjs";
+import dayjs, { type Dayjs } from "dayjs";
 
 type TimeContextType = {
-  date: Date;
+  currentDate: Dayjs;
   parts: Part;
 };
 
@@ -33,7 +33,7 @@ type TimeProps = {
 };
 
 const TimeProvider = ({ children }: TimeProps) => {
-  const date = new Date();
+  const currentDate = dayjs();
   const [parts, setParts] = useState<Part>({
     hour: "",
     minute: "",
@@ -46,11 +46,11 @@ const TimeProvider = ({ children }: TimeProps) => {
     const timeInterval = setInterval(
       () =>
         setParts({
-          hour: dayjs(date).format("h"),
-          minute: dayjs(date).format("mm"),
-          second: dayjs(date).format("s"),
-          meridiem: dayjs(date).format("A"),
-          day: dayjs(date).format("ddd"),
+          hour: dayjs(currentDate).format("h"),
+          minute: dayjs(currentDate).format("mm"),
+          second: dayjs(currentDate).format("s"),
+          meridiem: dayjs(currentDate).format("A"),
+          day: dayjs(currentDate).format("ddd"),
         }),
       0,
     );
@@ -59,7 +59,7 @@ const TimeProvider = ({ children }: TimeProps) => {
   });
 
   return (
-    <TimeContext.Provider value={{ parts, date }}>
+    <TimeContext.Provider value={{ parts, currentDate }}>
       {children}
     </TimeContext.Provider>
   );

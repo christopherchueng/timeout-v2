@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import type { Alarm, Value } from "@/types";
 import dayjs from "dayjs";
 import { useTimeContext } from "@/context/Time";

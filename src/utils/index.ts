@@ -184,3 +184,11 @@ export const verifyNumericalInput = (
     return !/^\d+$/.test(e.key) && e.preventDefault();
   }
 };
+
+export const saveTimeInLocalStorage = (time: string) => {
+  localStorage.setItem("snoozeCountdown", time);
+};
+
+export const getTimeFromLocalStorage = () => {
+  return localStorage.getItem("snoozeCountdown");
+};

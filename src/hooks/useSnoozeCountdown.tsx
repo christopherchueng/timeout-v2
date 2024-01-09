@@ -1,72 +1,54 @@
-import { useTimeContext } from "@/context/Time";
-import type { Alarm, Value, WeekdaysDataType } from "@/types";
 import dayjs, { type Dayjs } from "dayjs";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import duration from "dayjs/plugin/duration";
+import { saveTimeInLocalStorage, getTimeFromLocalStorage } from "@/utils";
 
-const useSnoozeCountdown = (
-  terminalTime: Date | Dayjs | number,
-  alarm: Alarm,
-  weekdaysData: WeekdaysDataType,
-) => {
-  const { date, parts } = useTimeContext();
-  const { hour, minute, second, meridiem } = parts;
+dayjs.extend(duration);
 
-  const currentDate = dayjs(date);
-
-  const timeLeft = useMemo(
-    () => dayjs(terminalTime).diff(currentDate),
-    [terminalTime],
+const useSnoozeCountdown = (endTime: Dayjs) => {
+  const [isAlarmRinging, setIsAlarmRinging] = useState(false);
+  const [timeLeft, setTimeLeft] = useState<number>(
+    Number(getTimeFromLocalStorage()),
   );
+  const [snoozed, setSnoozed] = useState(false);
 
-  const isAlarmTriggered = useMemo(() => {
-    const alarmMatchesTime =
-      alarm.isOn &&
-      alarm.hour === Number(hour) &&
-      alarm.minutes === Number(minute) &&
-      Number(second) === 0 &&
-      alarm.meridiem === meridiem;
-
-    if (!alarm.repeat) {
-      return alarmMatchesTime;
+  // Snooze registered in local storage
+  useEffect(() => {
+    // If snooze is clicked and turned on, then start the snooze countdown
+    if (snoozed) {
+      // This updates the countdown in local storage every second
+      const timer = setInterval(
+        () =>
+          setTimeLeft((prev) => {
+            if (prev > 0) {
+              saveTimeInLocalStorage(timeLeft.toString());
+              return prev - 1;
+            } else {
+              // If countdown hits 0, then show the snooze modal.
+              setIsAlarmRinging(true);
+              setSnoozed(false);
+              return prev;
+            }
+          }),
+        1000,
+      );
+      return () => clearInterval(timer);
     }
-
-    const repeatDays = alarm.repeat.split(",").map((number) => {
-      return weekdaysData[number as Value]!.value;
-    });
-
-    return repeatDays.includes(currentDate.get("day"));
-  }, [alarm, hour, minute, meridiem, terminalTime]);
-
-  const [isAlarmRinging, setIsAlarmRinging] = useState(isAlarmTriggered);
+  }, [timeLeft, endTime, snoozed]);
 
   useEffect(() => {
-    if (timeLeft === 0 || isAlarmTriggered) setIsAlarmRinging(true);
-  }, [timeLeft, isAlarmTriggered]);
+    if (snoozed) {
+      setTimeLeft(endTime.diff(dayjs(), "seconds"));
+      saveTimeInLocalStorage(timeLeft.toString());
+    }
+  }, [snoozed]);
 
-  //   // 2 cases: For repeated days
-  //   // If click on Snooze, then settimeout for 10 min
-  //   // If click on Turn off, then just close modal and don't do anything else
-
-  //   // No repeats
-  //   // Only turn off will be allowed. Just close modal.
-
-  //   // If stop button is clicked, close the snooze modal, snooze will be turned off, and countdown will be removed from local storage
-  //   const handleCloseSnoozeModal = (e) => {
-  //     e.preventDefault();
-  //     setShowSnoozeModal(false);
-  //     setIsAlarmRinging(false);
-  //     window.localStorage.removeItem("snooze");
-  //   };
-
-  //   // If snooze button is clicked, modal will close, snooze will be turned on, and countdown will be set in state and in local storage
-  //   const repeatSnooze = () => {
-  //     setShowSnoozeModal(false);
-  //     setIsAlarmRinging(true);
-  //     setCountdown(10);
-  //     window.localStorage.setItem("snooze", countdown);
-  //   };
-
-  return { isAlarmRinging, setIsAlarmRinging };
+  return {
+    timeLeft,
+    setSnoozed,
+    isAlarmRinging,
+    setIsAlarmRinging,
+  };
 };
 
 export default useSnoozeCountdown;
