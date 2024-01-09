@@ -218,4 +218,14 @@ export const alarmRouter = createTRPCRouter({
 
       return { alarm: updatedAlarm, alarms: alarmsInAlarmlist, alarmlist };
     }),
+  setSnoozeTime: protectedProcedure
+    .input(z.object({ id: z.string(), time: z.date().nullable() }))
+    .mutation(async ({ ctx, input }) => {
+      const { id, time } = input;
+
+      return await ctx.db.alarm.update({
+        where: { id },
+        data: { snoozeEndTime: time },
+      });
+    }),
 });
