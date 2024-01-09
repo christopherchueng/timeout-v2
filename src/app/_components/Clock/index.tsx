@@ -3,7 +3,7 @@
 import { useTimeContext } from "@/context/Time";
 import clsx from "clsx";
 import Loading from "./loading";
-import { DAYS } from "@/utils/constants";
+import { weekdaysData } from "@/utils/constants";
 
 type ClockProps = {
   size: "sm" | "lg";
@@ -38,15 +38,15 @@ const Clock = ({ size = "lg" }: ClockProps) => {
         </span>
       </div>
       <div className="inline-flex justify-center gap-5 md:gap-10">
-        {Object.entries(DAYS).map(([DAY]) => (
+        {Object.values(weekdaysData).map(({ abbr }) => (
           <div
-            key={DAY}
+            key={abbr}
             className={clsx(
               "text-xs uppercase",
-              DAY === day ? "text-slate-900" : "text-gray-200",
+              abbr === day ? "text-slate-900" : "text-gray-200",
             )}
           >
-            {DAY}
+            {abbr}
           </div>
         ))}
       </div>
