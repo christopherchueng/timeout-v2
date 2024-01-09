@@ -37,6 +37,7 @@ model Alarm {
     sound           String?
     repeat          String?  @db.VarChar(64)
     snooze          Boolean  @default(false)
+    snoozeEndTime   DateTime?
     isOn            Boolean  @default(true)
     createdAt       DateTime @default(now())
     updatedAt       DateTime @updatedAt
