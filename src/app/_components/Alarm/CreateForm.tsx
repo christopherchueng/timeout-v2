@@ -63,6 +63,8 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
     resolver: zodResolver(createAlarmSchema),
     defaultValues: {
       name: "",
+      hour: Number(hour),
+      minutes: minute,
       snooze: true,
       repeat: "",
       userId: session.user.id,
@@ -99,6 +101,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
                 sound: process.env.NEXT_PUBLIC_SOUND_URL ?? null,
                 repeat: repeat ?? null,
                 isOn: true,
+                snoozeEndTime: null,
                 userId: session.user.id,
                 createdAt: new Date(),
                 updatedAt: new Date(),
@@ -198,16 +201,6 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
     }
   };
 
-  const handleInputCharCount = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    field: "hour" | "minutes",
-  ) => {
-    const val = e.target.value;
-    if (val.length <= 2) return;
-
-    setValue(field, val.slice(0, 2));
-  };
-
   return (
     <form
       onSubmit={handleSubmit(handleCreateAlarm)}
@@ -227,17 +220,17 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
                 setValueAs: (hourInput) => Number(hourInput),
               })}
               id="hour"
-              defaultValue={hour}
-              type="number"
+              type="text"
               maxLength={2}
+              autoComplete="off"
               className="w-24 text-right text-7xl outline-none"
-              onChange={(e) => handleInputCharCount(e, "hour")}
               onKeyDown={(
                 e: React.KeyboardEvent<HTMLInputElement> & { type: "keydown" },
-              ) => verifyNumericalInput(e)}
-              onPaste={(
-                e: React.ClipboardEvent<HTMLInputElement> & { type: "paste" },
-              ) => verifyNumericalInput(e)}
+              ) => verifyNumericalInput(e, "hour")}
+              onPaste={(e: React.ClipboardEvent<HTMLInputElement>) =>
+                !/^\d+$/.test(e.clipboardData.getData("text")) &&
+                e.preventDefault()
+              }
             />
           </label>
           <span className="h-full select-none text-7xl">:</span>
@@ -248,17 +241,17 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
                 setValueAs: (hourInput) => Number(hourInput),
               })}
               id="minutes"
-              type="number"
-              defaultValue={minute}
+              type="text"
               maxLength={2}
+              autoComplete="off"
               className="w-24 text-7xl outline-none"
-              onChange={(e) => handleInputCharCount(e, "minutes")}
               onKeyDown={(
                 e: React.KeyboardEvent<HTMLInputElement> & { type: "keydown" },
-              ) => verifyNumericalInput(e)}
-              onPaste={(
-                e: React.ClipboardEvent<HTMLInputElement> & { type: "paste" },
-              ) => verifyNumericalInput(e)}
+              ) => verifyNumericalInput(e, "minutes")}
+              onPaste={(e: React.ClipboardEvent<HTMLInputElement>) =>
+                !/^\d+$/.test(e.clipboardData.getData("text")) &&
+                e.preventDefault()
+              }
             />
           </label>
           {/* ------------------------- MERIDIEM ------------------------- */}
@@ -277,6 +270,8 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
                   defaultSelectedKeys={[meridiem]}
                   disableAnimation={false}
                   onChange={onChange}
+                  selectorIcon={<></>}
+                  disableSelectorIconRotation
                   classNames={{
                     base: "w-14 mb-1",
                     label:
@@ -288,8 +283,6 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
                     trigger:
                       "transition shadow-none border-b-0 after:h-[0px] data-[open=true]:border-b-0 data-[open=false]:border-b-0",
                   }}
-                  selectorIcon={<></>}
-                  disableSelectorIconRotation
                 >
                   {["AM", "PM"].map((timeOfDay) => (
                     <SelectItem

@@ -172,16 +172,58 @@ export const parseMinutes = (minutes: string | number): number =>
   typeof minutes === "string" ? Number(minutes) : minutes;
 
 export const verifyNumericalInput = (
-  e:
-    | (React.KeyboardEvent<HTMLInputElement> & { type: "keydown" })
-    | (React.ClipboardEvent<HTMLInputElement> & { type: "paste" }),
+  e: React.KeyboardEvent<HTMLInputElement> & { type: "keydown" },
+  field: "hour" | "minutes",
 ) => {
-  if (e.type === "paste") {
-    return !/^\d+$/.test(e.clipboardData.getData("text")) && e.preventDefault();
+  if (e.type === "keydown") {
+    const allowedKeys =
+      /^[0-9]$|Backspace|Arrow(Left|Right|Up|Down)|Delete|Tab|Home|End$/;
+
+    if (!allowedKeys.test(e.key)) {
+      e.preventDefault();
+    }
   }
 
-  if (e.type === "keydown") {
-    return !/^\d+$/.test(e.key) && e.preventDefault();
+  if (field === "minutes") {
+    /*
+      Any number typed after a valid input value will replace the initial input value
+      Ex:
+        Current input value: 57
+        Type "1"
+        New input value: 1
+    */
+    const enterValueAfterValidMinutesValue =
+      e.currentTarget.value.length === 2 && !isNaN(Number(e.key));
+
+    if (enterValueAfterValidMinutesValue) {
+      e.currentTarget.value = "";
+    }
+
+    // Add a zero in the beginning if minutes is empty
+    // and enter a number greater than 5
+    const enterValueGreaterThanFiveOnEmptyInputValue =
+      !isNaN(Number(e.key)) &&
+      Number(e.key) > 5 &&
+      e.currentTarget.value.length === 0;
+
+    if (enterValueGreaterThanFiveOnEmptyInputValue) {
+      return (e.currentTarget.value = `0${e.key}`);
+    }
+  }
+
+  if (field === "hour") {
+    const hourIsGreaterThan12AndLessThan20 =
+      e.currentTarget.value.length === 1 &&
+      Number(e.currentTarget.value) === 1 &&
+      !isNaN(Number(e.key)) &&
+      Number(e.key) > 2;
+
+    const hourIsGreaterThan19 =
+      Number(e.currentTarget.value) !== 1 && !isNaN(Number(e.key));
+
+    if (hourIsGreaterThan12AndLessThan20 || hourIsGreaterThan19) {
+      e.currentTarget.value = "";
+    }
   }
 };
 

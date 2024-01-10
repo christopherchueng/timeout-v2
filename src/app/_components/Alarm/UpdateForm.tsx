@@ -208,16 +208,6 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
     }
   };
 
-  const handleInputCharCount = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    field: "hour" | "minutes",
-  ) => {
-    const val = e.target.value;
-    if (val.length <= 2) return;
-
-    setValue(field, val.slice(0, 2));
-  };
-
   const handleSelectedKeys = useMemo((): string[] => {
     const repeatDays = alarm.repeat?.split(",");
 
@@ -247,17 +237,17 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
                 setValueAs: (hourInput) => Number(hourInput),
               })}
               id="hour"
-              type="number"
-              defaultValue={alarm.hour}
+              type="text"
               maxLength={2}
+              autoComplete="off"
               className="w-24 text-right text-7xl outline-none"
-              onChange={(e) => handleInputCharCount(e, "hour")}
               onKeyDown={(
                 e: React.KeyboardEvent<HTMLInputElement> & { type: "keydown" },
-              ) => verifyNumericalInput(e)}
-              onPaste={(
-                e: React.ClipboardEvent<HTMLInputElement> & { type: "paste" },
-              ) => verifyNumericalInput(e)}
+              ) => verifyNumericalInput(e, "hour")}
+              onPaste={(e: React.ClipboardEvent<HTMLInputElement>) =>
+                !/^\d+$/.test(e.clipboardData.getData("text")) &&
+                e.preventDefault()
+              }
             />
           </label>
           <span className="h-full select-none text-7xl">:</span>
@@ -268,16 +258,17 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
                 setValueAs: (hourInput) => Number(hourInput),
               })}
               id="minutes"
-              type="number"
+              type="text"
               maxLength={2}
+              autoComplete="off"
               className="w-24 text-7xl outline-none"
-              onChange={(e) => handleInputCharCount(e, "minutes")}
               onKeyDown={(
                 e: React.KeyboardEvent<HTMLInputElement> & { type: "keydown" },
-              ) => verifyNumericalInput(e)}
-              onPaste={(
-                e: React.ClipboardEvent<HTMLInputElement> & { type: "paste" },
-              ) => verifyNumericalInput(e)}
+              ) => verifyNumericalInput(e, "minutes")}
+              onPaste={(e: React.ClipboardEvent<HTMLInputElement>) =>
+                !/^\d+$/.test(e.clipboardData.getData("text")) &&
+                e.preventDefault()
+              }
             />
           </label>
           {/* ------------------------- MERIDIEM ------------------------- */}
@@ -296,6 +287,8 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
                   defaultSelectedKeys={[alarm.meridiem]}
                   disableAnimation={false}
                   onChange={onChange}
+                  selectorIcon={<></>}
+                  disableSelectorIconRotation
                   classNames={{
                     base: "w-14 mb-1",
                     label:
@@ -307,8 +300,6 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
                     trigger:
                       "transition shadow-none border-b-0 after:h-[0px] data-[open=true]:border-b-0 data-[open=false]:border-b-0",
                   }}
-                  selectorIcon={<></>}
-                  disableSelectorIconRotation
                 >
                   {["AM", "PM"].map((timeOfDay) => (
                     <SelectItem
