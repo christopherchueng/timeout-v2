@@ -11,12 +11,12 @@ import {
   TOGGLE_ALARMLIST_AND_ALARMS,
 } from "@/store/constants";
 import type { AlarmlistWithAlarms } from "@/types";
+import { AccordionHeader, AccordionItem, AccordionPanel } from "../Accordian";
 import Alarm from "../Alarm";
+import { Settings } from "../Settings";
+import { AlarmlistIcon, Chevron, Switch } from "../UI";
 import DeleteAlarmlistForm from "./DeleteForm";
 import RenameAlarmlistForm from "./RenameForm";
-import { Settings } from "../Settings";
-import { AccordionHeader, AccordionItem, AccordionPanel } from "../Accordian";
-import { AlarmlistIcon, Chevron, Switch } from "../UI";
 
 const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
   const ellipsisRef = useRef<HTMLDivElement>(null);

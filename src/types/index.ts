@@ -1,3 +1,4 @@
+import type { z } from "zod";
 import type { RouterOutputs } from "@/trpc/shared";
 import type {
   createAlarmSchema,
@@ -5,7 +6,6 @@ import type {
   renameAlarmlistSchema,
   updateAlarmSchema,
 } from "@/utils";
-import type { z } from "zod";
 
 export type AlarmlistWithAlarms =
   RouterOutputs["alarmlist"]["getAllWithAlarms"][number];

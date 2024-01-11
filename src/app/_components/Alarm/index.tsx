@@ -1,25 +1,24 @@
 "use client";
 
+import { useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
-import { Switch } from "../UI";
+import dayjs from "dayjs";
+import toast from "react-hot-toast";
 import { api } from "@/trpc/react";
 import type { RouterOutputs } from "@/trpc/shared";
-import { AlarmIcon } from "../UI";
+import { AlarmIcon, Switch } from "../UI";
 import { formatMinutes, formatRepeatDays } from "@/utils";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { weekdaysData } from "@/utils/constants";
 import {
   useCursorPosition,
   useSettingsActions,
   useTriggerAlarm,
 } from "@/hooks";
 import { Settings } from "../Settings";
-import toast from "react-hot-toast";
 import Modal from "../Modal";
-import UpdateAlarmForm from "./UpdateForm";
 import Snooze from "../Snooze";
+import UpdateAlarmForm from "./UpdateForm";
 import AbbreviatedDays from "./AbbreviatedDays";
-import { weekdaysData } from "@/utils/constants";
-import dayjs from "dayjs";
 
 type Alarm = RouterOutputs["alarm"]["getAllByAlarmlistId"][number];
 

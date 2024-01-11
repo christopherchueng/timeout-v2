@@ -4,10 +4,10 @@ import {
   useCallback,
   useRef,
 } from "react";
-import SettingsDropdown from "./SettingsDropdown";
-import SettingsWrapper from "./SettingsWrapper";
 import { DeleteAlarmlistIcon, EditIcon, Ellipsis } from "../UI";
 import DeleteAlarmIcon from "../UI/DeleteAlarmIcon";
+import SettingsDropdown from "./SettingsDropdown";
+import SettingsWrapper from "./SettingsWrapper";
 
 interface SettingsProps extends ComponentPropsWithoutRef<"div"> {
   handleEditAction: () => void;

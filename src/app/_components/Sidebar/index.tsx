@@ -3,8 +3,8 @@
 import { api } from "@/trpc/react";
 
 import Alarmlist from "../Alarmlist";
-import Loading from "./loading";
 import { Accordion } from "../Accordian";
+import Loading from "./loading";
 
 const Alarmlists = () => {
   const { data: alarmlists, isLoading } =

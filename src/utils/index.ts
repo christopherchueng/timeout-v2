@@ -1,6 +1,6 @@
-import type { SelectedItems } from "@nextui-org/select";
 import { type MutableRefObject, type RefCallback } from "react";
 import { z } from "zod";
+import type { SelectedItems } from "@nextui-org/select";
 import { Meridiem, type Value } from "@/types";
 import { weekdaysData } from "./constants";
 

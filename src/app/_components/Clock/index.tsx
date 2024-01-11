@@ -2,8 +2,8 @@
 
 import { useTimeContext } from "@/context/Time";
 import clsx from "clsx";
-import Loading from "./loading";
 import { weekdaysData } from "@/utils/constants";
+import Loading from "./loading";
 
 type ClockProps = {
   size: "sm" | "lg";

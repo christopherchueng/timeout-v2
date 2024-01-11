@@ -1,9 +1,9 @@
 import { GeistSans } from "geist/font/sans";
 import { cookies } from "next/headers";
+import { NextUIProvider } from "@nextui-org/system";
 import { TRPCReactProvider } from "@/trpc/react";
 import ProviderWrapper from "./_components/ProviderWrapper";
 import NavigationBar from "./_components/NavigationBar";
-import { NextUIProvider } from "@nextui-org/system";
 
 export default function RootLayout({
   children,

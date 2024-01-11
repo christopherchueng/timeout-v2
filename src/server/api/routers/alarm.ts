@@ -2,13 +2,13 @@ import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
+import { getServerAuthSession } from "@/server/auth";
 import {
   createAlarmSchema,
   parseHour,
   parseMinutes,
   updateAlarmSchema,
 } from "@/utils";
-import { getServerAuthSession } from "@/server/auth";
 
 // const addUserDataToAlarm = async (alarms: Alarm[]) => {
 //   const session = await getServerAuthSession();

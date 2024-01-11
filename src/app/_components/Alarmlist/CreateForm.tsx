@@ -2,9 +2,9 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { api } from "@/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { Alarmlist, CreateAlarmlistFormValues } from "@/types";
 import { createAlarmlistSchema } from "@/utils";
 import { Button, Input } from "../UI";
-import type { Alarmlist, CreateAlarmlistFormValues } from "@/types";
 
 type CreateAlarmlistFormProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import type { Alarm, Value } from "@/types";
 import dayjs from "dayjs";
 import { useTimeContext } from "@/context/Time";
+import type { Alarm, Value } from "@/types";
 import { weekdaysData } from "@/utils/constants";
 
 const useTriggerAlarm = (alarm: Alarm) => {

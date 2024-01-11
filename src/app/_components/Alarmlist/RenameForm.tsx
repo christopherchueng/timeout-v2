@@ -3,11 +3,11 @@ import {
   type SubmitHandler,
   type SubmitErrorHandler,
 } from "react-hook-form";
+import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
 import { renameAlarmlistSchema } from "@/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@/trpc/react";
-import { useSession } from "next-auth/react";
-import toast from "react-hot-toast";
 import type { Alarmlist, RenameAlarmlistFormValues } from "@/types";
 
 type RenameAlarmlistFormProps = {
