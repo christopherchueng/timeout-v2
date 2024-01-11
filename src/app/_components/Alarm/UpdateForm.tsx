@@ -255,7 +255,7 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
           <label htmlFor="minutes">
             <input
               {...register("minutes", {
-                setValueAs: (hourInput) => Number(hourInput),
+                setValueAs: (minutesInput) => Number(minutesInput),
               })}
               id="minutes"
               type="text"

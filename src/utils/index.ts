@@ -184,42 +184,50 @@ export const verifyNumericalInput = (
     }
   }
 
-  if (field === "minutes") {
-    /*
-      Any number typed after a valid input value will replace the initial input value
-      Ex:
-        Current input value: 57
-        Type "1"
-        New input value: 1
-    */
-    const enterValueAfterValidMinutesValue =
-      e.currentTarget.value.length === 2 && !isNaN(Number(e.key));
+  const previousValue = e.currentTarget.value;
+  const currentValue = e.key;
 
-    if (enterValueAfterValidMinutesValue) {
-      e.currentTarget.value = "";
+  if (field === "minutes") {
+    const isEmptyInputValue = previousValue.length === 0;
+    const isFirstDigitOutOfBounds =
+      previousValue.length === 1 && Number(previousValue) > 5;
+    const isInBetweenFiveAndTenWithLeadingZero =
+      previousValue.length === 2 &&
+      Number(previousValue) > 5 &&
+      Number(previousValue) < 10;
+    const isMinutesInBounds =
+      Number(previousValue) >= 10 && Number(previousValue) < 60;
+
+    const insertLeadingZeroToMinutes =
+      !isNaN(Number(currentValue)) &&
+      (isEmptyInputValue ||
+        isFirstDigitOutOfBounds ||
+        isInBetweenFiveAndTenWithLeadingZero ||
+        isMinutesInBounds);
+
+    if (insertLeadingZeroToMinutes) {
+      return (e.currentTarget.value = `0${currentValue}`);
     }
 
-    // Add a zero in the beginning if minutes is empty
-    // and enter a number greater than 5
-    const enterValueGreaterThanFiveOnEmptyInputValue =
-      !isNaN(Number(e.key)) &&
-      Number(e.key) > 5 &&
-      e.currentTarget.value.length === 0;
+    const enteredValueAfterValidFirstDigit =
+      Number(previousValue) < 6 && !isNaN(Number(currentValue));
 
-    if (enterValueGreaterThanFiveOnEmptyInputValue) {
-      return (e.currentTarget.value = `0${e.key}`);
+    if (enteredValueAfterValidFirstDigit) {
+      // If first digit is within valid minute value
+      // Then will append second digit to form a valid value
+      e.currentTarget.value = `${Number(previousValue)}${currentValue}`;
     }
   }
 
   if (field === "hour") {
     const hourIsGreaterThan12AndLessThan20 =
-      e.currentTarget.value.length === 1 &&
-      Number(e.currentTarget.value) === 1 &&
-      !isNaN(Number(e.key)) &&
-      Number(e.key) > 2;
+      previousValue.length === 1 &&
+      Number(previousValue) === 1 &&
+      !isNaN(Number(currentValue)) &&
+      Number(currentValue) > 2;
 
     const hourIsGreaterThan19 =
-      Number(e.currentTarget.value) !== 1 && !isNaN(Number(e.key));
+      Number(previousValue) !== 1 && !isNaN(Number(currentValue));
 
     if (hourIsGreaterThan12AndLessThan20 || hourIsGreaterThan19) {
       e.currentTarget.value = "";

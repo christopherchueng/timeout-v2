@@ -55,6 +55,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
     handleSubmit,
     setError,
     setValue,
+    getValues,
     watch,
     reset,
     control,
@@ -201,6 +202,8 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
     }
   };
 
+  console.log(getValues("minutes"));
+
   return (
     <form
       onSubmit={handleSubmit(handleCreateAlarm)}
@@ -238,7 +241,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
           <label htmlFor="minutes">
             <input
               {...register("minutes", {
-                setValueAs: (hourInput) => Number(hourInput),
+                setValueAs: (minutesInput) => Number(minutesInput),
               })}
               id="minutes"
               type="text"
