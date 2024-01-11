@@ -45,7 +45,6 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
     register,
     handleSubmit,
     setError,
-    setValue,
     watch,
     reset,
     control,
