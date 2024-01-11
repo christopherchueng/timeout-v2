@@ -25,9 +25,10 @@ const Snooze = ({
       <div className="flex h-full w-40 flex-col items-center gap-4">
         <audio
           src={alarm.sound ?? process.env.NEXT_PUBLIC_SOUND_URL}
-          // hidden
+          hidden
           autoPlay
-        ></audio>
+          loop
+        />
         <h1 className="text-lg leading-none">{alarm.name}</h1>
         <div className="flex h-full flex-col items-center justify-center gap-3.5">
           {alarm.snooze ? (
