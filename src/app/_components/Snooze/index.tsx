@@ -1,4 +1,5 @@
 import { useState } from "react";
+import clsx from "clsx";
 import type { Alarm } from "@prisma/client";
 import Modal from "../Modal";
 import { Button, InfoCircleIcon, Tooltip } from "../UI";
@@ -22,7 +23,12 @@ const Snooze = ({
 
   return (
     <Modal isOpen={isAlarmRinging} handleClose={handleClose}>
-      <div className="flex h-full w-40 flex-col items-center gap-4">
+      <div
+        className={clsx(
+          "flex h-full w-40 flex-col items-center gap-4",
+          alarm.snooze ? "py-4" : "py-6",
+        )}
+      >
         <audio
           src={alarm.sound ?? process.env.NEXT_PUBLIC_SOUND_URL}
           hidden
@@ -33,7 +39,7 @@ const Snooze = ({
         <div className="flex h-full flex-col items-center justify-center gap-3.5">
           {alarm.snooze ? (
             <>
-              <div className="flex flex-row gap-2">
+              <div className="flex flex-row gap-4">
                 <Button color="default" onClick={handleClose}>
                   Stop
                 </Button>
