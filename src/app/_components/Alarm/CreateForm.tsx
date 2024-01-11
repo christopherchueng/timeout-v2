@@ -202,8 +202,6 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
     }
   };
 
-  console.log(getValues("minutes"));
-
   return (
     <form
       onSubmit={handleSubmit(handleCreateAlarm)}
