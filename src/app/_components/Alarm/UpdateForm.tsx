@@ -208,10 +208,10 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
     }
   };
 
-  const handleSelectedKeys = useMemo((): string[] => {
+  const handleSelectedKeys = useMemo((): string[] | undefined => {
     const repeatDays = alarm.repeat?.split(",");
 
-    if (!repeatDays?.length) return [];
+    if (!repeatDays || (repeatDays && !repeatDays[0])) return undefined;
 
     return repeatDays.map((value) => {
       return weekdaysData[value as Value]!.abbr;

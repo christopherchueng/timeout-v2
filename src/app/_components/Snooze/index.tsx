@@ -1,7 +1,7 @@
 import Modal from "../Modal";
 import type { Alarm } from "@prisma/client";
 import { Button, InfoCircleIcon, Tooltip } from "../UI";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type SnoozeProps = {
   alarm: Alarm;
@@ -19,11 +19,18 @@ const Snooze = ({
   handleSnoozeClick,
 }: SnoozeProps) => {
   const [showDemoInfo, setShowDemoInfo] = useState(false);
+
+  const soundRef = useRef<HTMLAudioElement>(null);
+
+  // useEffect(() => {
+  //   if (isAlarmRinging) soundRef.current?.play();
+  // }, [isAlarmRinging]);
   return (
     <Modal isOpen={isAlarmRinging} handleClose={handleClose}>
       <div className="flex h-full w-40 flex-col items-center gap-4">
         <audio
-          src={alarm.sound ?? process.env.NEXT_PUBLIC_JINGLE_URL}
+          ref={soundRef}
+          src={alarm.sound ?? process.env.NEXT_PUBLIC_SOUND_URL}
           hidden
           autoPlay
         />
