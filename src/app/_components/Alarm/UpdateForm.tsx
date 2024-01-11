@@ -228,48 +228,43 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
         </p>
       )}
       <div className="flex w-full flex-col items-center justify-center md:mb-0">
-        <div className="flex flex-row gap-3">
+        <div className="flex flex-row gap-6">
           {/* ------------------------- HOUR ------------------------- */}
-          <label htmlFor="hour">
-            <input
-              {...register("hour", {
-                setValueAs: (hourInput) => Number(hourInput),
-              })}
-              id="hour"
-              type="text"
-              maxLength={2}
-              autoComplete="off"
-              className="w-24 text-end text-7xl outline-none transition selection:bg-transparent focus:bg-gray-200"
-              onKeyDown={(
-                e: React.KeyboardEvent<HTMLInputElement> & { type: "keydown" },
-              ) => verifyNumericalInput(e, "hour")}
-              onPaste={(e: React.ClipboardEvent<HTMLInputElement>) =>
-                !/^\d+$/.test(e.clipboardData.getData("text")) &&
-                e.preventDefault()
-              }
-            />
-          </label>
-          <span className="h-full select-none text-7xl">:</span>
+          <input
+            {...register("hour", {
+              setValueAs: (hourInput) => Number(hourInput),
+            })}
+            id="hour"
+            type="text"
+            maxLength={2}
+            autoComplete="off"
+            className="w-24 text-center text-7xl caret-transparent outline-none transition selection:bg-transparent hover:bg-gray-100 focus:bg-gray-200"
+            onKeyDown={(
+              e: React.KeyboardEvent<HTMLInputElement> & { type: "keydown" },
+            ) => verifyNumericalInput(e, "hour")}
+            onPaste={(e: React.ClipboardEvent<HTMLInputElement>) =>
+              !/^\d+$/.test(e.clipboardData.getData("text")) &&
+              e.preventDefault()
+            }
+          />
           {/* ------------------------- MINUTES ------------------------- */}
-          <label htmlFor="minutes">
-            <input
-              {...register("minutes", {
-                setValueAs: (minutesInput) => Number(minutesInput),
-              })}
-              id="minutes"
-              type="text"
-              maxLength={2}
-              autoComplete="off"
-              className="-ml-1.5 mr-1 w-24 text-end text-7xl outline-none transition selection:bg-transparent focus:bg-gray-200"
-              onKeyDown={(
-                e: React.KeyboardEvent<HTMLInputElement> & { type: "keydown" },
-              ) => verifyNumericalInput(e, "minutes")}
-              onPaste={(e: React.ClipboardEvent<HTMLInputElement>) =>
-                !/^\d+$/.test(e.clipboardData.getData("text")) &&
-                e.preventDefault()
-              }
-            />
-          </label>
+          <input
+            {...register("minutes", {
+              setValueAs: (minutesInput) => Number(minutesInput),
+            })}
+            id="minutes"
+            type="text"
+            maxLength={2}
+            autoComplete="off"
+            className="w-24 min-w-0 text-center text-7xl caret-transparent outline-none transition selection:bg-transparent hover:bg-gray-100 focus:bg-gray-200"
+            onKeyDown={(
+              e: React.KeyboardEvent<HTMLInputElement> & { type: "keydown" },
+            ) => verifyNumericalInput(e, "minutes")}
+            onPaste={(e: React.ClipboardEvent<HTMLInputElement>) =>
+              !/^\d+$/.test(e.clipboardData.getData("text")) &&
+              e.preventDefault()
+            }
+          />
           {/* ------------------------- MERIDIEM ------------------------- */}
           <div className="flex h-full flex-row items-end">
             <Controller
