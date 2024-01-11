@@ -213,7 +213,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
         </p>
       )}
       <div className="flex w-full flex-col items-center justify-center md:mb-0">
-        <div className="flex flex-row gap-4">
+        <div className="flex flex-row gap-3">
           {/* ------------------------- HOUR ------------------------- */}
           <label htmlFor="hour">
             <input
@@ -224,7 +224,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
               type="text"
               maxLength={2}
               autoComplete="off"
-              className="w-24 text-right text-7xl outline-none"
+              className="w-24 text-end text-7xl outline-none transition selection:bg-transparent focus:bg-gray-200"
               onKeyDown={(
                 e: React.KeyboardEvent<HTMLInputElement> & { type: "keydown" },
               ) => verifyNumericalInput(e, "hour")}
@@ -245,7 +245,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
               type="text"
               maxLength={2}
               autoComplete="off"
-              className="w-24 text-7xl outline-none"
+              className="-ml-1.5 mr-1 w-24 text-end text-7xl outline-none transition selection:bg-transparent focus:bg-gray-200"
               onKeyDown={(
                 e: React.KeyboardEvent<HTMLInputElement> & { type: "keydown" },
               ) => verifyNumericalInput(e, "minutes")}
@@ -278,7 +278,6 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
                     label:
                       "text-xs text-slate-900 group-data-[filled=true]:text-xs group-data-[filled=true]:text-slate-900",
                     value: "text-xs",
-                    listbox: "p-0",
                     popoverContent:
                       "border absolute p-0 -top-2.5 w-20 bg-white rounded-small",
                     trigger:
@@ -290,6 +289,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
                       key={timeOfDay}
                       textValue={timeOfDay}
                       value={value}
+                      className="rounded-md transition hover:bg-gray-200"
                     >
                       {timeOfDay}
                     </SelectItem>
