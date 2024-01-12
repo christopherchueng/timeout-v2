@@ -1,5 +1,11 @@
-import { useEffect, type ComponentPropsWithoutRef, useRef } from "react";
+import {
+  useEffect,
+  type ComponentPropsWithoutRef,
+  useRef,
+  useState,
+} from "react";
 import Portal from "../Portal";
+import { Tooltip } from "../UI";
 
 interface ModalProps extends ComponentPropsWithoutRef<"button"> {
   children: React.ReactNode;
@@ -9,6 +15,7 @@ interface ModalProps extends ComponentPropsWithoutRef<"button"> {
 
 const Modal = ({ children, isOpen, handleClose }: ModalProps) => {
   const modalRef = useRef<HTMLInputElement | null>(null);
+  const [isHovering, setIsHovering] = useState(false);
 
   // Close modal on escape key press or outside modal
   useEffect(() => {
@@ -52,10 +59,14 @@ const Modal = ({ children, isOpen, handleClose }: ModalProps) => {
           // className="relative box-border flex h-56 w-72 items-center justify-center rounded border bg-white p-8 shadow-lg"
         >
           <button
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
             onClick={handleClose}
-            className="absolute right-4 top-0 my-3 outline-none"
+            className="absolute right-4 top-0 my-3 rounded-md border border-transparent px-1.5 outline-none transition hover:bg-gray-200"
           >
-            &#x2715;
+            <Tooltip text="Esc" isShowing={isHovering}>
+              &#x2715;
+            </Tooltip>
           </button>
           {children}
         </div>
