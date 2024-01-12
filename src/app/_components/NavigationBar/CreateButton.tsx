@@ -65,7 +65,7 @@ const CreateButton = () => {
   }, [isTabOpen]);
 
   return (
-    <div className="relative flex flex-col">
+    <div className="relative flex flex-col justify-center">
       <Tooltip isShowing={isHovering && !isTabOpen} text="Create new">
         <button
           onMouseEnter={() => setIsHovering(true)}
