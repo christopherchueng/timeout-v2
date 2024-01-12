@@ -30,3 +30,12 @@ export const preferenceRouter = createTRPCRouter({
 
     return preferences;
   }),
+  create: protectedProcedure
+    .input(z.object({ userId: z.string(), isOn: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      const { userId, isOn } = input;
+
+      return await ctx.db.preference.create({
+        data: { userId, use12Hour: isOn },
+      });
+    }),
