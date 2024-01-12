@@ -1,9 +1,10 @@
-import { getServerAuthSession } from "@/server/auth";
 import { Signin, Signout } from "../Auth";
 import CreateButton from "./CreateButton";
+import { useSession } from "next-auth/react";
+import Preferences from "./Preferences";
 
-const Items = async () => {
-  const session = await getServerAuthSession();
+const Items = () => {
+  const { data: session } = useSession();
 
   return (
     <div className="flex w-full select-none justify-end gap-2.5 sm:gap-4">
@@ -11,6 +12,7 @@ const Items = async () => {
         <>
           <CreateButton />
           <div className="h-5 self-center border-l border-slate-900 text-slate-500" />
+          <Preferences session={session} />
         </>
       )}
       {session ? <Signout /> : <Signin />}
