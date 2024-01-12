@@ -298,10 +298,10 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
           })}
         >
           <div className="flex items-center gap-1 text-sm font-semibold">
-            <span className="leading-tight">
+            <span className="leading-snug">
               {hour}:{minutes}
             </span>
-            <div className="flex gap-1 text-2xs">
+            <div className="flex gap-1 pt-0.5 text-2xs">
               {preferences.use12Hour && <span>{meridiem}</span>}
               {displayRepeatDays()}
             </div>
