@@ -174,6 +174,7 @@ export const parseMinutes = (minutes: string | number): number =>
 export const verifyNumericalInput = (
   e: React.KeyboardEvent<HTMLInputElement> & { type: "keydown" },
   field: "hour" | "minutes",
+  is12HourMode: boolean,
 ) => {
   if (e.type === "keydown") {
     const allowedKeys =
@@ -220,17 +221,32 @@ export const verifyNumericalInput = (
   }
 
   if (field === "hour") {
-    const hourIsGreaterThan12AndLessThan20 =
-      previousValue.length === 1 &&
-      Number(previousValue) === 1 &&
-      !isNaN(Number(currentValue)) &&
-      Number(currentValue) > 2;
+    if (is12HourMode) {
+      const hourIsGreaterThan12AndLessThan20 =
+        previousValue.length === 1 &&
+        Number(previousValue) === 1 &&
+        !isNaN(Number(currentValue)) &&
+        Number(currentValue) > 2;
 
-    const hourIsGreaterThan19 =
-      Number(previousValue) !== 1 && !isNaN(Number(currentValue));
+      const hourIsGreaterThan19 =
+        Number(previousValue) !== 1 && !isNaN(Number(currentValue));
 
-    if (hourIsGreaterThan12AndLessThan20 || hourIsGreaterThan19) {
-      e.currentTarget.value = "";
+      if (hourIsGreaterThan12AndLessThan20 || hourIsGreaterThan19) {
+        e.currentTarget.value = "";
+      }
+    } else {
+      const hourIsGreaterThan23AndLessThan30 =
+        previousValue.length === 1 &&
+        Number(previousValue) === 2 &&
+        !isNaN(Number(currentValue)) &&
+        Number(currentValue) > 3;
+
+      const hourIsGreaterThan29 =
+        Number(previousValue) > 2 && !isNaN(Number(currentValue));
+
+      if (hourIsGreaterThan23AndLessThan30 || hourIsGreaterThan29) {
+        e.currentTarget.value = "";
+      }
     }
   }
 };
