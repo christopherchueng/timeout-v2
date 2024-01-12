@@ -4,7 +4,12 @@ import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { getServerAuthSession } from "@/server/auth";
 import type { Meridiem } from "@/types";
-import { createAlarmSchema, parseMinutes, updateAlarmSchema } from "@/utils";
+import {
+  convertHourTo24HourMode,
+  createAlarmSchema,
+  parseMinutes,
+  updateAlarmSchema,
+} from "@/utils";
 
 export const alarmRouter = createTRPCRouter({
   getAllByAlarmlistId: protectedProcedure
@@ -108,10 +113,11 @@ export const alarmRouter = createTRPCRouter({
       return ctx.db.alarm.create({
         data: {
           name: name || "Alarm",
-          hour:
-            preference.use12Hour && meridiem === ("PM" as Meridiem) && hour < 12
-              ? hour + 12
-              : hour,
+          hour: convertHourTo24HourMode(
+            hour,
+            meridiem as Meridiem,
+            preference.use12Hour,
+          ),
           minutes: parseMinutes(minutes),
           repeat,
           snooze,
@@ -179,10 +185,11 @@ export const alarmRouter = createTRPCRouter({
         where: { id },
         data: {
           name: name || "Alarm",
-          hour:
-            preference.use12Hour && meridiem === ("PM" as Meridiem) && hour < 12
-              ? hour + 12
-              : hour,
+          hour: convertHourTo24HourMode(
+            hour,
+            meridiem as Meridiem,
+            preference.use12Hour,
+          ),
           minutes: parseMinutes(minutes),
           repeat,
           snooze,

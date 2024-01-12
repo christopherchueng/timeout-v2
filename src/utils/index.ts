@@ -260,3 +260,19 @@ export const saveTimeInLocalStorage = (time: string) => {
 export const getTimeFromLocalStorage = () => {
   return localStorage.getItem("snoozeCountdown");
 };
+
+export const convertHourTo24HourMode = (
+  hour: number,
+  meridiem: Meridiem,
+  is12HourMode: boolean,
+): number => {
+  if (!is12HourMode || !meridiem) {
+    return hour;
+  }
+  // Convert 12 hour mode to 24 hour mode
+  if (hour === 12 && meridiem === "AM") return 0;
+
+  if (hour < 12 && meridiem === "PM") return hour + 12;
+
+  return hour;
+};
