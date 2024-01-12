@@ -44,8 +44,11 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
   useEffect(() => {
     if (isAlarmTriggered) {
       setIsAlarmRinging(true);
+      if (!alarm.snooze) {
+        toggleAlarm({ id: alarm.id, isOn: false });
+      }
     }
-  }, [isAlarmTriggered]);
+  }, [isAlarmTriggered, alarm.snooze]);
 
   const { data: preferences } = api.preference.get.useQuery();
 
