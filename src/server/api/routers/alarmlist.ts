@@ -23,12 +23,7 @@ export const alarmlistRouter = createTRPCRouter({
       orderBy: [{ createdAt: "desc" }],
       include: {
         alarms: {
-          orderBy: [
-            { meridiem: "asc" },
-            { hour: "asc" },
-            { minutes: "asc" },
-            { name: "asc" },
-          ],
+          orderBy: [{ hour: "asc" }, { minutes: "asc" }, { name: "asc" }],
         },
       },
     });
