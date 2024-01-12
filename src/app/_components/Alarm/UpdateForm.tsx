@@ -44,6 +44,16 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
       "transition border-b h-10 border-b-gray-400 after:h-[0px] data-[open=true]:border-b-slate-900 data-[open=false]:border-b-gray-400",
   };
 
+  const hour = useMemo(() => {
+    if (!preferences.use12Hour) return alarm.hour;
+
+    if (alarm.hour === 0) return 12;
+
+    if (alarm.hour <= 12) return alarm.hour;
+
+    return (alarm.hour % 13) + 1;
+  }, [preferences.use12Hour, alarm.hour]);
+
   const {
     register,
     handleSubmit,
@@ -57,7 +67,7 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
     defaultValues: {
       id: alarm.id,
       name: alarm.name,
-      hour: alarm.hour,
+      hour,
       minutes: alarm.minutes >= 10 ? alarm.minutes : `0${alarm.minutes}`,
       meridiem: alarm.hour >= 12 ? ("PM" as Meridiem) : ("AM" as Meridiem),
       snooze: alarm.snooze,

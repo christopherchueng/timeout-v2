@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import clsx from "clsx";
 import dayjs from "dayjs";
 import toast from "react-hot-toast";
@@ -267,6 +267,16 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
 
   if (!preferences) return;
 
+  const hour = useMemo(() => {
+    if (!preferences.use12Hour) return alarm.hour;
+
+    if (alarm.hour === 0) return 12;
+
+    if (alarm.hour <= 12) return alarm.hour;
+
+    return (alarm.hour % 13) + 1;
+  }, [preferences.use12Hour, alarm.hour]);
+
   return (
     <li
       onMouseEnter={() =>
@@ -286,10 +296,7 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
         >
           <div className="flex items-end gap-0.5 text-sm font-semibold">
             <span className="leading-tight">
-              {preferences.use12Hour && alarm.hour > 12
-                ? (alarm.hour % 13) + 1
-                : alarm.hour}
-              :{formatMinutes(alarm.minutes)}
+              {hour}:{formatMinutes(alarm.minutes)}
             </span>
             <div className="flex gap-1 text-2xs">
               {preferences.use12Hour && (
