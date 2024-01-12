@@ -26,8 +26,8 @@ export const alarmSchema = {
   name: z.string().optional().default("Alarm"),
   hour: z
     .number()
-    .gte(1, { message: "Hours must be in between 1 and 12." })
-    .lte(12, { message: "Hours must be in between 1 and 12." })
+    .gte(0, { message: "Invalid hour input." })
+    .lte(23, { message: "Invalid hour input." })
     .int(),
   minutes: z
     .string()
