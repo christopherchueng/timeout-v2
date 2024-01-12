@@ -193,9 +193,9 @@ export const verifyNumericalInput = (
 
   const previousValue = e.currentTarget.value;
   const currentValue = e.key;
+  const isEmptyInputValue = previousValue.length === 0;
 
   if (field === "minutes") {
-    const isEmptyInputValue = previousValue.length === 0;
     const isFirstDigitOutOfBounds =
       previousValue.length === 1 && Number(previousValue) > 5;
     const isInBetweenFiveAndTenWithLeadingZero =
@@ -241,17 +241,40 @@ export const verifyNumericalInput = (
         e.currentTarget.value = "";
       }
     } else {
-      const hourIsGreaterThan23AndLessThan30 =
-        previousValue.length === 1 &&
+      const isFirstDigitOutOfBounds =
+        previousValue.length === 1 && Number(previousValue) > 2;
+      const isSecondDigitOutOfBounds =
+        previousValue.length === 2 &&
         Number(previousValue) === 2 &&
-        !isNaN(Number(currentValue)) &&
         Number(currentValue) > 3;
+      const isInBetweenThreeAndTenWithLeadingZero =
+        previousValue.length === 2 &&
+        Number(previousValue) > 2 &&
+        Number(previousValue) < 10;
+      const isHourInBounds =
+        Number(previousValue) >= 10 && Number(previousValue) < 24;
 
-      const hourIsGreaterThan29 =
-        Number(previousValue) > 2 && !isNaN(Number(currentValue));
+      const insertLeadingZeroToHour =
+        !isNaN(Number(currentValue)) &&
+        (isEmptyInputValue ||
+          isFirstDigitOutOfBounds ||
+          isInBetweenThreeAndTenWithLeadingZero ||
+          isHourInBounds ||
+          isSecondDigitOutOfBounds);
 
-      if (hourIsGreaterThan23AndLessThan30 || hourIsGreaterThan29) {
-        e.currentTarget.value = "";
+      if (insertLeadingZeroToHour) {
+        e.currentTarget.value = `0${currentValue}`;
+      }
+
+      const isLessThan20 = Number(previousValue) < 2;
+      const isInBetween20And24 =
+        Number(previousValue) === 2 && Number(currentValue) < 4;
+
+      const enteredValueAfterValidFirstDigit =
+        !isNaN(Number(currentValue)) && (isLessThan20 || isInBetween20And24);
+
+      if (enteredValueAfterValidFirstDigit) {
+        e.currentTarget.value = `${Number(previousValue)}${currentValue}`;
       }
     }
   }
