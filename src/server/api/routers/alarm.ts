@@ -145,8 +145,17 @@ export const alarmRouter = createTRPCRouter({
   update: protectedProcedure
     .input(updateAlarmSchema)
     .mutation(async ({ ctx, input }) => {
-      const { id, name, hour, minutes, meridiem, repeat, snooze, alarmlistId } =
-        input;
+      const {
+        id,
+        name,
+        hour,
+        minutes,
+        meridiem,
+        repeat,
+        snooze,
+        alarmlistId,
+        userId,
+      } = input;
 
       const currentAlarm = await ctx.db.alarm.findFirst({
         where: { id },
@@ -169,13 +178,27 @@ export const alarmRouter = createTRPCRouter({
         data: { isOn: true },
       });
 
+      const preference = await ctx.db.preference.findFirst({
+        where: { userId },
+      });
+
+      if (!preference)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Unauthorized. Please sign in first and try again.",
+        });
+
       const alarm = await ctx.db.alarm.update({
         where: { id },
         data: {
           name: name || "Alarm",
-          hour: parseHour(hour),
+          hour:
+            preference.use12Hour &&
+            meridiem === ("PM" as Meridiem) &&
+            parseHour(hour) < 12
+              ? parseHour(hour) + 12
+              : parseHour(hour),
           minutes: parseMinutes(minutes),
-          meridiem,
           repeat,
           snooze,
           isOn: true,
