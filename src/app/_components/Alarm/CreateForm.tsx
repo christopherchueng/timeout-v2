@@ -51,7 +51,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
     const meridiem = dayjs(todaysDate).format("A");
 
     return { hour, minute, meridiem };
-  }, []);
+  }, [preferences.use12Hour]);
 
   const {
     register,
@@ -65,7 +65,7 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
     resolver: zodResolver(createAlarmSchema),
     defaultValues: {
       name: "",
-      hour: Number(hour),
+      hour,
       minutes: minute,
       snooze: true,
       repeat: "",

@@ -7,6 +7,7 @@ import type { Meridiem } from "@/types";
 import {
   convertHourTo24HourMode,
   createAlarmSchema,
+  parseHour,
   parseMinutes,
   updateAlarmSchema,
 } from "@/utils";
@@ -96,7 +97,10 @@ export const alarmRouter = createTRPCRouter({
           message: "Unauthorized. Please sign in first and try again.",
         });
 
-      if (preference.use12Hour && (hour === 0 || hour > 12)) {
+      if (
+        preference.use12Hour &&
+        (parseHour(hour) === 0 || parseHour(hour) > 12)
+      ) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Hour must be in between 1 and 12.",
@@ -114,7 +118,7 @@ export const alarmRouter = createTRPCRouter({
         data: {
           name: name || "Alarm",
           hour: convertHourTo24HourMode(
-            hour,
+            parseHour(hour),
             meridiem as Meridiem,
             preference.use12Hour,
           ),
@@ -174,7 +178,10 @@ export const alarmRouter = createTRPCRouter({
           message: "Unauthorized. Please sign in first and try again.",
         });
 
-      if (preference.use12Hour && (hour === 0 || hour > 12)) {
+      if (
+        preference.use12Hour &&
+        (parseHour(hour) === 0 || parseHour(hour) > 12)
+      ) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Hour must be in between 1 and 12.",
@@ -186,7 +193,7 @@ export const alarmRouter = createTRPCRouter({
         data: {
           name: name || "Alarm",
           hour: convertHourTo24HourMode(
-            hour,
+            parseHour(hour),
             meridiem as Meridiem,
             preference.use12Hour,
           ),

@@ -14,6 +14,7 @@ import {
   updateAlarmSchema,
   formatRepeatDays,
   verifyNumericalInput,
+  formatMinutes,
 } from "@/utils";
 import { weekdaysData } from "@/utils/constants";
 import { useSession } from "next-auth/react";
@@ -21,6 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { RouterOutputs } from "@/trpc/shared";
 import { Button, Input, Switch } from "../UI";
 import { usePreferencesContext } from "@/context/Preferences";
+import dayjs from "dayjs";
 
 type UpdateAlarmFormProps = {
   alarm: RouterOutputs["alarm"]["getAll"][number];
@@ -44,15 +46,17 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
       "transition border-b h-10 border-b-gray-400 after:h-[0px] data-[open=true]:border-b-slate-900 data-[open=false]:border-b-gray-400",
   };
 
-  const hour = useMemo(() => {
-    if (!preferences.use12Hour) return alarm.hour;
+  const { hour, minutes, meridiem } = useMemo(() => {
+    let hour;
+    if (!preferences.use12Hour) {
+      hour = dayjs().set("hour", alarm.hour).format("HH");
+    } else hour = dayjs().set("hour", alarm.hour).format("h");
 
-    if (alarm.hour === 0) return 12;
+    const minutes = formatMinutes(alarm.minutes);
+    const meridiem = alarm.hour >= 12 ? "PM" : "AM";
 
-    if (alarm.hour <= 12) return alarm.hour;
-
-    return (alarm.hour % 13) + 1;
-  }, [preferences.use12Hour, alarm.hour]);
+    return { hour, minutes, meridiem };
+  }, [preferences.use12Hour, alarm.hour, alarm.minutes]);
 
   const {
     register,
@@ -68,8 +72,8 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
       id: alarm.id,
       name: alarm.name,
       hour,
-      minutes: alarm.minutes >= 10 ? alarm.minutes : `0${alarm.minutes}`,
-      meridiem: alarm.hour >= 12 ? ("PM" as Meridiem) : ("AM" as Meridiem),
+      minutes,
+      meridiem: meridiem as Meridiem,
       snooze: alarm.snooze,
       alarmlistId: alarm.alarmlistId,
       repeat: alarm.repeat ?? undefined,
