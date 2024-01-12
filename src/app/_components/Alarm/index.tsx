@@ -47,6 +47,8 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
     }
   }, [isAlarmTriggered]);
 
+  const { data: preferences } = api.preference.get.useQuery();
+
   const ctx = api.useUtils();
 
   const { mutate: toggleAlarm } = api.alarm.toggle.useMutation({
@@ -263,6 +265,8 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
     );
   };
 
+  if (!preferences) return;
+
   return (
     <li
       onMouseEnter={() =>
@@ -282,10 +286,15 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
         >
           <div className="flex items-end gap-0.5 text-sm font-semibold">
             <span className="leading-tight">
-              {alarm.hour}:{formatMinutes(alarm.minutes)}
+              {preferences.use12Hour && alarm.hour > 12
+                ? (alarm.hour % 13) + 1
+                : alarm.hour}
+              :{formatMinutes(alarm.minutes)}
             </span>
             <div className="flex gap-1 text-2xs">
-              <span>{alarm.meridiem}</span>
+              {preferences.use12Hour && (
+                <span>{alarm.hour >= 12 ? "PM" : "AM"}</span>
+              )}
               {displayRepeatDays()}
             </div>
           </div>
