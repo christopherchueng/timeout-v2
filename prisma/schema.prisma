@@ -33,9 +33,7 @@ model Alarm {
     name            String  @default("Alarm")
     hour            Int
     minutes         Int
-    meridiem        String
     sound           String?
-    repeat          String?  @db.VarChar(64)
     snooze          Boolean  @default(false)
     snoozeEndTime   DateTime?
     isOn            Boolean  @default(true)
@@ -51,6 +49,16 @@ model Alarm {
 
     @@index([alarmlistId])
     @@index([userId])
+}
+
+model Preference {
+  id           Int      @id @default(autoincrement())
+  userId       String   @unique
+  use12Hour    Boolean  @default(true)
+
+  user         User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }
 
 // Necessary for Next auth
@@ -94,6 +102,7 @@ model User {
     sessions      Session[]
     alarmlists    Alarmlist[]
     alarms        Alarm[]
+    preferences   Preference?
 }
 
 model VerificationToken {
