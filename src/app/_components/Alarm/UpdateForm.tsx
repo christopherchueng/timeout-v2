@@ -31,6 +31,9 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
 
   if (!session) return;
 
+  const { data: preferences } = api.preference.get.useQuery();
+  if (!preferences) return;
+
   const selectClassNames = {
     label:
       "text-xs text-slate-900 group-data-[filled=true]:text-xs group-data-[filled=true]:text-slate-900",
@@ -56,7 +59,7 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
       name: alarm.name,
       hour: alarm.hour,
       minutes: alarm.minutes >= 10 ? alarm.minutes : `0${alarm.minutes}`,
-      meridiem: alarm.meridiem as Meridiem,
+      meridiem: alarm.hour >= 12 ? ("PM" as Meridiem) : ("AM" as Meridiem),
       snooze: alarm.snooze,
       alarmlistId: alarm.alarmlistId,
       repeat: alarm.repeat ?? undefined,
@@ -241,7 +244,7 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
             className="w-24 text-center text-7xl caret-transparent outline-none transition selection:bg-transparent hover:bg-gray-100 focus:bg-gray-200"
             onKeyDown={(
               e: React.KeyboardEvent<HTMLInputElement> & { type: "keydown" },
-            ) => verifyNumericalInput(e, "hour")}
+            ) => verifyNumericalInput(e, "hour", preferences.use12Hour)}
             onPaste={(e: React.ClipboardEvent<HTMLInputElement>) =>
               !/^\d+$/.test(e.clipboardData.getData("text")) &&
               e.preventDefault()
@@ -259,55 +262,57 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
             className="w-24 min-w-0 text-center text-7xl caret-transparent outline-none transition selection:bg-transparent hover:bg-gray-100 focus:bg-gray-200"
             onKeyDown={(
               e: React.KeyboardEvent<HTMLInputElement> & { type: "keydown" },
-            ) => verifyNumericalInput(e, "minutes")}
+            ) => verifyNumericalInput(e, "minutes", preferences.use12Hour)}
             onPaste={(e: React.ClipboardEvent<HTMLInputElement>) =>
               !/^\d+$/.test(e.clipboardData.getData("text")) &&
               e.preventDefault()
             }
           />
           {/* ------------------------- MERIDIEM ------------------------- */}
-          <div className="flex h-full flex-row items-end">
-            <Controller
-              name="meridiem"
-              control={control}
-              render={({ field: { value, onChange } }) => (
-                <Select
-                  {...register("meridiem")}
-                  id="meridiem"
-                  variant="underlined"
-                  size="sm"
-                  radius="none"
-                  aria-labelledby="meridiem"
-                  defaultSelectedKeys={[alarm.meridiem]}
-                  disableAnimation={false}
-                  onChange={onChange}
-                  selectorIcon={<></>}
-                  disableSelectorIconRotation
-                  classNames={{
-                    base: "w-14 mb-1",
-                    label:
-                      "text-xs text-slate-900 group-data-[filled=true]:text-xs group-data-[filled=true]:text-slate-900",
-                    value: "text-xs",
-                    popoverContent:
-                      "border absolute p-0 -top-2.5 w-20 bg-white rounded-small",
-                    trigger:
-                      "transition shadow-none border-b-0 after:h-[0px] data-[open=true]:border-b-0 data-[open=false]:border-b-0",
-                  }}
-                >
-                  {["AM", "PM"].map((timeOfDay) => (
-                    <SelectItem
-                      key={timeOfDay}
-                      textValue={timeOfDay}
-                      value={value}
-                      className="rounded-md transition hover:bg-gray-200"
-                    >
-                      {timeOfDay}
-                    </SelectItem>
-                  ))}
-                </Select>
-              )}
-            />
-          </div>
+          {preferences.use12Hour && (
+            <div className="flex h-full flex-row items-end">
+              <Controller
+                name="meridiem"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <Select
+                    {...register("meridiem")}
+                    id="meridiem"
+                    variant="underlined"
+                    size="sm"
+                    radius="none"
+                    aria-labelledby="meridiem"
+                    defaultSelectedKeys={[alarm.hour >= 12 ? "PM" : "AM"]}
+                    disableAnimation={false}
+                    onChange={onChange}
+                    selectorIcon={<></>}
+                    disableSelectorIconRotation
+                    classNames={{
+                      base: "w-14 mb-1",
+                      label:
+                        "text-xs text-slate-900 group-data-[filled=true]:text-xs group-data-[filled=true]:text-slate-900",
+                      value: "text-xs",
+                      popoverContent:
+                        "border absolute p-0 -top-2.5 w-20 bg-white rounded-small",
+                      trigger:
+                        "transition shadow-none border-b-0 after:h-[0px] data-[open=true]:border-b-0 data-[open=false]:border-b-0",
+                    }}
+                  >
+                    {["AM", "PM"].map((timeOfDay) => (
+                      <SelectItem
+                        key={timeOfDay}
+                        textValue={timeOfDay}
+                        value={value}
+                        className="rounded-md transition hover:bg-gray-200"
+                      >
+                        {timeOfDay}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                )}
+              />
+            </div>
+          )}
         </div>
         {errors.hour && (
           <p className="h-3.5 whitespace-break-spaces text-2xs text-red-600">
