@@ -4,32 +4,7 @@ import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { getServerAuthSession } from "@/server/auth";
 import type { Meridiem } from "@/types";
-import {
-  createAlarmSchema,
-  parseHour,
-  parseMinutes,
-  updateAlarmSchema,
-} from "@/utils";
-
-// const addUserDataToAlarm = async (alarms: Alarm[]) => {
-//   const session = await getServerAuthSession();
-
-//   if (!session) {
-//     throw new TRPCError({
-//       code: "INTERNAL_SERVER_ERROR",
-//       message: "User for alarmlist not found",
-//     });
-//   }
-
-//   return alarms.map((alarm) => {
-//     return {
-//       alarm,
-//       user: {
-//         ...session.user,
-//       },
-//     };
-//   });
-// };
+import { createAlarmSchema, parseMinutes, updateAlarmSchema } from "@/utils";
 
 export const alarmRouter = createTRPCRouter({
   getAllByAlarmlistId: protectedProcedure
@@ -116,6 +91,13 @@ export const alarmRouter = createTRPCRouter({
           message: "Unauthorized. Please sign in first and try again.",
         });
 
+      if (preference.use12Hour && (hour === 0 || hour > 12)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Hour must be in between 1 and 12.",
+        });
+      }
+
       await ctx.db.alarmlist.update({
         where: {
           id: alarmlistId,
@@ -127,11 +109,9 @@ export const alarmRouter = createTRPCRouter({
         data: {
           name: name || "Alarm",
           hour:
-            preference.use12Hour &&
-            meridiem === ("PM" as Meridiem) &&
-            parseHour(hour) < 12
-              ? parseHour(hour) + 12
-              : parseHour(hour),
+            preference.use12Hour && meridiem === ("PM" as Meridiem) && hour < 12
+              ? hour + 12
+              : hour,
           minutes: parseMinutes(minutes),
           repeat,
           snooze,
@@ -188,16 +168,21 @@ export const alarmRouter = createTRPCRouter({
           message: "Unauthorized. Please sign in first and try again.",
         });
 
+      if (preference.use12Hour && (hour === 0 || hour > 12)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Hour must be in between 1 and 12.",
+        });
+      }
+
       const alarm = await ctx.db.alarm.update({
         where: { id },
         data: {
           name: name || "Alarm",
           hour:
-            preference.use12Hour &&
-            meridiem === ("PM" as Meridiem) &&
-            parseHour(hour) < 12
-              ? parseHour(hour) + 12
-              : parseHour(hour),
+            preference.use12Hour && meridiem === ("PM" as Meridiem) && hour < 12
+              ? hour + 12
+              : hour,
           minutes: parseMinutes(minutes),
           repeat,
           snooze,

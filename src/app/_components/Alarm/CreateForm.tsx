@@ -138,7 +138,13 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
       void ctx.alarmlist.getAllWithAlarms.invalidate();
     },
     onError: (error) => {
-      if (error.message) {
+      // Invalid hour
+      if (error.data?.code === "BAD_REQUEST") {
+        setError("hour", {
+          type: "server",
+          message: error.message,
+        });
+      } else if (error.message) {
         setError("alarmlistId", {
           type: "server",
           message: error.message,
