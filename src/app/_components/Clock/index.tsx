@@ -2,6 +2,7 @@
 
 import { useTimeContext } from "@/context/Time";
 import clsx from "clsx";
+import { api } from "@/trpc/react";
 import { weekdaysData } from "@/utils/constants";
 import Loading from "./loading";
 
@@ -10,9 +11,12 @@ type ClockProps = {
 };
 
 const Clock = ({ size = "lg" }: ClockProps) => {
+  const { data: preferences } = api.preference.get.useQuery();
+
   const { parts } = useTimeContext();
   const { hour, minute, meridiem, day } = parts;
 
+  if (!preferences) return;
   if (!parts.hour) return <Loading size={size} />;
 
   return (
@@ -28,14 +32,16 @@ const Clock = ({ size = "lg" }: ClockProps) => {
           :
         </span>
         <span>{minute}</span>&nbsp;
-        <span
-          className={clsx("self-end font-normal", {
-            "text-2xs leading-5": size === "sm",
-            "text-sm leading-[45px]": size === "lg",
-          })}
-        >
-          {meridiem}
-        </span>
+        {meridiem && (
+          <span
+            className={clsx("self-end font-normal", {
+              "text-2xs leading-5": size === "sm",
+              "text-sm leading-[45px]": size === "lg",
+            })}
+          >
+            {meridiem}
+          </span>
+        )}
       </div>
       <div className="inline-flex justify-center gap-5 md:gap-10">
         {Object.values(weekdaysData).map(({ abbr }) => (
