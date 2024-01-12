@@ -269,15 +269,17 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
     );
   };
 
-  const hour = useMemo(() => {
-    if (!preferences.use12Hour) return alarm.hour;
+  const { hour, minutes, meridiem } = useMemo(() => {
+    let hour;
+    if (!preferences.use12Hour) {
+      hour = dayjs().set("hour", alarm.hour).format("HH");
+    } else hour = dayjs().set("hour", alarm.hour).format("h");
 
-    if (alarm.hour === 0) return 12;
+    const minutes = formatMinutes(alarm.minutes);
+    const meridiem = alarm.hour >= 12 ? "PM" : "AM";
 
-    if (alarm.hour <= 12) return alarm.hour;
-
-    return (alarm.hour % 13) + 1;
-  }, [preferences.use12Hour, alarm.hour]);
+    return { hour, minutes, meridiem };
+  }, [preferences.use12Hour, alarm.hour, alarm.minutes]);
 
   return (
     <li
@@ -296,14 +298,12 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
             "text-gray-400": !alarm.isOn,
           })}
         >
-          <div className="flex items-end gap-0.5 text-sm font-semibold">
+          <div className="flex items-center gap-1 text-sm font-semibold">
             <span className="leading-tight">
-              {hour}:{formatMinutes(alarm.minutes)}
+              {hour}:{minutes}
             </span>
             <div className="flex gap-1 text-2xs">
-              {preferences.use12Hour && (
-                <span>{alarm.hour >= 12 ? "PM" : "AM"}</span>
-              )}
+              {preferences.use12Hour && <span>{meridiem}</span>}
               {displayRepeatDays()}
             </div>
           </div>
