@@ -1,6 +1,7 @@
 import { createTRPCRouter } from "@/server/api/trpc";
 import { alarmlistRouter } from "./routers/alarmlist";
 import { alarmRouter } from "./routers/alarm";
+import { preferenceRouter } from "./routers/preference";
 
 /**
  * This is the primary router for your server.
@@ -10,6 +11,7 @@ import { alarmRouter } from "./routers/alarm";
 export const appRouter = createTRPCRouter({
   alarmlist: alarmlistRouter,
   alarm: alarmRouter,
+  preference: preferenceRouter,
 });
 
 // export type definition of API
