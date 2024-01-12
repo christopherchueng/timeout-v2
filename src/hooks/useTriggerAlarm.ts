@@ -3,15 +3,16 @@ import dayjs from "dayjs";
 import { useTimeContext } from "@/context/Time";
 import type { Alarm, Value } from "@/types";
 import { weekdaysData } from "@/utils/constants";
+import { parseHour } from "@/utils";
 
-const useTriggerAlarm = (alarm: Alarm) => {
+const useTriggerAlarm = (alarm: Alarm, is12HourMode: boolean) => {
   const { currentDate } = useTimeContext();
 
   const isAlarmTriggered = useMemo(() => {
-    const currentHour = dayjs().get("hour");
+    const currentHour = dayjs().format(is12HourMode ? "h" : "H");
     const alarmMatchesTime =
       alarm.isOn &&
-      alarm.hour === (currentHour % 12 || 12) &&
+      alarm.hour === parseHour(currentHour) &&
       alarm.minutes === dayjs().get("minute") &&
       dayjs().get("second") === 0;
 

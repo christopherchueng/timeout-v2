@@ -30,6 +30,7 @@ type AlarmProps = {
 
 const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
   const ellipsisRef = useRef<HTMLDivElement>(null);
+  const { preferences } = usePreferencesContext();
 
   const [isUpdatingAlarm, setIsUpdatingAlarm] = useState(false);
   const [isAlarmRinging, setIsAlarmRinging] = useState(false);
@@ -37,7 +38,7 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
     dayjs(alarm.snoozeEndTime).diff(dayjs(), "seconds"),
   );
 
-  const { isAlarmTriggered } = useTriggerAlarm(alarm);
+  const { isAlarmTriggered } = useTriggerAlarm(alarm, preferences.use12Hour);
   const { settingsTab, openSettings, closeSettings, setSettingsTab } =
     useSettingsActions();
   const { cursorPosition, onMouseMove } = useCursorPosition();
@@ -50,8 +51,6 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
       }
     }
   }, [isAlarmTriggered, alarm.snooze]);
-
-  const { preferences } = usePreferencesContext();
 
   const ctx = api.useUtils();
 
