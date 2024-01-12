@@ -297,9 +297,9 @@ export const convertHourTo24HourMode = (
     return hour;
   }
   // Convert 12 hour mode to 24 hour mode
-  if (hour === 12 && meridiem === "AM") return 0;
+  if (hour === 12 && meridiem === ("AM" as Meridiem)) return 0;
 
-  if (hour < 12 && meridiem === "PM") return hour + 12;
+  if (hour < 12 && meridiem === ("PM" as Meridiem)) return hour + 12;
 
   return hour;
 };

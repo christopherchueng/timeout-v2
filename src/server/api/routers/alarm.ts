@@ -119,7 +119,7 @@ export const alarmRouter = createTRPCRouter({
           name: name || "Alarm",
           hour: convertHourTo24HourMode(
             parseHour(hour),
-            meridiem as Meridiem,
+            meridiem! as Meridiem,
             preference.use12Hour,
           ),
           minutes: parseMinutes(minutes),
@@ -194,7 +194,7 @@ export const alarmRouter = createTRPCRouter({
           name: name || "Alarm",
           hour: convertHourTo24HourMode(
             parseHour(hour),
-            meridiem as Meridiem,
+            meridiem! as Meridiem,
             preference.use12Hour,
           ),
           minutes: parseMinutes(minutes),
