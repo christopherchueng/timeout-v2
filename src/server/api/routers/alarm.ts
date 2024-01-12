@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { getServerAuthSession } from "@/server/auth";
+import type { Meridiem } from "@/types";
 import {
   createAlarmSchema,
   parseHour,
@@ -105,6 +106,16 @@ export const alarmRouter = createTRPCRouter({
           message: "Alarmlist not found! Please select another one.",
         });
 
+      const preference = await ctx.db.preference.findFirst({
+        where: { userId },
+      });
+
+      if (!preference)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Unauthorized. Please sign in first and try again.",
+        });
+
       await ctx.db.alarmlist.update({
         where: {
           id: alarmlistId,
@@ -115,9 +126,13 @@ export const alarmRouter = createTRPCRouter({
       return ctx.db.alarm.create({
         data: {
           name: name || "Alarm",
-          hour: parseHour(hour),
+          hour:
+            preference.use12Hour &&
+            meridiem === ("PM" as Meridiem) &&
+            parseHour(hour) < 12
+              ? parseHour(hour) + 12
+              : parseHour(hour),
           minutes: parseMinutes(minutes),
-          meridiem,
           repeat,
           snooze,
           sound: process.env.NEXT_PUBLIC_SOUND_URL,
