@@ -13,8 +13,7 @@ const useTriggerAlarm = (alarm: Alarm) => {
       alarm.isOn &&
       alarm.hour === (currentHour % 12 || 12) &&
       alarm.minutes === dayjs().get("minute") &&
-      dayjs().get("second") === 0 &&
-      alarm.meridiem === (currentHour >= 12 && currentHour <= 23 ? "PM" : "AM");
+      dayjs().get("second") === 0;
 
     if (!alarm.repeat) {
       return alarmMatchesTime;
