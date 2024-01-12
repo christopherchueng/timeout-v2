@@ -3,12 +3,9 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import Items from "./Items";
-import { api } from "@/trpc/react";
 
 const Logo = () => {
   const { data: session } = useSession();
-
-  api.preference.get.useQuery();
 
   return (
     <div className="w-full">

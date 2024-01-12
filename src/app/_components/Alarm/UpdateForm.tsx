@@ -20,6 +20,7 @@ import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { RouterOutputs } from "@/trpc/shared";
 import { Button, Input, Switch } from "../UI";
+import { usePreferencesContext } from "@/context/Preferences";
 
 type UpdateAlarmFormProps = {
   alarm: RouterOutputs["alarm"]["getAll"][number];
@@ -31,8 +32,7 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
 
   if (!session) return;
 
-  const { data: preferences } = api.preference.get.useQuery();
-  if (!preferences) return;
+  const { preferences } = usePreferencesContext();
 
   const selectClassNames = {
     label:

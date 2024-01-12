@@ -2,13 +2,14 @@ import type { Session } from "next-auth";
 import toast from "react-hot-toast";
 import { api } from "@/trpc/react";
 import { Switch } from "../UI";
+import { usePreferencesContext } from "@/context/Preferences";
 
 type PreferencesProps = {
   session: Session;
 };
 
 const Preferences = ({ session }: PreferencesProps) => {
-  const { data: preferences } = api.preference.get.useQuery();
+  const { preferences } = usePreferencesContext();
 
   const ctx = api.useUtils();
 

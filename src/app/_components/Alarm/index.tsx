@@ -19,6 +19,7 @@ import Modal from "../Modal";
 import Snooze from "../Snooze";
 import UpdateAlarmForm from "./UpdateForm";
 import AbbreviatedDays from "./AbbreviatedDays";
+import { usePreferencesContext } from "@/context/Preferences";
 
 type Alarm = RouterOutputs["alarm"]["getAllByAlarmlistId"][number];
 
@@ -50,7 +51,7 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
     }
   }, [isAlarmTriggered, alarm.snooze]);
 
-  const { data: preferences } = api.preference.get.useQuery();
+  const { preferences } = usePreferencesContext();
 
   const ctx = api.useUtils();
 
@@ -267,8 +268,6 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
       </>
     );
   };
-
-  if (!preferences) return;
 
   const hour = useMemo(() => {
     if (!preferences.use12Hour) return alarm.hour;

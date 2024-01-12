@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import dayjs, { type Dayjs } from "dayjs";
-import { api } from "@/trpc/react";
+import { usePreferencesContext } from "./Preferences";
 
 type TimeContextType = {
   currentDate: Dayjs;
@@ -34,7 +34,7 @@ type TimeProps = {
 };
 
 const TimeProvider = ({ children }: TimeProps) => {
-  const { data: preferences } = api.preference.get.useQuery();
+  const { preferences } = usePreferencesContext();
 
   const currentDate = dayjs();
   const [parts, setParts] = useState<Part>({

@@ -2,16 +2,16 @@
 
 import { useTimeContext } from "@/context/Time";
 import clsx from "clsx";
-import { api } from "@/trpc/react";
 import { weekdaysData } from "@/utils/constants";
 import Loading from "./loading";
+import { usePreferencesContext } from "@/context/Preferences";
 
 type ClockProps = {
   size: "sm" | "lg";
 };
 
 const Clock = ({ size = "lg" }: ClockProps) => {
-  const { data: preferences } = api.preference.get.useQuery();
+  const { preferences } = usePreferencesContext();
 
   const { parts } = useTimeContext();
   const { hour, minute, meridiem, day } = parts;
