@@ -63,7 +63,7 @@ const TimeProvider = ({ children }: TimeProps) => {
     );
 
     return () => clearInterval(timeInterval);
-  });
+  }, [currentDate]);
 
   return (
     <TimeContext.Provider value={{ parts, currentDate }}>
