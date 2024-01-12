@@ -38,9 +38,11 @@ export const alarmSchema = {
         .lte(59, { message: "Minutes must be in between 0 and 59." })
         .int(),
     ),
-  meridiem: z.nativeEnum(Meridiem, {
-    errorMap: () => ({ message: "Please select AM or PM." }),
-  }),
+  meridiem: z
+    .nativeEnum(Meridiem, {
+      errorMap: () => ({ message: "Please select AM or PM." }),
+    })
+    .optional(),
   sound: z.string().optional(),
   repeat: z.string().optional(),
   snooze: z.boolean({
