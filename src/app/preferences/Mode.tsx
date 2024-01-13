@@ -1,14 +1,14 @@
 import type { Session } from "next-auth";
 import toast from "react-hot-toast";
 import { api } from "@/trpc/react";
-import { Switch } from "../UI";
+import { Switch } from "../_components/UI";
 import { usePreferencesContext } from "@/context/Preferences";
 
-type PreferencesProps = {
+type ModeProps = {
   session: Session;
 };
 
-const Preferences = ({ session }: PreferencesProps) => {
+const Mode = ({ session }: ModeProps) => {
   const { preferences } = usePreferencesContext();
 
   const ctx = api.useUtils();
@@ -38,4 +38,4 @@ const Preferences = ({ session }: PreferencesProps) => {
   );
 };
 
-export default Preferences;
+export default Mode;
