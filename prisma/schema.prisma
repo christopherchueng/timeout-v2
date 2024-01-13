@@ -34,7 +34,7 @@ model Alarm {
     hour            Int
     minutes         Int
     sound           String?
-    // repeat          String?  @db.VarChar(13)
+    repeat          String?  @db.VarChar(13)
     snooze          Boolean  @default(false)
     snoozeEndTime   DateTime?
     isOn            Boolean  @default(true)
