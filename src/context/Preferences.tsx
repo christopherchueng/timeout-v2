@@ -3,6 +3,8 @@
 import { createContext, useContext } from "react";
 import { api } from "@/trpc/react";
 import type { Preference } from "@prisma/client";
+import { signIn, useSession } from "next-auth/react";
+import { Signin } from "@/app/_components/Auth";
 
 type PreferencesContextType = {
   preferences: Preference;
@@ -29,6 +31,12 @@ type PreferencesProps = {
 };
 
 const PreferencesProvider = ({ children }: PreferencesProps) => {
+  // const { data: session, status } = useSession();
+
+  // if (status !== "unauthenticated") {
+  //   return <Signin />;
+  // }
+
   const { data: preferences } = api.preference.get.useQuery();
 
   if (!preferences) return;
