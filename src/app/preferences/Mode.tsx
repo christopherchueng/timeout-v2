@@ -15,10 +15,11 @@ const Mode = ({ session }: ModeProps) => {
 
   const { mutate: toggle12HourSettings } = api.preference.toggle.useMutation({
     onSuccess: () => {
+      toast.success("Changes saved.");
       void ctx.preference.get.invalidate();
     },
     onError: () => {
-      toast.error("Could not switch time mode. Please try again.");
+      toast.error("Could not switch time formats. Please try again.");
     },
   });
 
