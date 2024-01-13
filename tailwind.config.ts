@@ -9,6 +9,9 @@ export default {
   ],
   theme: {
     extend: {
+      padding: {
+        "18": "4.5rem",
+      },
       scale: {
         "-1": "-1",
       },
