@@ -14,7 +14,7 @@ const PreferencesPage = () => {
       <div className="mt-10 flex h-full w-full max-w-2xl flex-col items-center gap-10 pt-18 sm:px-6">
         <div className="w-full underline underline-offset-2">
           <Link href="/dashboard" className="text-xs">
-            Back
+            Back to dashboard
           </Link>
         </div>
         <div className="w-full">
