@@ -2,10 +2,12 @@ import AlarmIcon from "./AlarmIcon";
 import AlarmlistIcon from "./AlarmlistIcon";
 import Button from "./Button";
 import Chevron from "./Chevron";
+import Cog from "./Cog";
 import CreateAlarmlistIcon from "./CreateAlarmlistIcon";
 import DeleteAlarmlistIcon from "./DeleteAlarmlistIcon";
 import EditIcon from "./EditIcon";
 import Ellipsis from "./Ellipsis";
+import ExitIcon from "./ExitIcon";
 import InfoCircleIcon from "./InfoCircleIcon";
 import Input from "./Input";
 import Plus from "./Plus";
@@ -18,10 +20,12 @@ export {
   AlarmlistIcon,
   Button,
   Chevron,
+  Cog,
   CreateAlarmlistIcon,
   DeleteAlarmlistIcon,
   EditIcon,
   Ellipsis,
+  ExitIcon,
   InfoCircleIcon,
   Input,
   Plus,
