@@ -24,7 +24,7 @@ const Tooltip = ({
     color === "error" && "bg-red-100 text-red-700 border-red-100",
   );
   return (
-    <div className="relative h-full">
+    <div className="relative flex h-full items-center">
       {children}
       {isShowing && <span className={classNames}>{text}</span>}
     </div>
