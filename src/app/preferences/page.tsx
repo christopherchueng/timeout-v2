@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import Mode from "./Mode";
 import { useSession } from "next-auth/react";
 
@@ -10,8 +11,13 @@ const PreferencesPage = () => {
 
   return (
     <main className="flex h-full w-full justify-center px-6 text-slate-900 sm:px-0">
-      <div className="flex h-full w-full max-w-2xl flex-col items-center gap-10 pt-18 sm:px-6">
-        <div className="mt-10 w-full">
+      <div className="mt-10 flex h-full w-full max-w-2xl flex-col items-center gap-10 pt-18 sm:px-6">
+        <div className="w-full underline underline-offset-2">
+          <Link href="/dashboard" className="text-xs">
+            Back
+          </Link>
+        </div>
+        <div className="w-full">
           <h1 className="text-xl font-bold">Preferences</h1>
         </div>
         <div className="flex w-full flex-row items-center justify-between gap-4">
