@@ -65,7 +65,7 @@ const CreateButton = () => {
   }, [isTabOpen]);
 
   return (
-    <div className="relative flex flex-col justify-center">
+    <div className="relative flex items-center justify-center">
       <Tooltip isShowing={isHovering && !isTabOpen} text="Create new">
         <button
           onMouseEnter={() => setIsHovering(true)}
@@ -74,7 +74,7 @@ const CreateButton = () => {
             setIsTabOpen((prev) => !prev);
             setIsHovering(false);
           }}
-          className="h-full rounded border border-slate-900 transition hover:border-slate-500 hover:bg-gray-100 active:bg-gray-200"
+          className="h-7 rounded border border-slate-900 transition hover:border-slate-500 hover:bg-gray-100 active:bg-gray-200"
         >
           <div className="flex h-full items-center gap-0.5 px-1">
             <Plus />
@@ -85,7 +85,7 @@ const CreateButton = () => {
               <div className="absolute left-0 top-1.5 z-50 flex h-fit w-36 flex-col whitespace-nowrap rounded-md border bg-white p-2 shadow-lg">
                 <div
                   onClick={() => setIsAlarmlistModalOpen((prev) => !prev)}
-                  className="cursor-pointer rounded-md px-2 py-2 hover:z-50 hover:bg-gray-200"
+                  className="cursor-pointer rounded-md p-2 hover:z-50 hover:bg-gray-200"
                 >
                   <div className="flex items-center gap-1.5">
                     <CreateAlarmlistIcon />
