@@ -4,12 +4,12 @@ export const metadata: Metadata = {
   title: "Dashboard",
 };
 
-type DashboardLayout = {
+type layout = {
   children: React.ReactNode;
 };
 
-const DashboardLayout = ({ children }: DashboardLayout) => {
+const layout = ({ children }: layout) => {
   return <>{children}</>;
 };
 
-export default DashboardLayout;
+export default layout;
