@@ -2,11 +2,11 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import dayjs, { type Dayjs } from "dayjs";
-import { usePreferencesContext } from "./Preferences";
 
 type TimeContextType = {
   currentDate: Dayjs;
   parts: Part;
+  setParts: React.Dispatch<React.SetStateAction<Part>>;
 };
 
 export const TimeContext = createContext<TimeContextType | null>(null);
@@ -34,8 +34,6 @@ type TimeProps = {
 };
 
 const TimeProvider = ({ children }: TimeProps) => {
-  // const { preferences } = usePreferencesContext();
-
   const currentDate = dayjs();
   const [parts, setParts] = useState<Part>({
     hour: "",
@@ -46,19 +44,13 @@ const TimeProvider = ({ children }: TimeProps) => {
   });
 
   useEffect(() => {
-    // if (!preferences) return;
-
     const timeInterval = setInterval(
       () =>
         setParts({
-          // hour: dayjs(currentDate).format(preferences.use12Hour ? "h" : "H"),
           hour: dayjs(currentDate).format("h"),
           minute: dayjs(currentDate).format("mm"),
           second: dayjs(currentDate).format("s"),
           meridiem: dayjs(currentDate).format("A"),
-          // meridiem: preferences.use12Hour
-          //   ? dayjs(currentDate).format("A")
-          //   : undefined,
           day: dayjs(currentDate).format("ddd"),
         }),
       0,
@@ -68,7 +60,7 @@ const TimeProvider = ({ children }: TimeProps) => {
   }, [currentDate]);
 
   return (
-    <TimeContext.Provider value={{ parts, currentDate }}>
+    <TimeContext.Provider value={{ parts, setParts, currentDate }}>
       {children}
     </TimeContext.Provider>
   );
