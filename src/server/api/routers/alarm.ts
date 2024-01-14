@@ -2,7 +2,6 @@ import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
-import { getServerAuthSession } from "@/server/auth";
 import type { Meridiem } from "@/types";
 import {
   convertHourTo24HourMode,
@@ -44,18 +43,9 @@ export const alarmRouter = createTRPCRouter({
       return alarms;
     }),
   getAll: protectedProcedure.query(async ({ ctx }) => {
-    const session = await getServerAuthSession();
-
-    if (!session) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "User not found",
-      });
-    }
-
     const alarms = await ctx.db.alarm.findMany({
       where: {
-        userId: session.user.id,
+        userId: ctx.session.user.id,
       },
     });
 
