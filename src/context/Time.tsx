@@ -34,7 +34,7 @@ type TimeProps = {
 };
 
 const TimeProvider = ({ children }: TimeProps) => {
-  const { preferences } = usePreferencesContext();
+  // const { preferences } = usePreferencesContext();
 
   const currentDate = dayjs();
   const [parts, setParts] = useState<Part>({
@@ -46,17 +46,19 @@ const TimeProvider = ({ children }: TimeProps) => {
   });
 
   useEffect(() => {
-    if (!preferences) return;
+    // if (!preferences) return;
 
     const timeInterval = setInterval(
       () =>
         setParts({
-          hour: dayjs(currentDate).format(preferences.use12Hour ? "h" : "H"),
+          // hour: dayjs(currentDate).format(preferences.use12Hour ? "h" : "H"),
+          hour: dayjs(currentDate).format("h"),
           minute: dayjs(currentDate).format("mm"),
           second: dayjs(currentDate).format("s"),
-          meridiem: preferences.use12Hour
-            ? dayjs(currentDate).format("A")
-            : undefined,
+          meridiem: dayjs(currentDate).format("A"),
+          // meridiem: preferences.use12Hour
+          //   ? dayjs(currentDate).format("A")
+          //   : undefined,
           day: dayjs(currentDate).format("ddd"),
         }),
       0,
