@@ -21,7 +21,6 @@ import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { RouterOutputs } from "@/trpc/shared";
 import { Button, Input, Switch } from "../UI";
-import { usePreferencesContext } from "@/context/Preferences";
 import dayjs from "dayjs";
 
 type UpdateAlarmFormProps = {
@@ -30,11 +29,12 @@ type UpdateAlarmFormProps = {
 };
 
 const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
-  const { data: session } = useSession();
+  const { data: session } = useSession({ required: true });
 
   if (!session) return;
 
-  const { preferences } = usePreferencesContext();
+  const { data: preferences } = api.preference.get.useQuery();
+  if (!preferences) return;
 
   const selectClassNames = {
     label:

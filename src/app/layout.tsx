@@ -9,7 +9,6 @@ import { TRPCReactProvider } from "@/trpc/react";
 
 import ProviderWrapper from "./_components/ProviderWrapper";
 import NavigationBar from "./_components/NavigationBar";
-import PreferencesProvider from "@/context/Preferences";
 
 export const metadata = {
   title: "Timeout",
@@ -27,13 +26,11 @@ export default function RootLayout({
       <body className={`font-sans ${GeistSans.variable}`}>
         <ProviderWrapper>
           <TRPCReactProvider cookies={cookies().toString()}>
-            <PreferencesProvider>
-              <TimeProvider>
-                <NavigationBar />
-                {children}
-                <Toaster position="bottom-left" />
-              </TimeProvider>
-            </PreferencesProvider>
+            <TimeProvider>
+              <NavigationBar />
+              {children}
+              <Toaster position="bottom-left" />
+            </TimeProvider>
           </TRPCReactProvider>
         </ProviderWrapper>
       </body>

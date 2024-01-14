@@ -4,25 +4,30 @@ import { useTimeContext } from "@/context/Time";
 import clsx from "clsx";
 import { weekdaysData } from "@/utils/constants";
 import Loading from "./loading";
-import { usePreferencesContext } from "@/context/Preferences";
+import { api } from "@/trpc/react";
+import dayjs from "dayjs";
+import { Preference } from "@prisma/client";
+import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 type ClockProps = {
   size: "sm" | "lg";
 };
 
 const Clock = ({ size = "lg" }: ClockProps) => {
-  const { preferences } = usePreferencesContext();
+  const { data: preferences } = api.preference.get.useQuery();
 
-  const { parts } = useTimeContext();
-  const { hour, minute, meridiem, day } = parts;
+  const { currentDate, parts } = useTimeContext();
+  const { minute, day } = parts;
 
-  if (!preferences) return;
   if (!parts.hour) return <Loading size={size} />;
 
   return (
     <div className="flex w-full select-none flex-col justify-center gap-6">
       <div className="flex justify-center gap-1">
-        <span>{hour}</span>
+        <span>
+          {dayjs(currentDate).format(preferences?.use12Hour ? "h" : "H")}
+        </span>
         <span
           className={clsx("animate-blink text-center transition", {
             "w-2": size === "sm",
@@ -32,14 +37,14 @@ const Clock = ({ size = "lg" }: ClockProps) => {
           :
         </span>
         <span>{minute}</span>&nbsp;
-        {meridiem && (
+        {preferences?.use12Hour && (
           <span
             className={clsx("self-end font-normal", {
               "text-2xs leading-5": size === "sm",
               "text-sm leading-[45px]": size === "lg",
             })}
           >
-            {meridiem}
+            {dayjs(currentDate).format("A")}
           </span>
         )}
       </div>

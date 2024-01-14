@@ -1,12 +1,11 @@
 import { useMemo } from "react";
 import dayjs from "dayjs";
-import { useTimeContext } from "@/context/Time";
 import type { Alarm, Value } from "@/types";
 import { weekdaysData } from "@/utils/constants";
 import { parseHour } from "@/utils";
 
 const useTriggerAlarm = (alarm: Alarm, is12HourMode: boolean) => {
-  const { currentDate } = useTimeContext();
+  const currentDate = dayjs();
 
   const isAlarmTriggered = useMemo(() => {
     const currentHour = dayjs().format(is12HourMode ? "h" : "H");

@@ -19,7 +19,6 @@ import Modal from "../Modal";
 import Snooze from "../Snooze";
 import UpdateAlarmForm from "./UpdateForm";
 import AbbreviatedDays from "./AbbreviatedDays";
-import { usePreferencesContext } from "@/context/Preferences";
 
 type Alarm = RouterOutputs["alarm"]["getAllByAlarmlistId"][number];
 
@@ -29,8 +28,10 @@ type AlarmProps = {
 };
 
 const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
+  const { data: preferences } = api.preference.get.useQuery();
+  if (!preferences) return;
+
   const ellipsisRef = useRef<HTMLDivElement>(null);
-  const { preferences } = usePreferencesContext();
 
   const [isUpdatingAlarm, setIsUpdatingAlarm] = useState(false);
   const [isAlarmRinging, setIsAlarmRinging] = useState(false);

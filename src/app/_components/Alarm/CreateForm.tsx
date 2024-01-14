@@ -20,18 +20,18 @@ import { weekdaysData } from "@/utils/constants";
 import { useSession } from "next-auth/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input, Switch } from "../UI";
-import { usePreferencesContext } from "@/context/Preferences";
 
 type CreateAlarmFormProps = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
-  const { data: session } = useSession();
+  const { data: session } = useSession({ required: true });
 
   if (!session) return;
 
-  const { preferences } = usePreferencesContext();
+  const { data: preferences } = api.preference.get.useQuery();
+  if (!preferences) return;
 
   const selectClassNames = {
     label:
