@@ -12,7 +12,7 @@ export const preferenceRouter = createTRPCRouter({
       preferences = await ctx.db.preference.create({
         data: {
           userId: ctx.session.user.id,
-          use12Hour: false,
+          use12Hour: true,
         },
       });
     }
