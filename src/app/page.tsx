@@ -9,13 +9,12 @@ import { redirect } from "next/navigation";
 
 export default function Home() {
   const { status } = useSession();
+  const { parts } = useTimeContext();
+  const { hour, minute, meridiem, day } = parts;
 
   if (status === "loading") return <></>;
 
   if (status === "authenticated") redirect("/dashboard");
-
-  const { parts } = useTimeContext();
-  const { hour, minute, meridiem, day } = parts;
 
   return (
     <main className="flex min-h-screen w-full select-none flex-col items-center justify-center gap-6 text-7xl md:text-9xl">
