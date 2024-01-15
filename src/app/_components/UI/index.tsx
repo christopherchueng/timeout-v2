@@ -10,6 +10,7 @@ import Ellipsis from "./Ellipsis";
 import ExitIcon from "./ExitIcon";
 import InfoCircleIcon from "./InfoCircleIcon";
 import Input from "./Input";
+import { Logo, NameLogo } from "./Logo";
 import Plus from "./Plus";
 // import Select from "./Select";
 import Switch from "./Switch";
@@ -28,6 +29,8 @@ export {
   ExitIcon,
   InfoCircleIcon,
   Input,
+  Logo,
+  NameLogo,
   Plus,
   Switch,
   Tooltip,
