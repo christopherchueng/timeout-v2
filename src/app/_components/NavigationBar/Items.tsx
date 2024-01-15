@@ -14,7 +14,11 @@ const Items = () => {
           <div className="h-5 self-center border-l border-slate-900 text-slate-500" />
         </>
       )}
-      {session ? <ProfilePicture imageUrl={session.user.image!} /> : <Signin />}
+      {session ? (
+        <ProfilePicture imageUrl={session.user.image!} />
+      ) : (
+        <a href="/signin">Sign in</a>
+      )}
     </div>
   );
 };
