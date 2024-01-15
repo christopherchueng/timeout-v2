@@ -7,8 +7,6 @@ import Items from "./Items";
 const NavigationBar = () => {
   const { status } = useSession();
 
-  if (status === "loading") return;
-
   return (
     <nav className="absolute z-10 flex w-full items-center justify-center bg-white px-6 py-4 text-xs sm:px-8">
       <div className="w-full">
