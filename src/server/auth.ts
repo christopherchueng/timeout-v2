@@ -46,6 +46,18 @@ export const authOptions: NextAuthOptions = {
         id: user.id,
       },
     }),
+    // Redirect does not work here...
+    // Use signin onClick on client side instead for callbacks and redirects
+    // async redirect({ url, baseUrl }) {
+    //   // Allows relative callback URLs
+    //   if (url.startsWith("/")) return `${baseUrl}${url}`;
+    //   // Allows callback URLs on the same origin
+    //   else if (new URL(url).origin === baseUrl) return url;
+    //   return baseUrl;
+    // },
+  },
+  pages: {
+    signIn: "/signin",
   },
   adapter: PrismaAdapter(db),
   providers: [

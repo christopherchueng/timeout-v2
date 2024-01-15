@@ -9,7 +9,7 @@ type layout = {
 };
 
 const layout = ({ children }: layout) => {
-  return <>{children}</>;
+  return children;
 };
 
 export default layout;
