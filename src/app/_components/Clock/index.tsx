@@ -6,9 +6,6 @@ import { weekdaysData } from "@/utils/constants";
 import Loading from "./loading";
 import { api } from "@/trpc/react";
 import dayjs from "dayjs";
-import { Preference } from "@prisma/client";
-import { useState } from "react";
-import { useSession } from "next-auth/react";
 
 type ClockProps = {
   size: "sm" | "lg";
