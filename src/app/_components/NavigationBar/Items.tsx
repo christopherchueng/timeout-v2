@@ -17,7 +17,12 @@ const Items = () => {
       {session ? (
         <ProfilePicture imageUrl={session.user.image!} />
       ) : (
-        <a href="/signin">Sign in</a>
+        <a
+          className="flex select-none items-center justify-center whitespace-nowrap rounded border-slate-900 bg-slate-900 px-3 py-1.5 text-xs text-white transition hover:bg-slate-700 active:bg-slate-800 disabled:cursor-not-allowed disabled:bg-gray-300"
+          href="/signin"
+        >
+          Sign in
+        </a>
       )}
     </div>
   );
