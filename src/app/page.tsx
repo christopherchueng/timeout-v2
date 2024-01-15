@@ -4,8 +4,16 @@ import { useTimeContext } from "@/context/Time";
 import { weekdaysData } from "@/utils/constants";
 import clsx from "clsx";
 import Loading from "./_components/Clock/loading";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function Home() {
+  const { status } = useSession();
+
+  if (status === "loading") return <></>;
+
+  if (status === "authenticated") redirect("/dashboard");
+
   const { parts } = useTimeContext();
   const { hour, minute, meridiem, day } = parts;
 

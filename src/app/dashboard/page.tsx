@@ -1,7 +1,22 @@
+"use client";
+
 import Sidebar from "../_components/Sidebar";
 import Clock from "../_components/Clock";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 const Dashboard = () => {
+  // onUnauthenticated sends user to sign in page,
+  // and if successful, they will be redirected to the dashboard
+  const { status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/signin?callbackUrl=/dashboard");
+    },
+  });
+
+  if (status === "loading") return <></>;
+
   return (
     <main className="flex h-full w-full flex-row items-center justify-center">
       <Sidebar />
