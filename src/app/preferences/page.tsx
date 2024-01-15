@@ -21,8 +21,8 @@ const PreferencesPage = () => {
   if (!session) return;
 
   return (
-    <main className="flex h-full w-full justify-center px-6 text-slate-900 sm:px-0">
-      <div className="mt-10 flex h-full w-full max-w-2xl flex-col items-center gap-10 pt-18 sm:px-6">
+    <main className="relative flex h-full w-full justify-center px-6 text-slate-900 sm:px-0">
+      <div className="absolute top-16 flex max-w-2xl flex-col items-center gap-10 px-6 pt-6">
         <div className="w-full underline underline-offset-2">
           <Link href="/dashboard" className="text-xs">
             Back to dashboard
