@@ -13,7 +13,7 @@ const Items = () => {
     if (status === "loading") return <Loading />;
 
     if (status === "authenticated")
-      return <ProfilePicture imageUrl={session?.user.image!} />;
+      return <ProfilePicture imageUrl={session.user.image!} />;
 
     return (
       <a
