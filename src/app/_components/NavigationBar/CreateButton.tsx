@@ -82,7 +82,7 @@ const CreateButton = () => {
           </div>
           {isTabOpen && (
             <div className="relative animate-dilate transition-all">
-              <div className="absolute left-0 top-1.5 z-50 flex h-fit w-36 flex-col whitespace-nowrap rounded-md border bg-white p-2 shadow-lg">
+              <div className="absolute -left-0.5 top-1.5 z-50 flex h-fit w-36 flex-col whitespace-nowrap rounded-md border bg-white p-2 shadow-lg">
                 <div
                   onClick={() => setIsAlarmlistModalOpen((prev) => !prev)}
                   className="cursor-pointer rounded-md p-2 hover:z-50 hover:bg-gray-200"

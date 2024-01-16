@@ -26,7 +26,7 @@ const Items = () => {
   };
 
   return (
-    <div className="flex w-full select-none justify-end gap-5 sm:gap-4">
+    <div className="flex w-full select-none justify-end gap-6 sm:gap-5">
       {session && (
         <>
           <CreateButton />
