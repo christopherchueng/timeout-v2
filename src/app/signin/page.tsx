@@ -6,8 +6,14 @@ const SigninPage = () => {
     <div className="relative flex h-full flex-col items-center justify-center">
       <div className="absolute top-40 flex flex-col items-center justify-center space-y-28">
         <NameLogo />
-        <div className="flex h-36 w-96 items-center justify-center rounded-lg border py-6 shadow-xl">
+        <div className="flex h-44 w-96 flex-col items-center justify-center gap-4 rounded-lg border py-6 shadow-xl">
           <Signin />
+          <p className="px-10 text-center text-xs italic text-gray-400">
+            {/* Users can sign in using their Google email account, and an account
+            will be created automatically during the sign-in process. */}
+            An account will be created for you during the sign-in process even
+            if you don't have an existing account.
+          </p>
         </div>
       </div>
     </div>
