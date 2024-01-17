@@ -18,7 +18,11 @@ import { AlarmlistIcon, Chevron, Switch } from "../UI";
 import DeleteAlarmlistForm from "./DeleteForm";
 import RenameAlarmlistForm from "./RenameForm";
 
-const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
+type AlarmlistProps = {
+  alarmlist: AlarmlistWithAlarms;
+};
+
+const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
   const ellipsisRef = useRef<HTMLDivElement>(null);
 
   const [isHoveringIcon, setIsHoveringIcon] = useState(false);
@@ -140,7 +144,7 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
   );
 
   const handleToggleAccordion = useCallback(
-    (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+    (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       /*
         Accordion should not toggle if user clicks on settings/ellipsis.
         Accordion should remain the same status when opening/closing settings tab
@@ -169,90 +173,93 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
 
   return (
     <AccordionItem>
-      <AccordionHeader
-        handleToggleAccordion={handleToggleAccordion}
-        onMouseEnter={() => {
-          !isEditingAlarmlist &&
-            setSettingsTab((prev) => ({ ...prev, isHovering: true }));
-          setIsHoveringIcon(true);
-        }}
-        onMouseLeave={() => {
-          !isEditingAlarmlist &&
-            setSettingsTab((prev) => ({ ...prev, isHovering: false }));
-          setIsHoveringIcon(false);
-        }}
-        className={clsx(
-          settingsTab.isHovering && "bg-gray-200",
-          "relative flex h-10 cursor-pointer items-center justify-between rounded-lg border border-transparent px-2 py-2 text-sm transition duration-200",
-        )}
-      >
-        {/*
+      <div className="flex flex-row">
+        {/* Div with Drag handle goes here */}
+        <AccordionHeader
+          handleToggleAccordion={handleToggleAccordion}
+          onMouseEnter={() => {
+            !isEditingAlarmlist &&
+              setSettingsTab((prev) => ({ ...prev, isHovering: true }));
+            setIsHoveringIcon(true);
+          }}
+          onMouseLeave={() => {
+            !isEditingAlarmlist &&
+              setSettingsTab((prev) => ({ ...prev, isHovering: false }));
+            setIsHoveringIcon(false);
+          }}
+          className={clsx(
+            settingsTab.isHovering && "bg-gray-200",
+            "relative flex h-10 w-full cursor-pointer items-center justify-between rounded-lg border border-transparent p-2 py-2 text-sm transition duration-200",
+          )}
+        >
+          {/*
           Width is defined below to allow alarmlist name to truncate.
           Name will truncate even more on hover to account for ellipsis.
         */}
-        <div
-          className={clsx(
-            settingsTab.isHovering && "w-[73%]",
-            "absolute flex w-3/4 items-center gap-2",
-          )}
-        >
-          <div className="w-3.5">
-            {isHoveringIcon ? (
-              <Chevron isOpen={isShowingAlarms} isToggleOn={alarmlist.isOn} />
+          <div
+            className={clsx(
+              settingsTab.isHovering && "w-[73%]",
+              "absolute flex w-3/4 items-center gap-2",
+            )}
+          >
+            <div className="w-3.5">
+              {isHoveringIcon ? (
+                <Chevron isOpen={isShowingAlarms} isToggleOn={alarmlist.isOn} />
+              ) : (
+                <AlarmlistIcon isOn={alarmlist.isOn} />
+              )}
+            </div>
+            {isEditingAlarmlist ? (
+              <RenameAlarmlistForm
+                alarmlist={alarmlist}
+                handleCloseRename={handleCloseRename}
+              />
             ) : (
-              <AlarmlistIcon isOn={alarmlist.isOn} />
+              <span
+                className={clsx(
+                  "line-clamp-1 inline-block select-none self-center truncate transition",
+                  {
+                    "text-gray-400": !alarmlist.isOn,
+                  },
+                )}
+                // onDoubleClick={() => {
+                //   setIsShowingAlarms((prev) => prev);
+                //   handleRenameAction();
+                // }}
+              >
+                {name}
+              </span>
             )}
           </div>
-          {isEditingAlarmlist ? (
-            <RenameAlarmlistForm
-              alarmlist={alarmlist}
-              handleCloseRename={handleCloseRename}
-            />
-          ) : (
-            <span
-              className={clsx(
-                "line-clamp-1 inline-block select-none self-center truncate transition",
-                {
-                  "text-gray-400": !alarmlist.isOn,
-                },
-              )}
-              // onDoubleClick={() => {
-              //   setIsShowingAlarms((prev) => prev);
-              //   handleRenameAction();
-              // }}
+          <div className="absolute right-1 inline-flex w-auto gap-1.5">
+            <button
+              onClick={(e) => {
+                openSettings();
+                onMouseMove(e);
+              }}
             >
-              {name}
-            </span>
-          )}
-        </div>
-        <div className="absolute right-1 inline-flex w-auto gap-1.5">
-          <button
-            onClick={(e) => {
-              openSettings();
-              onMouseMove(e);
-            }}
-          >
-            <Settings
-              ref={ellipsisRef}
-              action="Alarmlist"
-              handleEditAction={handleRenameAction}
-              handleDeleteAction={handleDeleteAction}
-              closeSettings={closeSettings}
-              isOpen={settingsTab.isOpen}
-              isHovering={settingsTab.isHovering}
-              cursorPosition={cursorPosition}
-              handleAlarmlistModal={() => setIsDeleteConfirmationOpen(false)}
+              <Settings
+                ref={ellipsisRef}
+                action="Alarmlist"
+                handleEditAction={handleRenameAction}
+                handleDeleteAction={handleDeleteAction}
+                closeSettings={closeSettings}
+                isOpen={settingsTab.isOpen}
+                isHovering={settingsTab.isHovering}
+                cursorPosition={cursorPosition}
+                handleAlarmlistModal={() => setIsDeleteConfirmationOpen(false)}
+              />
+            </button>
+            <Switch
+              id={alarmlist.id}
+              checked={alarmlist.isOn}
+              onChange={(e) => {
+                mutate({ id: alarmlist.id, isOn: e.currentTarget.checked });
+              }}
             />
-          </button>
-          <Switch
-            id={alarmlist.id}
-            checked={alarmlist.isOn}
-            onChange={(e) => {
-              mutate({ id: alarmlist.id, isOn: e.currentTarget.checked });
-            }}
-          />
-        </div>
-      </AccordionHeader>
+          </div>
+        </AccordionHeader>
+      </div>
       <AccordionPanel>
         {!!alarmlist.alarms.length ? (
           <ul>
@@ -267,7 +274,7 @@ const Alarmlist = ({ alarmlist }: { alarmlist: AlarmlistWithAlarms }) => {
         ) : (
           <p
             className={clsx(
-              "flex h-full py-1 pl-4 pr-2 text-xs italic transition",
+              "flex h-full select-none py-1 pl-4 pr-2 text-xs italic transition",
               isOn ? "text-slate-900" : "text-gray-400",
             )}
           >
