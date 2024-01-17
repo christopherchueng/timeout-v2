@@ -30,11 +30,8 @@ const Alarmlists = () => {
 };
 
 const Sidebar = () => {
-  // Start fetching data asap
-  // api.alarmlist.getAllWithAlarms.useQuery();
-
   return (
-    <aside className="pt-18 h-full w-full overflow-x-auto overflow-y-scroll border-r sm:w-72 sm:flex-none">
+    <aside className="h-full w-full overflow-x-auto overflow-y-scroll border-r pt-18 sm:w-80 sm:flex-none">
       <Alarmlists />
     </aside>
   );

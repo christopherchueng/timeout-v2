@@ -10,6 +10,7 @@ export default {
   theme: {
     extend: {
       padding: {
+        "5.5": "1.40rem",
         "18": "4.5rem",
       },
       scale: {
