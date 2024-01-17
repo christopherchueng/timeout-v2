@@ -1,22 +1,9 @@
-"use client";
-
 import Link from "next/link";
+import { getServerAuthSession } from "@/server/auth";
 import Mode from "./Mode";
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
 
-const PreferencesPage = () => {
-  // onUnauthenticated sends user to sign in page,
-  // and if successful, they will be redirected to preferences
-  // ...although the callbackUrl in nextauth's Signin API seems to handle this...
-  const { data: session, status } = useSession({
-    required: true,
-    onUnauthenticated() {
-      redirect("/signin?callbackUrl=/preferences");
-    },
-  });
-
-  if (status === "loading") return <></>;
+const PreferencesPage = async () => {
+  const session = await getServerAuthSession();
 
   if (!session) return;
 
