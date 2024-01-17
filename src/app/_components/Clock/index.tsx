@@ -12,12 +12,12 @@ type ClockProps = {
 };
 
 const Clock = ({ size = "lg" }: ClockProps) => {
-  const { data: preferences } = api.preference.get.useQuery();
+  const { data: preferences, isLoading } = api.preference.get.useQuery();
 
   const { currentDate, parts } = useTimeContext();
   const { minute, day } = parts;
 
-  if (!parts.hour) return <Loading size={size} />;
+  if (isLoading) return <Loading size={size} />;
 
   return (
     <div className="flex w-full select-none flex-col justify-center gap-6">
