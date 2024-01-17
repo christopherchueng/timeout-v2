@@ -68,10 +68,10 @@ export const AccordionItem = ({ children, ...rest }: TAccordionItem) => {
   );
 };
 
-interface TAccordionHeader extends HTMLMotionProps<"li"> {
+interface TAccordionHeader extends HTMLMotionProps<"div"> {
   children: React.ReactNode;
   handleToggleAccordion: (
-    e: React.MouseEvent<HTMLLIElement, MouseEvent>,
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => boolean;
 }
 
@@ -84,7 +84,7 @@ export const AccordionHeader = ({
   const { id, onChangeIndex } = useAccordion();
 
   return (
-    <motion.li
+    <motion.div
       {...rest}
       onClick={(e) => {
         if (handleToggleAccordion(e)) {
@@ -93,7 +93,7 @@ export const AccordionHeader = ({
       }}
     >
       {children}
-    </motion.li>
+    </motion.div>
   );
 };
 
