@@ -5,6 +5,7 @@ import Chevron from "./Chevron";
 import Cog from "./Cog";
 import CreateAlarmlistIcon from "./CreateAlarmlistIcon";
 import DeleteAlarmlistIcon from "./DeleteAlarmlistIcon";
+import DragHandle from "./DragHandle";
 import EditIcon from "./EditIcon";
 import Ellipsis from "./Ellipsis";
 import ExitIcon from "./ExitIcon";
@@ -24,6 +25,7 @@ export {
   Cog,
   CreateAlarmlistIcon,
   DeleteAlarmlistIcon,
+  DragHandle,
   EditIcon,
   Ellipsis,
   ExitIcon,
