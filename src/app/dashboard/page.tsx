@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 const Dashboard = () => {
   // onUnauthenticated sends user to sign in page,
   // and if successful, they will be redirected to the dashboard
+  // ...although the callbackUrl in nextauth's Signin API seems to handle this...
   const { status } = useSession({
     required: true,
     onUnauthenticated() {
