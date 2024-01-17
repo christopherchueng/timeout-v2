@@ -1,3 +1,5 @@
+"use client";
+
 import type { Session } from "next-auth";
 import toast from "react-hot-toast";
 import { api } from "@/trpc/react";
@@ -8,8 +10,8 @@ type ModeProps = {
 };
 
 const Mode = ({ session }: ModeProps) => {
-  const { data: preferences } = api.preference.get.useQuery();
-
+  const { data: preferences, isLoading: switchLoading } =
+    api.preference.get.useQuery();
   const ctx = api.useUtils();
 
   const { mutate: toggle12HourSettings } = api.preference.toggle.useMutation({
@@ -21,6 +23,8 @@ const Mode = ({ session }: ModeProps) => {
       toast.error("Could not switch time formats. Please try again.");
     },
   });
+
+  if (switchLoading) return <div className="h-5 w-8 rounded-xl bg-gray-200" />;
 
   if (!preferences) return;
 
