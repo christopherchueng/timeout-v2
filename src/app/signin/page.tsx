@@ -1,7 +1,13 @@
+import { redirect } from "next/navigation";
+import { getServerAuthSession } from "@/server/auth";
 import { Signin } from "../_components/Auth";
 import { NameLogo } from "../_components/UI";
 
-const SigninPage = () => {
+const SigninPage = async () => {
+  const session = await getServerAuthSession();
+
+  if (session) redirect("/dashboard");
+
   return (
     <div className="relative flex h-full flex-col items-center justify-center">
       <div className="absolute top-40 flex flex-col items-center justify-center space-y-28">
