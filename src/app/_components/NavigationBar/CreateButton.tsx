@@ -18,7 +18,7 @@ const Chevron = ({ isOpen }: { isOpen: boolean }) => (
     stroke="currentColor"
     data-slot="icon"
     className={clsx(
-      "h-3.5 w-3.5 -rotate-90 stroke-slate-900 transition duration-75",
+      "h-3.5 w-3.5 -rotate-90 stroke-slate-900 transition duration-75 dark:stroke-white/70",
       isOpen && "rotate-0",
     )}
   >
@@ -33,7 +33,7 @@ const Chevron = ({ isOpen }: { isOpen: boolean }) => (
 const CreateAlarmIcon = () => (
   <svg
     fill="#000000"
-    className="h-3.5 w-3.5"
+    className="h-3.5 w-3.5 dark:fill-white/70"
     viewBox="0 0 32 32"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
@@ -74,7 +74,7 @@ const CreateButton = () => {
             setIsTabOpen((prev) => !prev);
             setIsHovering(false);
           }}
-          className="h-7 rounded border border-slate-900 transition hover:border-slate-500 hover:bg-gray-100 active:bg-gray-200"
+          className="h-7 rounded border border-slate-900 transition hover:border-slate-500 hover:bg-gray-100 active:bg-gray-200 dark:border-zinc-600 dark:hover:bg-zinc-700"
         >
           <div className="flex h-full items-center gap-0.5 px-1">
             <Plus />
@@ -82,10 +82,10 @@ const CreateButton = () => {
           </div>
           {isTabOpen && (
             <div className="relative animate-dilate transition-all">
-              <div className="absolute -left-0.5 top-1.5 z-50 flex h-fit w-36 flex-col whitespace-nowrap rounded-md border bg-white p-2 shadow-lg">
+              <div className="absolute -left-0.5 top-1.5 z-50 flex h-fit w-36 flex-col whitespace-nowrap rounded-md border bg-white p-2 shadow-lg dark:border-zinc-600 dark:bg-zinc-900 dark:text-white/70">
                 <div
                   onClick={() => setIsAlarmlistModalOpen((prev) => !prev)}
-                  className="cursor-pointer rounded-md p-2 hover:z-50 hover:bg-gray-200"
+                  className="cursor-pointer rounded-md p-2 hover:z-50 hover:bg-gray-200 dark:hover:bg-zinc-700"
                 >
                   <div className="flex items-center gap-1.5">
                     <CreateAlarmlistIcon />
@@ -94,7 +94,7 @@ const CreateButton = () => {
                 </div>
                 <div
                   onClick={() => setIsAlarmModalOpen((prev) => !prev)}
-                  className="cursor-pointer rounded-md px-2 py-2 hover:z-50 hover:bg-gray-200"
+                  className="cursor-pointer rounded-md px-2 py-2 hover:z-50 hover:bg-gray-200 dark:hover:bg-zinc-700"
                 >
                   <div className="flex items-center gap-1.5">
                     <CreateAlarmIcon />
