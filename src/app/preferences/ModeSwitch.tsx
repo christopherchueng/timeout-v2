@@ -25,7 +25,7 @@ const ModeSwitch = ({ session }: ModeProps) => {
   });
 
   if (switchLoading)
-    return <div className="h-5 w-8 rounded-xl bg-gray-200 dark:bg-gray-400" />;
+    return <div className="h-5 w-8 rounded-xl bg-gray-200 dark:bg-zinc-700" />;
 
   if (!preferences) return;
 

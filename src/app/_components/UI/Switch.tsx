@@ -52,9 +52,9 @@ export const MySwitch = extendVariants(SwitchComponent, {
       default: {
         wrapper: [
           "bg-gray-300",
-          "dark:bg-gray-400",
+          "dark:bg-zinc-700",
           "group-data-[selected=true]:bg-slate-900",
-          "dark:group-data-[selected=true]:bg-slate-700",
+          "dark:group-data-[selected=true]:bg-white/80",
           "group-data-[selected=true]:text-primary-foreground",
         ],
       },
@@ -234,6 +234,9 @@ const Switch = ({
           if (showIcon) {
             return isSelected ? <MoonIcon /> : <SunIcon />;
           }
+        }}
+        classNames={{
+          thumb: "dark:bg-slate-950",
         }}
         {...props}
         // classNames={{
