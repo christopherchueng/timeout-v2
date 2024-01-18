@@ -9,7 +9,7 @@ type ModeProps = {
   session: Session;
 };
 
-const Mode = ({ session }: ModeProps) => {
+const ModeSwitch = ({ session }: ModeProps) => {
   const { data: preferences, isLoading: switchLoading } =
     api.preference.get.useQuery();
   const ctx = api.useUtils();
@@ -42,4 +42,4 @@ const Mode = ({ session }: ModeProps) => {
   );
 };
 
-export default Mode;
+export default ModeSwitch;
