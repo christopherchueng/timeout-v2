@@ -26,7 +26,9 @@ export const useTheme = () => {
 };
 
 const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>(
+    (window.localStorage.getItem("theme") as Theme) ?? "dark",
+  );
 
   const toggleTheme = () => {
     if (theme === "light") {
@@ -54,6 +56,8 @@ const ThemeProvider = ({ children }: ThemeProviderProps) => {
       document.documentElement.classList.add("dark");
     }
   }, []);
+
+  if (!theme) return;
 
   return (
     <ThemeContext.Provider
