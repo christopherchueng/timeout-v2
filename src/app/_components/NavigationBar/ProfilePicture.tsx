@@ -33,6 +33,7 @@ const ProfilePicture = ({ imageUrl }: { imageUrl: string }) => {
           alt="Profile picture"
           height={28}
           width={28}
+          priority={true}
         />
       </button>
       {isMenuOpen && (
