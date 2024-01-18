@@ -24,7 +24,7 @@ const ProfilePicture = ({ imageUrl }: { imageUrl: string }) => {
   return (
     <div className="flex items-center">
       <button
-        className="rounded-full border border-slate-900"
+        className="rounded-full border border-slate-900 dark:border-white/70"
         onClick={() => setIsMenuOpen((prev) => !prev)}
       >
         <Image
@@ -38,17 +38,17 @@ const ProfilePicture = ({ imageUrl }: { imageUrl: string }) => {
       </button>
       {isMenuOpen && (
         <div className="relative animate-dilate transition-all">
-          <div className="absolute right-0 top-5 z-50 flex h-fit w-36 flex-col items-start rounded-md border bg-white p-2 shadow-lg">
+          <div className="absolute right-0 top-5 z-50 flex h-fit w-36 flex-col items-start rounded-md border bg-white p-2 shadow-lg dark:border-zinc-600 dark:bg-zinc-900">
             <Link
               href="/preferences"
-              className="inline-flex w-full cursor-pointer gap-1.5 rounded-md p-2 hover:bg-gray-200"
+              className="inline-flex w-full cursor-pointer gap-1.5 rounded-md p-2 hover:bg-gray-200 dark:hover:bg-zinc-700"
             >
               <Cog />
               <span>Preferences</span>
             </Link>
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
-              className="inline-flex w-full cursor-pointer gap-1.5 rounded-md p-2 text-start hover:bg-gray-200"
+              className="inline-flex w-full cursor-pointer gap-1.5 rounded-md p-2 text-start hover:bg-gray-200 dark:hover:bg-zinc-700"
             >
               <ExitIcon />
               Sign out
