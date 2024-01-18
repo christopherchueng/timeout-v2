@@ -18,15 +18,15 @@ const PreferencesPage = async () => {
         <div className="w-full">
           <h1 className="text-xl font-bold">Preferences</h1>
         </div>
-        <div className="flex w-full flex-row items-center justify-between gap-4">
-          <div className="leading-8">
+        <div className="flex w-full flex-col items-center justify-between gap-1.5">
+          <div className="flex w-full justify-between leading-8">
             <span className="text-sm font-semibold">Standard time</span>
-            <p className="min-w-8 max-w-prose text-xs text-gray-400">
-              Display time in 12-hour format. Turn off to switch to military
-              time (24-hour format).
-            </p>
+            <Mode session={session} />
           </div>
-          <Mode session={session} />
+          <p className="min-w-8 max-w-prose text-xs text-gray-400">
+            Display time in 12-hour format. Turn off to switch to military time
+            (24-hour format).
+          </p>
         </div>
       </div>
     </main>
