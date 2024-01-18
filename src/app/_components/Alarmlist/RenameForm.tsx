@@ -113,7 +113,7 @@ const RenameAlarmlistForm = ({
         type="text"
         value={watchName}
         placeholder={alarmlist.name}
-        className="w-full bg-transparent outline-none"
+        className="w-full bg-transparent text-slate-900 outline-none dark:text-white/70"
         autoComplete="on"
         autoFocus
       />
