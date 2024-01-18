@@ -55,14 +55,14 @@ const Modal = ({ children, isOpen, handleClose }: ModalProps) => {
       >
         <div
           ref={modalRef}
-          className="relative box-border flex items-center justify-center rounded border bg-white p-8 shadow-lg"
+          className="relative box-border flex items-center justify-center rounded border bg-white p-8 shadow-lg dark:border-zinc-700 dark:bg-zinc-900"
           // className="relative box-border flex h-56 w-72 items-center justify-center rounded border bg-white p-8 shadow-lg"
         >
           <button
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
             onClick={handleClose}
-            className="absolute right-4 top-0 my-3 rounded-md border border-transparent px-1.5 outline-none transition hover:bg-gray-200"
+            className="absolute right-3 top-0 my-3 rounded-md border border-transparent px-1.5 outline-none transition hover:bg-gray-200 dark:hover:bg-zinc-500 dark:active:bg-zinc-500/70"
           >
             <Tooltip text="Esc" isShowing={isHovering}>
               &#x2715;
