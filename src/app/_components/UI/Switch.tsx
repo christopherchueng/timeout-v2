@@ -168,7 +168,7 @@ export const MySwitch = extendVariants(SwitchComponent, {
       disableAnimation: false,
       size: "xs",
       class: {
-        /** @ts-expect-error */
+        /** @ts-expect-error: TS can't detect thumb class for nextui custom styling */
         thumb: [
           "group-data-[pressed=true]:w-4",
           "group-data-[selected]:group-data-[pressed]:ml-2",
@@ -179,7 +179,7 @@ export const MySwitch = extendVariants(SwitchComponent, {
       disableAnimation: false,
       size: "sm",
       class: {
-        /** @ts-expect-error */
+        /** @ts-expect-error: TS can't detect thumb class for nextui custom styling */
         thumb: [
           "group-data-[pressed=true]:w-5",
           "group-data-[selected]:group-data-[pressed]:ml-3",
@@ -190,7 +190,7 @@ export const MySwitch = extendVariants(SwitchComponent, {
       disableAnimation: false,
       size: "md",
       class: {
-        /** @ts-expect-error */
+        /** @ts-expect-error: TS can't detect thumb class for nextui custom styling */
         thumb: [
           "group-data-[pressed=true]:w-6",
           "group-data-[selected]:group-data-[pressed]:ml-4",
@@ -201,7 +201,7 @@ export const MySwitch = extendVariants(SwitchComponent, {
       disableAnimation: false,
       size: "lg",
       class: {
-        /** @ts-expect-error */
+        /** @ts-expect-error: TS can't detect thumb class for nextui custom styling */
         thumb: [
           "group-data-[pressed=true]:w-7",
           "group-data-[selected]:group-data-[pressed]:ml-5",
