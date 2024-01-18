@@ -19,14 +19,14 @@ const SettingsDropdown = ({
     <div className="flex select-none flex-col justify-center text-sm">
       <button
         onClick={handleEditAction}
-        className="flex cursor-pointer items-center gap-1.5 px-2 py-2 transition hover:bg-gray-200"
+        className="flex cursor-pointer items-center gap-1.5 px-2 py-2 transition hover:bg-gray-200 dark:stroke-white/70 dark:hover:bg-zinc-700"
       >
         {editIcon}
         <span>{editText}</span>
       </button>
       <button
         onClick={handleDeleteAction}
-        className="flex cursor-pointer items-center gap-1.5 px-2 py-2 text-red-600 transition hover:bg-gray-200"
+        className="flex cursor-pointer items-center gap-1.5 px-2 py-2 text-red-600 transition hover:bg-gray-200 dark:hover:bg-zinc-700"
       >
         {deleteIcon}
         <span>{deleteText}</span>
