@@ -27,7 +27,9 @@ export const useTheme = () => {
 
 const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const [theme, setTheme] = useState<Theme>(
-    (window.localStorage.getItem("theme") as Theme) ?? "dark",
+    typeof window !== "undefined"
+      ? (window.localStorage.getItem("theme") as Theme)
+      : "dark",
   );
 
   const toggleTheme = () => {
