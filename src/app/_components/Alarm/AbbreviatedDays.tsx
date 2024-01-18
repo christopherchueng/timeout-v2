@@ -30,7 +30,9 @@ const AbbreviatedDays = ({
     <span
       className={clsx(
         "font-semibold transition",
-        isOn && activeDays.has(value) ? "text-slate-900" : "text-gray-400",
+        isOn && activeDays.has(value)
+          ? "text-slate-900 dark:text-white/70"
+          : "text-gray-400 dark:text-gray-400/40",
       )}
     >
       {abbrDay[0]}
