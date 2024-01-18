@@ -16,7 +16,7 @@ const Tooltip = ({
   children,
 }: TooltipProps) => {
   const classNames = clsx(
-    "absolute w-fit mx-auto z-50 animate-dilate whitespace-nowrap rounded border px-2 py-1.5 text-xs transition duration-75",
+    "absolute w-fit mx-auto z-50 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white/70 animate-dilate whitespace-nowrap rounded border px-2 py-1.5 text-xs transition duration-75",
     placement === "bottom" && "inset-x-0 -bottom-9 -left-4",
     placement === "right" && "inset-y-0 left-4 my-auto h-fit",
     color === "default" && "bg-gray-50",

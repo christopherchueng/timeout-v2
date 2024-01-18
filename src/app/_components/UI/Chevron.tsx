@@ -13,8 +13,10 @@ const Chevron = ({ isOpen, isToggleOn }: ChevronProps) => (
     stroke="currentColor"
     data-slot="icon"
     className={clsx(
-      "h-3.5 w-3.5 -rotate-90 transition duration-75",
-      isToggleOn ? "stroke-slate-900" : "stroke-gray-400",
+      "h-3.5 w-3.5 -rotate-90 transition duration-75 dark:hover:stroke-white/70",
+      isToggleOn
+        ? "stroke-slate-900 dark:stroke-white/70"
+        : "stroke-gray-400 dark:stroke-gray-400/40",
       isOpen && "rotate-0",
     )}
   >

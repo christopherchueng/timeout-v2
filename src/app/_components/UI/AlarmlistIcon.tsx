@@ -9,7 +9,9 @@ const AlarmlistIcon = ({ isOn }: AlarmlistIconProps) => (
     fill="currentColor"
     className={clsx(
       "h-3.5 w-3.5 transition",
-      isOn ? "fill-slate-900" : "fill-gray-400",
+      isOn
+        ? "fill-slate-900 dark:fill-white/70"
+        : "fill-gray-400 dark:fill-gray-400/40",
     )}
     viewBox="0 0 32 32"
     version="1.1"

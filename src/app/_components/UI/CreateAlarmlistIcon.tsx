@@ -1,7 +1,7 @@
 const CreateAlarmlistIcon = () => (
   <svg
     fill="#000000"
-    className="h-3.5 w-3.5"
+    className="h-3.5 w-3.5 dark:fill-white/70"
     viewBox="0 0 32 32"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"

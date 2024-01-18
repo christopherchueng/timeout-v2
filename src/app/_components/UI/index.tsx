@@ -12,9 +12,11 @@ import ExitIcon from "./ExitIcon";
 import InfoCircleIcon from "./InfoCircleIcon";
 import Input from "./Input";
 import { Logo, NameLogo } from "./Logo";
+import MoonIcon from "./MoonIcon";
 import Plus from "./Plus";
 // import Select from "./Select";
 import Switch from "./Switch";
+import SunIcon from "./SunIcon";
 import Tooltip from "./Tooltip";
 
 export {
@@ -32,8 +34,10 @@ export {
   InfoCircleIcon,
   Input,
   Logo,
+  MoonIcon,
   NameLogo,
   Plus,
   Switch,
+  SunIcon,
   Tooltip,
 };

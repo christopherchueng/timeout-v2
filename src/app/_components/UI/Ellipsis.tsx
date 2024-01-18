@@ -8,8 +8,8 @@ const Ellipsis = (props: { isSettingsTabOpen: boolean }) => (
     strokeWidth="1.5"
     stroke="currentColor"
     className={clsx(
-      props.isSettingsTabOpen && "bg-gray-300",
-      "h-6 w-6 cursor-pointer rounded border border-transparent p-1 transition hover:bg-gray-300 active:bg-gray-400 group-hover:z-10 group-hover:block",
+      props.isSettingsTabOpen && "bg-gray-300 dark:bg-zinc-500",
+      "h-6 w-6 cursor-pointer rounded border border-transparent p-1 transition hover:bg-gray-300 active:bg-gray-400 group-hover:z-10 group-hover:block dark:hover:bg-zinc-500 dark:active:bg-zinc-500/70",
     )}
   >
     <path

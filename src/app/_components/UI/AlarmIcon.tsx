@@ -8,8 +8,8 @@ const AlarmIcon = ({ isOn }: AlarmIconProps) => (
   <svg
     fill="currentColor"
     className={clsx("h-4 w-4 transition", {
-      "fill-slate-900": isOn,
-      "fill-gray-400": !isOn,
+      "fill-slate-900 dark:fill-white/70": isOn,
+      "fill-gray-400 dark:fill-gray-400/40": !isOn,
     })}
     viewBox="0 0 32 32"
     version="1.1"
