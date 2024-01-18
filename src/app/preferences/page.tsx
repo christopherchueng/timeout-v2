@@ -12,7 +12,10 @@ const PreferencesPage = async () => {
     <main className="relative flex h-full w-full justify-center px-6 text-slate-900 transition dark:bg-zinc-900 dark:text-white/80 sm:px-0">
       <div className="absolute top-16 flex max-w-2xl flex-col items-center gap-10 px-6 pt-6">
         <div className="w-full underline underline-offset-2">
-          <Link href="/dashboard" className="text-xs">
+          <Link
+            href="/dashboard"
+            className="text-xs text-slate-900 transition hover:opacity-70 dark:text-white/70"
+          >
             Back to dashboard
           </Link>
         </div>
