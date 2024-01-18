@@ -40,7 +40,7 @@ const SettingsWrapper = forwardRef<HTMLDivElement, SettingsWrapperProps>(
               left: `${cursorPosition.x}px`,
               top: `${cursorPosition.y}px`,
             }}
-            className="fixed left-0 z-20 rounded border bg-white"
+            className="fixed left-0 z-20 rounded border bg-white dark:border-zinc-600 dark:bg-zinc-900"
           >
             {children}
           </div>
