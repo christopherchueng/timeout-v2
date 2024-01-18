@@ -17,7 +17,7 @@ const Items = () => {
 
     return (
       <a
-        className="flex select-none items-center justify-center whitespace-nowrap rounded border-slate-900 bg-slate-900 px-3 py-1.5 text-xs text-white transition hover:bg-slate-700 active:bg-slate-800 disabled:cursor-not-allowed dark:bg-slate-700 dark:text-white/70 dark:hover:bg-slate-700/70 dark:active:bg-slate-700/40"
+        className="flex select-none items-center justify-center whitespace-nowrap rounded border-slate-900 bg-slate-900 px-3 py-1.5 text-xs text-white transition hover:bg-slate-700 active:bg-slate-800 disabled:cursor-not-allowed dark:border-white/80 dark:bg-white/80 dark:text-slate-900 dark:hover:border-white dark:hover:bg-white dark:active:border-white/80 dark:active:bg-white/80"
         href="/signin"
       >
         Sign in
