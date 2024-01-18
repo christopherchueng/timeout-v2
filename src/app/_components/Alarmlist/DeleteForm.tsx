@@ -60,7 +60,7 @@ const DeleteAlarmlistForm = ({
       <div className="flex flex-col items-center gap-2.5">
         <DeleteAlarmlistIcon size={40} />
         <div className="text-center text-xs leading-6">
-          <p className="font-bold">{`Delete '${alarmlist.name}'?`}</p>
+          <p className="font-bold dark:text-white/80">{`Delete '${alarmlist.name}'?`}</p>
           <p className="italic text-gray-400">{`All alarms under '${alarmlist.name}' will be deleted.`}</p>
         </div>
         <Button
