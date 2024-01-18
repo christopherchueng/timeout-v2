@@ -38,12 +38,13 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
 
   const selectClassNames = {
     label:
-      "text-xs text-slate-900 group-data-[filled=true]:text-xs group-data-[filled=true]:text-slate-900",
-    value: "text-xs",
+      "text-xs text-slate-900 group-data-[filled=true]:text-xs group-data-[filled=true]:text-slate-900 dark:text-white/70 dark:group-data-[filled=true]:text-white/70",
+    value: "text-xs dark:group-data-[filled=true]:text-white/70",
     contentWrapper: "p-0",
-    popoverContent: "border bg-white rounded-small",
+    popoverContent:
+      "border bg-white rounded-small dark:bg-zinc-900 dark:border-zinc-600",
     trigger:
-      "transition border-b h-10 border-b-gray-400 after:h-[0px] data-[open=true]:border-b-slate-900 data-[open=false]:border-b-gray-400",
+      "transition border-b h-10 border-b-gray-400 after:h-[0px] data-[open=true]:border-b-slate-900 data-[open=false]:border-b-gray-400 dark:border-b-zinc-600 dark:data-[open=false]:border-b-zinc-600 dark:data-[open=true]:border-b-white/70",
   };
 
   const { hour, minutes, meridiem } = useMemo(() => {
@@ -242,7 +243,7 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
   return (
     <form
       onSubmit={handleSubmit(handleUpdateAlarm)}
-      className="mx-auto my-4 flex h-full w-96 flex-col justify-center gap-4"
+      className="mx-auto my-4 flex h-full w-96 flex-col justify-center gap-4 dark:bg-zinc-900"
     >
       {errors.userId && (
         <p className="h-3.5 whitespace-break-spaces text-center text-2xs text-red-600">
@@ -260,7 +261,7 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
             type="text"
             maxLength={2}
             autoComplete="off"
-            className="w-24 text-center text-7xl caret-transparent outline-none transition selection:bg-transparent hover:bg-gray-100 focus:bg-gray-200"
+            className="w-24 text-center text-7xl caret-transparent outline-none transition selection:bg-transparent hover:bg-gray-100 focus:bg-gray-200 dark:bg-zinc-900 dark:text-white/70 dark:hover:bg-zinc-700 dark:focus:bg-zinc-700/70"
             onKeyDown={(
               e: React.KeyboardEvent<HTMLInputElement> & { type: "keydown" },
             ) => verifyNumericalInput(e, "hour", preferences.use12Hour)}
@@ -278,7 +279,7 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
             type="text"
             maxLength={2}
             autoComplete="off"
-            className="w-24 min-w-0 text-center text-7xl caret-transparent outline-none transition selection:bg-transparent hover:bg-gray-100 focus:bg-gray-200"
+            className="w-24 text-center text-7xl caret-transparent outline-none transition selection:bg-transparent hover:bg-gray-100 focus:bg-gray-200 dark:bg-zinc-900 dark:text-white/70 dark:hover:bg-zinc-700 dark:focus:bg-zinc-700/70"
             onKeyDown={(
               e: React.KeyboardEvent<HTMLInputElement> & { type: "keydown" },
             ) => verifyNumericalInput(e, "minutes", preferences.use12Hour)}
@@ -310,9 +311,10 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
                       base: "w-14 mb-1",
                       label:
                         "text-xs text-slate-900 group-data-[filled=true]:text-xs group-data-[filled=true]:text-slate-900",
-                      value: "text-xs",
+                      value:
+                        "text-xs dark:group-data-[filled=true]:text-white/70",
                       popoverContent:
-                        "border absolute p-0 -top-2.5 w-20 bg-white rounded-small",
+                        "border absolute p-0 -top-2.5 w-20 bg-white rounded-small dark:bg-zinc-900 dark:border-zinc-600",
                       trigger:
                         "transition shadow-none border-b-0 after:h-[0px] data-[open=true]:border-b-0 data-[open=false]:border-b-0",
                     }}
@@ -322,7 +324,7 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
                         key={timeOfDay}
                         textValue={timeOfDay}
                         value={value}
-                        className="rounded-md transition hover:bg-gray-200"
+                        className="rounded-md transition hover:bg-gray-200 dark:hover:bg-zinc-700"
                       >
                         {timeOfDay}
                       </SelectItem>
@@ -387,7 +389,7 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
                     key={alarmlist.id}
                     textValue={alarmlist.name}
                     value={value}
-                    className="rounded-small transition hover:bg-gray-200"
+                    className="rounded-small transition hover:bg-gray-200 dark:hover:bg-zinc-700"
                   >
                     {alarmlist.name}
                   </SelectItem>
@@ -440,7 +442,7 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
                 key={abbr}
                 textValue={abbr}
                 value={value}
-                className="rounded-small transition hover:bg-gray-200"
+                className="rounded-small transition hover:bg-gray-200 dark:hover:bg-zinc-700"
               >
                 {abbr}
               </SelectItem>
@@ -450,7 +452,7 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
       />
       {/* ------------------------- SNOOZE ------------------------- */}
       <div className="flex items-center justify-between py-4">
-        <span className="pl-1 text-xs">Snooze</span>
+        <span className="pl-1 text-xs dark:text-white/70">Snooze</span>
         <Controller
           name="snooze"
           control={control}
