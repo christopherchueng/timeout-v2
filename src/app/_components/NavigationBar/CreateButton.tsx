@@ -74,7 +74,7 @@ const CreateButton = () => {
             setIsTabOpen((prev) => !prev);
             setIsHovering(false);
           }}
-          className="h-7 rounded border border-slate-900 transition hover:border-slate-500 hover:bg-gray-100 active:bg-gray-200 dark:border-zinc-600 dark:hover:bg-zinc-700"
+          className="h-7 rounded border border-slate-900 transition hover:border-slate-500 hover:bg-gray-100 active:bg-gray-200 dark:border-zinc-600 dark:hover:bg-zinc-600/70 dark:active:bg-zinc-600/40"
         >
           <div className="flex h-full items-center gap-0.5 px-1">
             <Plus />
