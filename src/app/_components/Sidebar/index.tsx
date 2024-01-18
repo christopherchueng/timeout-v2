@@ -31,7 +31,7 @@ const Alarmlists = () => {
 
 const Sidebar = () => {
   return (
-    <aside className="h-full w-full overflow-x-auto overflow-y-scroll border-r pt-18 sm:w-80 sm:flex-none">
+    <aside className="h-full w-full overflow-x-auto overflow-y-scroll border-r pt-18 dark:border-r-zinc-600 sm:w-80 sm:flex-none">
       <Alarmlists />
     </aside>
   );
