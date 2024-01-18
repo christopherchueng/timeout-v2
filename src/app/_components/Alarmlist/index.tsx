@@ -59,9 +59,16 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
 
         const newAlarmlists = prev.map((alarmlist) => {
           if (alarmlist.id === id) {
+            const updatedAlarms = alarmlist.alarms.map((alarm) => {
+              return {
+                ...alarm,
+                isOn,
+              };
+            });
             return {
               ...alarmlist,
               isOn,
+              alarms: updatedAlarms,
             };
           }
 
