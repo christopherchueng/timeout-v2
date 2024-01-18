@@ -21,7 +21,7 @@ const Clock = ({ size = "lg" }: ClockProps) => {
 
   return (
     <div className="flex w-full select-none flex-col justify-center gap-6">
-      <div className="flex justify-center gap-1">
+      <div className="flex justify-center gap-1 dark:text-white/70">
         <span>
           {dayjs(currentDate).format(preferences?.use12Hour ? "h" : "H")}
         </span>
@@ -51,7 +51,9 @@ const Clock = ({ size = "lg" }: ClockProps) => {
             key={abbr}
             className={clsx(
               "text-xs uppercase",
-              abbr === day ? "text-slate-900" : "text-gray-200",
+              abbr === day
+                ? "text-slate-900 dark:text-white/70"
+                : "text-gray-200 dark:text-gray-400/40",
             )}
           >
             {abbr}
