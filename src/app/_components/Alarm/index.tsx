@@ -289,13 +289,13 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
       onMouseLeave={() =>
         setSettingsTab((prev) => ({ ...prev, isHovering: false }))
       }
-      className="pl-5.5 group relative mt-0.5 flex h-10 flex-row items-center justify-between rounded-lg border border-transparent py-1 pr-2 transition duration-200 hover:bg-gray-200"
+      className="group relative mt-0.5 flex h-10 flex-row items-center justify-between rounded-lg border border-transparent py-1 pl-5.5 pr-2 transition duration-200 hover:bg-gray-200 dark:text-white/70 dark:hover:bg-zinc-600"
     >
       <div className="absolute flex w-3/4 items-center gap-2 group-hover:w-[73%]">
         <AlarmIcon isOn={alarm.isOn} />
         <div
           className={clsx("flex select-none flex-col transition", {
-            "text-gray-400": !alarm.isOn,
+            "text-gray-400 dark:text-gray-400/40": !alarm.isOn,
           })}
         >
           <div className="flex items-center gap-1 text-sm font-semibold">
