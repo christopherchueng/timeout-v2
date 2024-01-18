@@ -188,7 +188,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
             setIsHoveringIcon(false);
           }}
           className={clsx(
-            settingsTab.isHovering && "bg-gray-200",
+            settingsTab.isHovering && "bg-gray-200 dark:bg-zinc-600",
             "relative flex h-10 w-full cursor-pointer items-center justify-between rounded-lg border border-transparent p-2 py-2 text-sm transition duration-200",
           )}
         >
@@ -217,9 +217,9 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
             ) : (
               <span
                 className={clsx(
-                  "line-clamp-1 inline-block select-none self-center truncate transition",
+                  "line-clamp-1 inline-block select-none self-center truncate transition dark:text-white/80",
                   {
-                    "text-gray-400": !alarmlist.isOn,
+                    "text-gray-400 dark:text-gray-400/40": !alarmlist.isOn,
                   },
                 )}
                 // onDoubleClick={() => {
