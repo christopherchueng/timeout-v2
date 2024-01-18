@@ -23,7 +23,7 @@ const Signin = () => {
 
   return (
     <button
-      className="flex h-12 w-2/3 select-none items-center whitespace-nowrap rounded border-slate-900 bg-slate-900 px-3 py-1.5 text-xs text-white transition hover:bg-slate-700 active:bg-slate-800 disabled:cursor-not-allowed disabled:bg-gray-300"
+      className="flex h-12 w-2/3 select-none items-center whitespace-nowrap rounded border-slate-900 bg-slate-900 px-3 py-1.5 text-xs text-white transition hover:bg-slate-700 active:bg-slate-800 disabled:cursor-not-allowed disabled:bg-gray-300 dark:bg-slate-700 dark:text-white/70"
       onClick={() =>
         signIn("google", {
           callbackUrl: searchParams.get("callbackUrl") ?? "/dashboard",
