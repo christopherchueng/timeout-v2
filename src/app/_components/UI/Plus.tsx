@@ -6,7 +6,7 @@ const Plus = () => (
     strokeWidth="1.5"
     stroke="currentColor"
     data-slot="icon"
-    className="h-5 w-5"
+    className="h-5 w-5 stroke-slate-900 transition dark:stroke-white/70"
   >
     <path
       strokeLinecap="round"
