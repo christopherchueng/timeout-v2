@@ -9,7 +9,7 @@ const NavigationBar = () => {
   const { status } = useSession();
 
   return (
-    <nav className="absolute z-10 flex w-full items-center justify-center bg-white px-6 py-4 text-xs transition dark:bg-zinc-900 sm:px-8">
+    <nav className="absolute z-10 flex w-full items-center justify-center px-6 py-4 text-xs sm:px-8">
       <div className="w-full">
         <div className="hidden w-fit sm:block">
           <Link href={status === "authenticated" ? "/dashboard" : "/"}>

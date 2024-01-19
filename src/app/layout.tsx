@@ -29,7 +29,9 @@ export default function RootLayout({
           <TRPCReactProvider cookies={cookies().toString()}>
             <ThemeProvider>
               <TimeProvider>
-                <NavigationBar />
+                <div className="bg-white transition dark:bg-zinc-900">
+                  <NavigationBar />
+                </div>
                 {children}
                 <Toaster position="bottom-left" />
               </TimeProvider>
