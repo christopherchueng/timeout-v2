@@ -282,7 +282,9 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
           <p
             className={clsx(
               "flex h-full select-none py-1 pl-4 pr-2 text-xs italic transition",
-              isOn ? "text-slate-900" : "text-gray-400",
+              isOn
+                ? "text-slate-900 dark:text-white/70"
+                : "text-gray-400 dark:text-gray-400/40",
             )}
           >
             No alarms under '{name}'!
