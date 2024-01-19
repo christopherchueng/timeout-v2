@@ -1,5 +1,8 @@
-const Loading = () => (
-  <aside className="h-full w-full overflow-y-hidden sm:w-80 sm:flex-none">
+const Loading = ({ width }: { width?: number }) => (
+  <aside
+    className="h-full w-full overflow-y-hidden sm:flex-none"
+    style={{ width: width ? `${width}rem` : "" }}
+  >
     <ul className="flex h-full flex-col gap-4 px-4">
       {Array.from({ length: 20 }).map((_, idx) => (
         <li
