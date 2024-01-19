@@ -1,19 +1,18 @@
 import { useMemo } from "react";
-import dayjs from "dayjs";
 import type { Alarm, Value } from "@/types";
 import { weekdaysData } from "@/utils/constants";
-import { parseHour } from "@/utils";
+import { useTimeContext } from "@/context/Time";
 
-const useTriggerAlarm = (alarm: Alarm, is12HourMode: boolean) => {
-  const currentDate = dayjs();
+const useTriggerAlarm = (alarm: Alarm) => {
+  const { currentDate, parts } = useTimeContext();
+  const { minute, second } = parts;
 
   const isAlarmTriggered = useMemo(() => {
-    const currentHour = dayjs().format(is12HourMode ? "h" : "H");
     const alarmMatchesTime =
       alarm.isOn &&
-      alarm.hour === parseHour(currentHour) &&
-      alarm.minutes === dayjs().get("minute") &&
-      dayjs().get("second") === 0;
+      alarm.hour === Number(currentDate.format("H")) &&
+      alarm.minutes === Number(minute) &&
+      Number(second) === 0;
 
     if (!alarm.repeat) {
       return alarmMatchesTime;
@@ -24,7 +23,7 @@ const useTriggerAlarm = (alarm: Alarm, is12HourMode: boolean) => {
     });
 
     return alarmMatchesTime && repeatDays.includes(currentDate.get("day") + 1);
-  }, [currentDate]);
+  }, [currentDate, minute, second]);
 
   return { isAlarmTriggered };
 };

@@ -39,7 +39,7 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
     dayjs(alarm.snoozeEndTime).diff(dayjs(), "seconds"),
   );
 
-  const { isAlarmTriggered } = useTriggerAlarm(alarm, preferences.use12Hour);
+  const { isAlarmTriggered } = useTriggerAlarm(alarm);
   const { settingsTab, openSettings, closeSettings, setSettingsTab } =
     useSettingsActions();
   const { cursorPosition, onMouseMove } = useCursorPosition();
