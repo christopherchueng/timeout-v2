@@ -38,7 +38,7 @@ const ProfilePicture = ({ imageUrl }: { imageUrl: string }) => {
       </button>
       {isMenuOpen && (
         <div className="relative animate-dilate transition-all">
-          <div className="absolute right-0 top-5 z-50 flex h-fit w-36 flex-col items-start rounded-md border bg-white p-2 shadow-lg dark:border-zinc-600 dark:bg-zinc-900">
+          <div className="absolute right-0 top-5 z-50 flex h-fit w-36 flex-col items-start rounded-md border transition bg-white p-2 shadow-lg dark:border-zinc-600 dark:bg-zinc-900">
             <Link
               href="/preferences"
               className="inline-flex w-full cursor-pointer gap-1.5 rounded-md p-2 hover:bg-gray-200 dark:hover:bg-zinc-700"
