@@ -45,7 +45,7 @@ const Clock = ({ size = "lg" }: ClockProps) => {
           </span>
         )}
       </div>
-      <div className="inline-flex justify-center gap-5 md:gap-10">
+      <div className="inline-flex justify-center gap-3 md:gap-5 lg:gap-10">
         {Object.values(weekdaysData).map(({ abbr }) => (
           <div
             key={abbr}
