@@ -21,7 +21,7 @@ const Dashboard = () => {
   return (
     <main className="flex h-full w-full flex-row items-center justify-center dark:bg-zinc-900">
       <Sidebar />
-      <div className="z-0 hidden h-full w-full items-center text-7xl dark:bg-zinc-900 sm:flex sm:justify-center md:text-9xl">
+      <div className="z-0 hidden h-full w-full items-center text-5xl dark:bg-zinc-900 sm:flex sm:justify-center md:text-7xl lg:text-9xl">
         <Clock size="lg" />
       </div>
     </main>
