@@ -405,14 +405,14 @@ const CreateAlarmForm = ({ setIsModalOpen }: CreateAlarmFormProps) => {
             selectorIcon={<></>}
             disableSelectorIconRotation
           >
-            {Object.entries(weekdaysData).map(([_, { abbr, value }]) => (
+            {Object.entries(weekdaysData).map(([_, { abbr, value, long }]) => (
               <SelectItem
                 key={abbr}
                 textValue={abbr}
                 value={value}
                 className="rounded-small transition hover:bg-gray-200 dark:hover:bg-zinc-700"
               >
-                {abbr}
+                {long}
               </SelectItem>
             ))}
           </Select>
