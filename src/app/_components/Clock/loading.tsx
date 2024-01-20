@@ -1,7 +1,7 @@
 import clsx from "clsx";
 
 type ClockProps = {
-  size: "sm" | "lg";
+  size: "sm" | "md" | "lg";
 };
 
 const Loading = ({ size = "lg" }: ClockProps) => {
@@ -10,7 +10,7 @@ const Loading = ({ size = "lg" }: ClockProps) => {
       <div
         className={clsx("animate-pulse bg-gray-200 dark:bg-zinc-700", {
           "h-7 w-16 rounded-md": size === "sm",
-          "h-24 w-96 rounded-lg": size === "lg",
+          "rounded-lg sm:h-20 sm:w-64 md:h-24 md:w-96": size === "lg",
         })}
       />
     </div>
