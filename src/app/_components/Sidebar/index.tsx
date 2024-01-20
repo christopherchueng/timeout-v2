@@ -36,7 +36,11 @@ const Sidebar = () => {
 
   return (
     <>
-      <AnimatePresence>
+      {/*
+        Setting initial to false will keep sidebar open.
+        Since initial width is set to 0, we will ignore.
+     */}
+      <AnimatePresence initial={false}>
         {isDrawerOpen && (
           <motion.aside
             initial={{ width: 0 }}
