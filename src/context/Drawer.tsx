@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, createContext, useContext } from "react";
+import React, { createContext, useContext } from "react";
+import { useCycle, type Cycle } from "framer-motion";
 
 type DrawerProviderProps = {
   children: React.ReactNode;
@@ -8,7 +9,7 @@ type DrawerProviderProps = {
 
 type DrawerContextType = {
   isDrawerOpen: boolean;
-  toggleDrawer: () => void;
+  cycleDrawer: Cycle;
 };
 
 const DrawerContext = createContext<DrawerContextType | null>(null);
@@ -24,14 +25,10 @@ export const useDrawer = () => {
 };
 
 const DrawerProvider = ({ children }: DrawerProviderProps) => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(true);
-
-  const toggleDrawer = () => {
-    setIsDrawerOpen((prev) => !prev);
-  };
+  const [isDrawerOpen, cycleDrawer] = useCycle(true, false);
 
   return (
-    <DrawerContext.Provider value={{ isDrawerOpen, toggleDrawer }}>
+    <DrawerContext.Provider value={{ isDrawerOpen, cycleDrawer }}>
       {children}
     </DrawerContext.Provider>
   );

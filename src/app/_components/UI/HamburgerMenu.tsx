@@ -1,12 +1,15 @@
+"use client";
+
 import clsx from "clsx";
 import { useDrawer } from "@/context/Drawer";
+import { motion } from "framer-motion";
 
 const HamburgerMenu = () => {
-  const { isDrawerOpen, toggleDrawer } = useDrawer();
+  const { isDrawerOpen, cycleDrawer } = useDrawer();
 
   return (
-    <button
-      onClick={toggleDrawer}
+    <motion.button
+      onTap={() => cycleDrawer()}
       className="hidden sm:flex sm:flex-col sm:items-center sm:justify-center"
     >
       <span
@@ -27,7 +30,7 @@ const HamburgerMenu = () => {
           "block h-0.5 w-6 rounded-sm bg-slate-900 transition-all duration-300 ease-out dark:bg-white/70",
         )}
       />
-    </button>
+    </motion.button>
   );
 };
 
