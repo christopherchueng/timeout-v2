@@ -9,6 +9,7 @@ import DragHandle from "./DragHandle";
 import EditIcon from "./EditIcon";
 import Ellipsis from "./Ellipsis";
 import ExitIcon from "./ExitIcon";
+import HamburgerMenu from "./HamburgerMenu";
 import InfoCircleIcon from "./InfoCircleIcon";
 import Input from "./Input";
 import { Logo, NameLogo } from "./Logo";
@@ -31,6 +32,7 @@ export {
   EditIcon,
   Ellipsis,
   ExitIcon,
+  HamburgerMenu,
   InfoCircleIcon,
   Input,
   Logo,
