@@ -12,19 +12,19 @@ const HamburgerMenu = () => {
       <span
         className={clsx(
           isDrawerOpen ? "translate-y-1 rotate-45" : "-translate-y-0.5",
-          "block h-0.5 w-6 rounded-sm bg-slate-900 transition-all duration-300 ease-out",
+          "block h-0.5 w-6 rounded-sm bg-slate-900 transition-all duration-300 ease-out dark:bg-white/70",
         )}
       />
       <span
         className={clsx(
           isDrawerOpen ? "opacity-0" : "opacity-100",
-          "my-0.5 block h-0.5 w-6 rounded-sm bg-slate-900 transition-all duration-300 ease-out",
+          "my-0.5 block h-0.5 w-6 rounded-sm bg-slate-900 transition-all duration-300 ease-out dark:bg-white/70",
         )}
       />
       <span
         className={clsx(
           isDrawerOpen ? "-translate-y-1 -rotate-45" : "translate-y-0.5",
-          "block h-0.5 w-6 rounded-sm bg-slate-900 transition-all duration-300 ease-out",
+          "block h-0.5 w-6 rounded-sm bg-slate-900 transition-all duration-300 ease-out dark:bg-white/70",
         )}
       />
     </button>
