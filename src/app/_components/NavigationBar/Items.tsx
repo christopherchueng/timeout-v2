@@ -11,8 +11,9 @@ const Items = () => {
   const { data: session, status } = useSession();
 
   const rightItem = () => {
-    if (status === "loading") return <Loading />;
-    else if (status === "authenticated") {
+    if (!session && status === "loading") return <Loading />;
+
+    if (session && status === "authenticated") {
       return (
         <>
           <CreateButton />
@@ -20,16 +21,16 @@ const Items = () => {
           <ProfilePicture imageUrl={session.user.image!} />
         </>
       );
-    } else {
-      return (
-        <Link
-          className="flex select-none items-center justify-center whitespace-nowrap rounded border-slate-900 bg-slate-900 px-3 py-1.5 text-xs text-white transition hover:bg-slate-700 active:bg-slate-800 disabled:cursor-not-allowed dark:border-white/80 dark:bg-white/80 dark:text-slate-900 dark:hover:border-white dark:hover:bg-white dark:active:border-white/80 dark:active:bg-white/80"
-          href="/signin"
-        >
-          Sign in
-        </Link>
-      );
     }
+
+    return (
+      <Link
+        className="flex select-none items-center justify-center whitespace-nowrap rounded border-slate-900 bg-slate-900 px-3 py-1.5 text-xs text-white transition hover:bg-slate-700 active:bg-slate-800 disabled:cursor-not-allowed dark:border-white/80 dark:bg-white/80 dark:text-slate-900 dark:hover:border-white dark:hover:bg-white dark:active:border-white/80 dark:active:bg-white/80"
+        href="/signin"
+      >
+        Sign in
+      </Link>
+    );
   };
 
   return (

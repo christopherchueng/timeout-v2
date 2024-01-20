@@ -6,13 +6,13 @@ import Items from "./Items";
 import { HamburgerMenu, Logo, NameLogo } from "../UI";
 
 const NavigationBar = () => {
-  const { status } = useSession();
+  const { data: session, status } = useSession();
 
   return (
     <nav className="absolute z-10 flex w-full items-center justify-center px-6 py-4 text-xs sm:px-8">
       <div className="w-full">
         <div className="flex gap-4">
-          {status === "authenticated" && <HamburgerMenu />}
+          {session && <HamburgerMenu />}
           <div className="hidden w-fit sm:block">
             <Link href={status === "authenticated" ? "/dashboard" : "/"}>
               <NameLogo className="h-8 w-24" />
