@@ -10,6 +10,7 @@ import { TRPCReactProvider } from "@/trpc/react";
 import ProviderWrapper from "./_components/ProviderWrapper";
 import NavigationBar from "./_components/NavigationBar";
 import ThemeProvider from "@/context/Theme";
+import DrawerProvider from "@/context/Drawer";
 
 export const metadata = {
   title: "Timeout",
@@ -29,11 +30,13 @@ export default function RootLayout({
           <TRPCReactProvider cookies={cookies().toString()}>
             <ThemeProvider>
               <TimeProvider>
-                <div className="bg-white transition dark:bg-zinc-900">
-                  <NavigationBar />
-                </div>
-                {children}
-                <Toaster position="bottom-left" />
+                <DrawerProvider>
+                  <div className="bg-white transition dark:bg-zinc-900">
+                    <NavigationBar />
+                  </div>
+                  {children}
+                  <Toaster position="bottom-left" />
+                </DrawerProvider>
               </TimeProvider>
             </ThemeProvider>
           </TRPCReactProvider>
