@@ -15,7 +15,7 @@ const ModeSwitch = ({ session }: ModeProps) => {
   const ctx = api.useUtils();
 
   const { mutate: toggle12HourSettings } = api.preference.toggle.useMutation({
-    onMutate: async ({ userId, isOn }) => {
+    onMutate: async ({ isOn }) => {
       await ctx.preference.get.cancel();
 
       const previousMode = ctx.preference.get.getData();

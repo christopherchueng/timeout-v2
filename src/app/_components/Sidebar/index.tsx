@@ -1,7 +1,7 @@
 "use client";
 
 import { api } from "@/trpc/react";
-import { AnimatePresence, motion, useCycle } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 import Alarmlist from "../Alarmlist";
 import { Accordion } from "../Accordian";
