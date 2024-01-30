@@ -19,10 +19,10 @@ const useSettingsActions = () => {
   }, []);
 
   const openSettings = useCallback(() => {
-    setSettingsTab((prev) => ({
-      ...prev,
+    setSettingsTab({
+      isHovering: true,
       isOpen: true,
-    }));
+    });
   }, []);
 
   return {
