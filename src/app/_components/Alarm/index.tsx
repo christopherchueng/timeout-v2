@@ -183,7 +183,8 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
       return { previousAlarms };
     },
     onSuccess: () => {
-      void ctx.alarmlist.getAllWithAlarms.invalidate();
+      void ctx.user.get.invalidate();
+      // void ctx.alarmlist.getAllWithAlarms.invalidate();
     },
     onError: (_data, _payload, context) => {
       toast.error("An error occurred while snoozing alarm. Please try again.");
