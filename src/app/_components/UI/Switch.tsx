@@ -236,6 +236,9 @@ const Switch = ({
             return isSelected ? <MoonIcon /> : <SunIcon />;
           }
         }}
+        classNames={{
+          thumb: "z-0",
+        }}
         {...props}
         // classNames={{
         //   thumb: "dark:bg-slate-950",
