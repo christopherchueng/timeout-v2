@@ -33,7 +33,7 @@ export const MySwitch = extendVariants(SwitchComponent, {
       // ...groupDataFocusVisibleClasses,
     ],
     thumb: [
-      "z-10",
+      // "z-10",
       "flex",
       "items-center",
       "justify-center",
@@ -235,6 +235,9 @@ const Switch = ({
           if (showIcon) {
             return isSelected ? <MoonIcon /> : <SunIcon />;
           }
+        }}
+        classNames={{
+          thumb: "z-0",
         }}
         {...props}
         // classNames={{

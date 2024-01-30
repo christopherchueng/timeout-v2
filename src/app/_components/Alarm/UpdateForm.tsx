@@ -157,7 +157,8 @@ const UpdateAlarmForm = ({ alarm, setIsModalOpen }: UpdateAlarmFormProps) => {
         This is because the alarm id is still "optimistic-alarm-id" and not the cuid generated in the backend.
         Thus, we must invalidate all alarmlists in order to interact with the real alarm id.
       */
-      void ctx.alarmlist.getAllWithAlarms.invalidate();
+      void ctx.user.get.invalidate();
+      // void ctx.alarmlist.getAllWithAlarms.invalidate();
     },
     onError: (error) => {
       if (error.data?.code === "BAD_REQUEST") {

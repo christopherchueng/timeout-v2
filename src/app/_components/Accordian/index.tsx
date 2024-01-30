@@ -56,15 +56,18 @@ export const Accordion = ({ children, defaultId = "" }: AccordionProps) => {
   });
 };
 
-interface TAccordionItem extends HTMLAttributes<HTMLDivElement> {
+interface TAccordionItem extends HTMLMotionProps<"div"> {
   children: React.ReactNode;
 }
 // Each alarmlist
 export const AccordionItem = ({ children, ...rest }: TAccordionItem) => {
   return (
-    <div {...rest} className="mt-0.5 overflow-hidden rounded px-4 first:mt-0">
+    <motion.div
+      {...rest}
+      className="mt-0.5 overflow-hidden rounded px-4 first:mt-0"
+    >
       {children}
-    </div>
+    </motion.div>
   );
 };
 

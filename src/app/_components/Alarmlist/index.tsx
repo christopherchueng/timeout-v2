@@ -14,22 +14,50 @@ import type { AlarmlistWithAlarms } from "@/types";
 import { AccordionHeader, AccordionItem, AccordionPanel } from "../Accordian";
 import Alarm from "../Alarm";
 import { Settings } from "../Settings";
-import { AlarmlistIcon, Chevron, Switch } from "../UI";
+import { AlarmlistIcon, Chevron, DragHandle, Switch } from "../UI";
 import DeleteAlarmlistForm from "./DeleteForm";
 import RenameAlarmlistForm from "./RenameForm";
+import {
+  Reorder,
+  motion,
+  useDragControls,
+  useMotionValue,
+} from "framer-motion";
+import { useMeasurePosition } from "@/hooks/useMeasurePosition";
 
 type AlarmlistProps = {
   alarmlist: AlarmlistWithAlarms;
+  index: number;
+  updateOrder: (i: number, dragOffset: number) => void;
+  updatePosition: (
+    i: number,
+    offset: {
+      height: number;
+      top: number;
+    },
+  ) => {
+    height: number;
+    top: number;
+  };
 };
 
-const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
+const Alarmlist = ({
+  alarmlist,
+  index,
+  updateOrder,
+  updatePosition,
+}: AlarmlistProps) => {
   const ellipsisRef = useRef<HTMLDivElement>(null);
+  const dragRef = useMeasurePosition((pos) => {
+    updatePosition(index, pos);
+  });
 
   const [isHoveringIcon, setIsHoveringIcon] = useState(false);
   const [isShowingAlarms, setIsShowingAlarms] = useState(false);
   const [isEditingAlarmlist, setIsEditingAlarmlist] = useState(false);
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
     useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   const { onMouseMove, cursorPosition } = useCursorPosition();
   const { settingsTab, closeSettings, openSettings, setSettingsTab } =
@@ -88,7 +116,8 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
         alarms,
         isOn,
       });
-      void ctx.alarmlist.getAllWithAlarms.invalidate();
+      void ctx.user.get.invalidate();
+      // void ctx.alarmlist.getAllWithAlarms.invalidate();
     },
 
     // If the mutation fails,
@@ -178,9 +207,30 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
     [settingsTab.isOpen, isEditingAlarmlist],
   );
 
+  const controls = useDragControls();
+  const y = useMotionValue(0);
+
   return (
-    <AccordionItem>
-      <div className="flex flex-row">
+    <AccordionItem
+      ref={dragRef}
+      drag="y"
+      layout
+      dragConstraints={{ top: 0, bottom: 0 }}
+      dragElastic={0.6}
+      dragListener={false}
+      dragControls={controls}
+      whileDrag={{ scale: 1.01, backgroundColor: "rgb(82, 82, 91)" }}
+      onDragEnd={(e, info) => {
+        if (isDragging) {
+          updateOrder(index, info.offset.y);
+        }
+        y.set(info.offset.y);
+      }}
+    >
+      <div className="flex flex-row items-center">
+        <div onPointerDown={(e) => controls.start(e)}>
+          <DragHandle />
+        </div>
         {/* Div with Drag handle goes here */}
         <AccordionHeader
           handleToggleAccordion={handleToggleAccordion}

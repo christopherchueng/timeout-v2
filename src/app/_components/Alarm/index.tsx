@@ -107,7 +107,8 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
     },
     // Always refetch after error or success:
     onSettled: () => {
-      void ctx.alarmlist.getAllWithAlarms.invalidate();
+      void ctx.user.get.invalidate();
+      // void ctx.alarmlist.getAllWithAlarms.invalidate();
     },
   });
 
@@ -135,7 +136,8 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
     },
     onSuccess: (data) => {
       toast.success(`'${data.name}' has been deleted.`);
-      void ctx.alarmlist.getAllWithAlarms.invalidate();
+      void ctx.user.get.invalidate();
+      // void ctx.alarmlist.getAllWithAlarms.invalidate();
     },
     onError: (_data, _payload, context) => {
       toast.error(
@@ -144,7 +146,7 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
 
       if (!context) return;
 
-      ctx.alarmlist.getAll.setData(undefined, () => context.previousAlarms);
+      // ctx.alarmlist.getAll.setData(undefined, () => context.previousAlarms);
     },
   });
 
@@ -188,7 +190,7 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
 
       if (!context) return;
 
-      ctx.alarmlist.getAll.setData(undefined, () => context.previousAlarms);
+      // ctx.alarmlist.getAll.setData(undefined, () => context.previousAlarms);
     },
   });
 

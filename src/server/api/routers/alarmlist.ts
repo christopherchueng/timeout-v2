@@ -3,6 +3,8 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { createAlarmlistSchema, renameAlarmlistSchema } from "@/utils";
+import { AlarmlistWithAlarms } from "@/types";
+import { getServerAuthSession } from "@/server/auth";
 
 export const alarmlistRouter = createTRPCRouter({
   getAllWithAlarms: protectedProcedure.query(async ({ ctx }) => {
@@ -10,7 +12,8 @@ export const alarmlistRouter = createTRPCRouter({
       where: {
         userId: ctx.session.user.id,
       },
-      orderBy: [{ createdAt: "desc" }],
+      orderBy: [{ order: "asc" }],
+      // orderBy: [{ createdAt: "desc" }],
       include: {
         alarms: {
           orderBy: [{ hour: "asc" }, { minutes: "asc" }, { name: "asc" }],
@@ -19,12 +22,13 @@ export const alarmlistRouter = createTRPCRouter({
     });
 
     const alarmlists = alarmlistsWithAlarms.map((alarmlist) => {
-      const { id, name, isOn, createdAt, updatedAt, userId, alarms } =
+      const { id, name, isOn, order, createdAt, updatedAt, userId, alarms } =
         alarmlist;
       const newAlarmlist = {
         id,
         name,
         isOn,
+        order,
         createdAt,
         updatedAt,
         userId,
@@ -41,15 +45,17 @@ export const alarmlistRouter = createTRPCRouter({
       where: {
         userId: ctx.session.user.id,
       },
-      orderBy: [{ createdAt: "desc" }],
+      orderBy: [{ order: "asc" }],
+      // orderBy: [{ createdAt: "desc" }],
     });
 
     const alarmlists = alarmlistsWithAlarms.map((alarmlist) => {
-      const { id, name, isOn, createdAt, updatedAt, userId } = alarmlist;
+      const { id, name, isOn, order, createdAt, updatedAt, userId } = alarmlist;
       const newAlarmlist = {
         id,
         name,
         isOn,
+        order,
         createdAt,
         updatedAt,
         userId,
@@ -86,11 +92,23 @@ export const alarmlistRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { name } = input;
 
+      await ctx.db.alarmlist.updateMany({
+        where: {
+          userId: ctx.session.user.id,
+        },
+        data: {
+          order: {
+            increment: 1,
+          },
+        },
+      });
+
       const alarmlist = await ctx.db.alarmlist.create({
         data: {
           name,
           user: { connect: { id: ctx.session.user.id } },
           isOn: true,
+          order: 1,
         },
       });
       return alarmlist;
@@ -108,6 +126,31 @@ export const alarmlistRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const { id } = input;
+
+      const alarmlist = await ctx.db.alarmlist.findFirst({
+        where: { id },
+      });
+
+      if (!alarmlist)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "could not find alarmlist.",
+        });
+
+      await ctx.db.alarmlist.updateMany({
+        where: {
+          userId: ctx.session.user.id,
+          order: {
+            gt: alarmlist.order,
+          },
+        },
+        data: {
+          order: {
+            decrement: 1,
+          },
+        },
+      });
+
       return ctx.db.alarmlist.delete({
         where: { id },
       });
@@ -130,5 +173,56 @@ export const alarmlistRouter = createTRPCRouter({
       });
 
       return alarmlist;
+    }),
+  rearrange: protectedProcedure
+    .input(
+      z.object({
+        newOrder: z
+          .object({
+            id: z.string(),
+            name: z.string(),
+            isOn: z.boolean(),
+            order: z.number(),
+            createdAt: z.date(),
+            updatedAt: z.date(),
+            userId: z.string(),
+            alarms: z
+              .object({
+                id: z.string(),
+                name: z.string(),
+                hour: z.number(),
+                minutes: z.number(),
+                sound: z.string().nullable(),
+                repeat: z.string().nullable(),
+                snooze: z.boolean(),
+                snoozeEndTime: z.date().nullable(),
+                isOn: z.boolean(),
+                createdAt: z.date(),
+                updatedAt: z.date(),
+                alarmlistId: z.string(),
+                userId: z.string(),
+              })
+              .array(),
+          })
+          .array(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { newOrder } = input;
+      const session = await getServerAuthSession();
+
+      // newOrder.map(async (alarmlist: AlarmlistWithAlarms, index: number) => {
+      //   return await ctx.db.alarmlist.update({
+      //     where: {
+      //       id: alarmlist.id,
+      //       userId: ctx.session.user.id,
+      //     },
+      //     data: {
+      //       order: index + 1,
+      //     },
+      //   });
+      // });
+
+      // return newOrder;
     }),
 });

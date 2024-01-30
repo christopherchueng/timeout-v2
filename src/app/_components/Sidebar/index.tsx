@@ -1,20 +1,66 @@
 "use client";
 
 import { api } from "@/trpc/react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, Reorder, motion } from "framer-motion";
 
 import Alarmlist from "../Alarmlist";
 import { Accordion } from "../Accordian";
 import Loading from "./loading";
 import { useDrawer } from "@/context/Drawer";
+import { useEffect, useState } from "react";
+import { AlarmlistWithAlarms } from "@/types";
+import { redirect } from "next/navigation";
+import { RouterOutputs } from "@/trpc/shared";
+import { usePositionReorder } from "@/hooks/usePositionReorder";
+
+type User = RouterOutputs["user"]["get"];
 
 const Alarmlists = () => {
-  const { data: alarmlists, isLoading } =
-    api.alarmlist.getAllWithAlarms.useQuery();
+  const { data, isLoading } = api.alarmlist.getAllWithAlarms.useQuery();
+  const {
+    data: user,
+    isLoading: loadingUser,
+    isSuccess: userLoaded,
+  } = api.user.get.useQuery();
 
-  if (isLoading) return <Loading />;
+  const [order, updatePosition, updateOrder] = usePositionReorder(
+    user?.alarmlists,
+  );
 
-  if (!alarmlists?.length) {
+  const ctx = api.useUtils();
+
+  const { mutate: reorderAlarmlists } =
+    api.user.rearrangeAlarmlists.useMutation({
+      onMutate: async ({ newOrder }) => {
+        await ctx.alarmlist.getAllWithAlarms.cancel();
+
+        const previousUserData = ctx.user.get.getData();
+
+        ctx.user.get.setData(undefined, (user: User | undefined) => {
+          if (!user) return;
+
+          return {
+            ...user,
+            alarmlists: newOrder,
+          };
+        });
+
+        return { previousUserData };
+      },
+      onSuccess: () => {
+        void ctx.user.get.invalidate();
+        // void ctx.alarmlist.getAllWithAlarms.invalidate();
+      },
+      onError: () => {
+        console.log("Error happened");
+      },
+    });
+
+  if (loadingUser) return <Loading />;
+
+  if (!user) return;
+
+  if (userLoaded && !user?.alarmlists?.length) {
     return (
       <p className="flex h-full justify-center pt-10 text-xs italic text-gray-400">
         No Alarmlists!
@@ -24,8 +70,14 @@ const Alarmlists = () => {
 
   return (
     <Accordion>
-      {alarmlists.map((alarmlist) => (
-        <Alarmlist key={alarmlist.id} alarmlist={alarmlist} />
+      {user.alarmlists.map((alarmlist, index) => (
+        <Alarmlist
+          key={alarmlist.id}
+          index={index}
+          alarmlist={alarmlist}
+          updateOrder={updateOrder}
+          updatePosition={updatePosition}
+        />
       ))}
     </Accordion>
   );

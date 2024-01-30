@@ -49,6 +49,7 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
             id: "optimistic-alarmlist-id",
             name: newAlarmlist.name,
             isOn: true,
+            order: 1,
             userId: session?.user.id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -67,7 +68,8 @@ const CreateAlarmlistForm = ({ setIsModalOpen }: CreateAlarmlistFormProps) => {
       return previousAlarmlists;
     },
     onSuccess: () => {
-      void ctx.alarmlist.getAllWithAlarms.invalidate();
+      void ctx.user.get.invalidate();
+      // void ctx.alarmlist.getAllWithAlarms.invalidate();
     },
     onError: (error) => {
       const nameError = error.data?.zodError?.fieldErrors.name;

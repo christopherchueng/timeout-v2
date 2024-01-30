@@ -39,7 +39,8 @@ const DeleteAlarmlistForm = ({
       },
       onSuccess: () => {
         toast.success(`'${alarmlist.name}' has been deleted!`);
-        void ctx.alarmlist.getAllWithAlarms.invalidate();
+        void ctx.user.get.invalidate();
+        // void ctx.alarmlist.getAllWithAlarms.invalidate();
       },
       // If the mutation fails,
       // use the context returned from onMutate to roll back

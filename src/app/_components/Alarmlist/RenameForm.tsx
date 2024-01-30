@@ -70,7 +70,8 @@ const RenameAlarmlistForm = ({
       return { previousAlarmlists };
     },
     onSuccess: (data) => {
-      void ctx.alarmlist.getAllWithAlarms.invalidate();
+      void ctx.user.get.invalidate();
+      // void ctx.alarmlist.getAllWithAlarms.invalidate();
       reset();
       handleCloseRename(data.name.trim());
     },

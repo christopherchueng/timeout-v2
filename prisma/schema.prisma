@@ -17,6 +17,7 @@ model Alarmlist {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     isOn      Boolean  @default(true)
+    order     Int      @default(1)
     userId    String
 
     alarms    Alarm[]
