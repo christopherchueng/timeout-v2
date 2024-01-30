@@ -7,7 +7,7 @@ const InfoCircleIcon = () => (
     viewBox="0 0 24 24"
     strokeWidth="1.5"
     stroke="currentColor"
-    className="h-2.5 w-2.5 stroke-gray-700"
+    className="h-2.5 w-2.5 stroke-gray-700 dark:stroke-gray-200"
   >
     <path
       strokeLinecap="round"
