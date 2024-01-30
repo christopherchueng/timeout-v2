@@ -192,6 +192,7 @@ const Alarmlist = ({ alarmlist }: AlarmlistProps) => {
       dragElastic={0.8}
       dragListener={false}
       dragControls={controls}
+      dragSnapToOrigin={true}
       whileDrag={{
         scale: 1.01,
         backgroundColor:
