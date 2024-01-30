@@ -281,9 +281,13 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
   return (
     <li
       onMouseEnter={() =>
+        !isUpdatingAlarm &&
+        !isAlarmRinging &&
         setSettingsTab((prev) => ({ ...prev, isHovering: true }))
       }
       onMouseLeave={() =>
+        !isUpdatingAlarm &&
+        !isAlarmRinging &&
         setSettingsTab((prev) => ({ ...prev, isHovering: false }))
       }
       className={clsx(
