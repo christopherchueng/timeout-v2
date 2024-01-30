@@ -20,7 +20,7 @@ const Modal = ({ children, isOpen, handleClose }: ModalProps) => {
   // Close modal on escape key press or outside modal
   useEffect(() => {
     const closeOnEscapeKey = (e: KeyboardEvent) =>
-      e.key === "Escape" ? handleClose() : null;
+      isOpen && e.key === "Escape" ? handleClose() : null;
 
     const handleClickedOutside = (e: MouseEvent) => {
       if (modalRef?.current && !modalRef.current?.contains(e.target as Node)) {
