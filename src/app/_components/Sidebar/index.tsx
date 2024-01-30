@@ -7,25 +7,16 @@ import Alarmlist from "../Alarmlist";
 import { Accordion } from "../Accordian";
 import Loading from "./loading";
 import { useDrawer } from "@/context/Drawer";
-import { useEffect, useState } from "react";
-import { AlarmlistWithAlarms } from "@/types";
-import { redirect } from "next/navigation";
 import { RouterOutputs } from "@/trpc/shared";
-import { usePositionReorder } from "@/hooks/usePositionReorder";
 
 type User = RouterOutputs["user"]["get"];
 
 const Alarmlists = () => {
-  const { data, isLoading } = api.alarmlist.getAllWithAlarms.useQuery();
   const {
     data: user,
     isLoading: loadingUser,
     isSuccess: userLoaded,
   } = api.user.get.useQuery();
-
-  const [order, updatePosition, updateOrder] = usePositionReorder(
-    user?.alarmlists,
-  );
 
   const ctx = api.useUtils();
 
@@ -60,7 +51,7 @@ const Alarmlists = () => {
 
   if (!user) return;
 
-  if (userLoaded && !user?.alarmlists?.length) {
+  if (userLoaded && !user.alarmlists?.length) {
     return (
       <p className="flex h-full justify-center pt-10 text-xs italic text-gray-400">
         No Alarmlists!
@@ -69,17 +60,16 @@ const Alarmlists = () => {
   }
 
   return (
-    <Accordion>
-      {user.alarmlists.map((alarmlist, index) => (
-        <Alarmlist
-          key={alarmlist.id}
-          index={index}
-          alarmlist={alarmlist}
-          updateOrder={updateOrder}
-          updatePosition={updatePosition}
-        />
-      ))}
-    </Accordion>
+    <Reorder.Group
+      values={user?.alarmlists}
+      onReorder={(newOrder) => reorderAlarmlists({ newOrder })}
+    >
+      <Accordion>
+        {user.alarmlists.map((alarmlist) => (
+          <Alarmlist key={alarmlist.id} alarmlist={alarmlist} />
+        ))}
+      </Accordion>
+    </Reorder.Group>
   );
 };
 
