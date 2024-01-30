@@ -228,19 +228,13 @@ const Alarm = ({ alarm, handleAlarmlistToggle }: AlarmProps) => {
 
   const handleSnoozeClick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      if (e.currentTarget.innerText === "Snooze") {
-        saveSnoozeEndTime({
-          id: alarm.id,
-          time: dayjs().add(10, "minute").toDate(),
-        });
-      }
-
-      if (e.currentTarget.innerText === "Demo snooze") {
-        saveSnoozeEndTime({
-          id: alarm.id,
-          time: dayjs().add(10, "second").toDate(),
-        });
-      }
+      saveSnoozeEndTime({
+        id: alarm.id,
+        time: dayjs()
+          // If click on snooze, add 10 minutes. Otherwise, add 10 seconds
+          .add(10, e.currentTarget.innerText === "Snooze" ? "minute" : "second")
+          .toDate(),
+      });
 
       setIsAlarmRinging(false);
     },
