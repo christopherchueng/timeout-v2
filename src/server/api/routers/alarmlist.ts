@@ -3,8 +3,6 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { createAlarmlistSchema, renameAlarmlistSchema } from "@/utils";
-import { AlarmlistWithAlarms } from "@/types";
-import { getServerAuthSession } from "@/server/auth";
 
 export const alarmlistRouter = createTRPCRouter({
   getAllWithAlarms: protectedProcedure.query(async ({ ctx }) => {
@@ -173,56 +171,5 @@ export const alarmlistRouter = createTRPCRouter({
       });
 
       return alarmlist;
-    }),
-  rearrange: protectedProcedure
-    .input(
-      z.object({
-        newOrder: z
-          .object({
-            id: z.string(),
-            name: z.string(),
-            isOn: z.boolean(),
-            order: z.number(),
-            createdAt: z.date(),
-            updatedAt: z.date(),
-            userId: z.string(),
-            alarms: z
-              .object({
-                id: z.string(),
-                name: z.string(),
-                hour: z.number(),
-                minutes: z.number(),
-                sound: z.string().nullable(),
-                repeat: z.string().nullable(),
-                snooze: z.boolean(),
-                snoozeEndTime: z.date().nullable(),
-                isOn: z.boolean(),
-                createdAt: z.date(),
-                updatedAt: z.date(),
-                alarmlistId: z.string(),
-                userId: z.string(),
-              })
-              .array(),
-          })
-          .array(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const { newOrder } = input;
-      const session = await getServerAuthSession();
-
-      // newOrder.map(async (alarmlist: AlarmlistWithAlarms, index: number) => {
-      //   return await ctx.db.alarmlist.update({
-      //     where: {
-      //       id: alarmlist.id,
-      //       userId: ctx.session.user.id,
-      //     },
-      //     data: {
-      //       order: index + 1,
-      //     },
-      //   });
-      // });
-
-      // return newOrder;
     }),
 });

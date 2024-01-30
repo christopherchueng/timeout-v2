@@ -1,10 +1,4 @@
-import {
-  Children,
-  type HTMLAttributes,
-  createContext,
-  useContext,
-  useState,
-} from "react";
+import { Children, createContext, useContext, useState } from "react";
 import { AnimatePresence, type HTMLMotionProps, motion } from "framer-motion";
 
 type TAccordionContext = {

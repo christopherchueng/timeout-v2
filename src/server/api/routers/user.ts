@@ -61,7 +61,7 @@ export const userRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { newOrder } = input;
-      const alarmlistMap: { [key: string]: number } = {};
+      const alarmlistMap: Record<string, number> = {};
 
       newOrder.forEach((alarmlist, index) => {
         alarmlistMap[alarmlist.id] = index + 1;

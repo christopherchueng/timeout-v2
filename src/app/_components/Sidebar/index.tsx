@@ -7,7 +7,7 @@ import Alarmlist from "../Alarmlist";
 import { Accordion } from "../Accordian";
 import Loading from "./loading";
 import { useDrawer } from "@/context/Drawer";
-import { RouterOutputs } from "@/trpc/shared";
+import type { RouterOutputs } from "@/trpc/shared";
 
 type User = RouterOutputs["user"]["get"];
 
