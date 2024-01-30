@@ -12,10 +12,10 @@ const useSettingsActions = () => {
   });
 
   const closeSettings = useCallback(() => {
-    setSettingsTab((prev) => ({
-      ...prev,
+    setSettingsTab({
+      isHovering: false,
       isOpen: false,
-    }));
+    });
   }, []);
 
   const openSettings = useCallback(() => {
