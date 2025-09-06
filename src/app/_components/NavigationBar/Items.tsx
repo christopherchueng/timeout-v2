@@ -11,9 +11,9 @@ const Items = () => {
   const { data: session, status } = useSession();
 
   const rightItem = () => {
-    if (!session && status === "loading") return <Loading />;
+    if (status === "loading") return <Loading />;
 
-    if (session && status === "authenticated") {
+    if (status === "authenticated" && session) {
       return (
         <>
           <CreateButton />
